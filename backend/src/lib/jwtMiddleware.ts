@@ -38,6 +38,7 @@ const jwtMiddleware = async (req, res, next) => {
     }
     return next();
   } catch (e) {
+    // 토큰 검증 실패
     return next();
   }
 };

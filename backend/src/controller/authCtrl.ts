@@ -2,7 +2,7 @@ import Joi from 'joi';
 import { DataTypeNotSupportedError, getConnection } from 'typeorm';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { User } from '../../entity/User';
+import { User } from '../entity/User';
 
 /*
   POST /api/auth/register
@@ -22,9 +22,7 @@ export const register = async (req, res) => {
 
   const validate = schema.validate(req.body);
   if (validate.error) {
-    res.status(400).send(validate.error);
-
-    return;
+    return res.status(400).send(validate.error);
   }
 
   const { email, password, username } = req.body;
@@ -43,7 +41,11 @@ export const register = async (req, res) => {
     return res.status(409).send();
   }
 
-  const result = await getConnection().getRepository(User).save(user);
+  try {
+    await getConnection().getRepository(User).save(user);
+  } catch (e) {
+    res.status(500).send(e);
+  }
 
   return res.send();
 };
@@ -98,8 +100,7 @@ export const check = async (req, res) => {
   const user = req.user;
   if (!user) {
     // 로그인 중 아님
-    res.status(401); // Unauthorized
-    return res.send();
+    return res.status(401).send(); // Unauthorized
   }
   return res.send(user);
 };

@@ -1,7 +1,6 @@
 const checkLoggedIn = (req, res, next) => {
-  if (!req.state.user) {
-    res.status(401); // Unauthorized
-    return res.send();
+  if (!req.user) {
+    return res.status(401).send(); // Unauthorized
   }
   return next();
 };

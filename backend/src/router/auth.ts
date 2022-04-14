@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import * as authCtrl from '../controller/auth/authCtrl';
+import * as authCtrl from '../controller/authCtrl';
 
 const auth = Router();
 auth.post('/register', authCtrl.register);
