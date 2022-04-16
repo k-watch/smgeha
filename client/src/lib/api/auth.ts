@@ -2,9 +2,9 @@ import { LoginState } from 'modules/auth/state';
 import client from 'modules/client';
 import { useQuery } from 'react-query';
 
-export const login = async ({ username, password }: LoginState) => {
+export const login = async ({ email, password }: LoginState) => {
   const { data } = await client.post('/api/auth/login', {
-    username,
+    email,
     password,
   });
   return data;

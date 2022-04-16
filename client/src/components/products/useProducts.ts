@@ -17,11 +17,9 @@ function useProducts() {
   const res = async (id: number) => {
     await mutation.mutateAsync(id, {
       onSuccess: (data) => {
-        debugger;
         store.dispatch(setProducts(data));
       },
       onError: (error) => {
-        debugger;
         console.log(error);
       },
     });

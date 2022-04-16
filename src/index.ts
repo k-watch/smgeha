@@ -27,13 +27,13 @@ app.use(
 // 안 붙이면 3000으로 붙는게 아니라 8080으로 붙음
 app.use('/api', router);
 
-app.use(express.static(path.join(__dirname, '../../frontend/build')));
-app.use('/', (req, res, next) => {
-  res.sendFile(path.join(__dirname, '../../frontend/build', 'index.html'));
+app.use(express.static(path.join(__dirname, '../client/build')));
+app.use('*', (req, res, next) => {
+  res.sendFile(path.join(__dirname, '../client/build/index.html'));
 });
 
 createConnection().then((connection) => {
-  app.listen(8080, () => {
+  app.listen(process.env.PORT || 8080, () => {
     console.log('server is listening 8080');
   });
 });

@@ -15,10 +15,10 @@ function useLogin() {
   const { register, handleSubmit } = useForm<any>();
 
   const onSubmit = async (data: LoginState) => {
-    const { username, password } = data;
+    const { email, password } = data;
 
     await loginMutation.mutateAsync(
-      { username, password },
+      { email, password },
       {
         onSuccess: (data) => {
           navigate('/login');

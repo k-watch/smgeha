@@ -8,10 +8,10 @@ function LoginForm() {
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
         <TextField
-          {...register('username')}
+          {...register('email')}
           required
-          name="username"
-          placeholder="아이디"
+          name="email"
+          placeholder="이메일"
         />
         <TextField
           {...register('password')}

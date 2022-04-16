@@ -1,4 +1,4 @@
 export interface LoginState {
-  username: string;
+  email: string;
   password: string;
 }

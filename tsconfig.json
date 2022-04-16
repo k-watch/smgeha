@@ -17,7 +17,8 @@
     },
     // TypeORM 사용 시에 decoration 관련 옵션
     "emitDecoratorMetadata": true,
-    "experimentalDecorators": true
+    "experimentalDecorators": true,
+    "types": ["node"]
   },
   // 어디에 있는 파일을 컴파일 할 것인지
   "include": ["src/**/*"],
