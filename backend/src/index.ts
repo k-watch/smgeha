@@ -22,7 +22,10 @@ app.use(
   }),
 );
 
-app.use('/', router);
+// '/' <-> '/api' 랑 다름
+// api 무조건 붙여야 함, react proxy도 /api 붙여야 함
+// 안 붙이면 3000으로 붙는게 아니라 8080으로 붙음
+app.use('/api', router);
 
 app.use(express.static(path.join(__dirname, '../../frontend/build')));
 app.use('/', (req, res, next) => {
