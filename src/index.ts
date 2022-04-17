@@ -5,9 +5,6 @@ import { createConnection } from 'typeorm';
 import router from './router';
 import cookieParser from 'cookie-parser';
 import path from 'path';
-import fs from 'fs';
-import multer from 'multer';
-import cors from 'cors';
 
 const app = express();
 
@@ -30,13 +27,13 @@ app.use(
 // 안 붙이면 3000으로 붙는게 아니라 8080으로 붙음
 app.use('/api', router);
 
-app.use(express.static(path.join(__dirname, '../client/build')));
+app.use(express.static(path.join(__dirname, process.env.STATIC_PATH)));
 app.use('*', (req, res, next) => {
-  res.sendFile(path.join(__dirname, '../client/build/index.html'));
+  res.sendFile(path.join(__dirname, process.env.NOT_PAGE));
 });
 
 createConnection().then((connection) => {
   app.listen(process.env.PORT || 8080, () => {
-    console.log('server is listening 8080');
+    console.log('server is listening');
   });
 });
