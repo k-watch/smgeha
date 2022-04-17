@@ -13,15 +13,6 @@ const { promisify } = require('util');
   GET /products/:id
 */
 export const findAllProduct = async (req, res) => {
-  fs.readFile(
-    'C:/Kwon/smgeha/client/public/images/1650203524233.jpg',
-    (err, data) => {
-      console.log(data.toString());
-    },
-  );
-
-  return;
-
   // 동적 파라메터가 정규표현식으로 변경이 되면 첫번째 파라메터를 가져와야 한다. ex: {'0': '1'}
   const { id } = req.params;
 
