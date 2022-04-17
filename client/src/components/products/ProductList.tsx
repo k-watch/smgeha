@@ -8,6 +8,8 @@ function ProductList() {
   const { mutation } = useProducts();
   const { isLoading, isSuccess, data } = mutation;
 
+  console.log(data);
+
   return (
     <>
       <Grid container wrap="nowrap">
@@ -25,6 +27,8 @@ function ProductList() {
           ? data.map((product: PorductData) => (
               <Grid key={product.id} item={true} lg={3}>
                 {product.name}
+                {product.image}
+                <img src={`/images/${product.image}`} alt="" />
               </Grid>
             ))
           : null}
