@@ -1,6 +1,6 @@
 import { Grid, Skeleton } from '@mui/material';
 import { Box } from '@mui/system';
-import { PorductData } from 'lib/products/state';
+import { PorductData } from 'modules/products/state';
 import React from 'react';
 import useProducts from './useProducts';
 

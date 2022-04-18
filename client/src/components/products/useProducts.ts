@@ -1,6 +1,6 @@
 import { store } from 'app/store';
 import { findAllProduct } from 'lib/api/products';
-import { setProducts } from 'lib/products/products';
+import { setProducts } from 'modules/products/products';
 import { useEffect } from 'react';
 import { useMutation } from 'react-query';
 import { useParams } from 'react-router-dom';

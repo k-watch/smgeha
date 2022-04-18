@@ -11,10 +11,10 @@
     "sourceMap": true,
     // 컴파일된 js파일을 어디에 둘 것인지
     "outDir": "dist",
-    "baseUrl": ".",
-    "paths": {
-      "*": ["node_modules/*", "src/types/*"]
-    },
+    // "baseUrl": ".",
+    // "paths": {
+    //   "*": ["node_modules/*", "src/types/*"]
+    // },
     // TypeORM 사용 시에 decoration 관련 옵션
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
