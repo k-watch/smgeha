@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { grey } from '@mui/material/colors';
 
 const resetStyle = css`
   @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&family=Roboto:wght@100;300;400;500;700;900&display=swap');
@@ -130,6 +131,26 @@ const resetStyle = css`
   table {
     border-collapse: collapse;
     border-spacing: 0;
+  }
+  input::placeholder {
+    font-weight: 600;
+    font-size: 16px;
+    color: ${grey[500]} !important;
+  }
+  a:link {
+    text-decoration: none;
+  }
+
+  a:visited {
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: none;
+  }
+
+  a:active {
+    text-decoration: none;
   }
 `;
 

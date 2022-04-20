@@ -11,13 +11,13 @@ import {
 } from 'typeorm';
 
 @Entity()
-@Unique(['email'])
+@Unique(['userId'])
 export class User {
   @PrimaryGeneratedColumn({ type: 'bigint' })
   id: number;
 
   @Column({ length: 255 })
-  email: string;
+  userId: string;
 
   @Column({ length: 255 })
   password: string;

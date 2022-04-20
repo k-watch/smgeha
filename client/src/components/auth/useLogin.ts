@@ -1,9 +1,16 @@
+import { bool } from 'joi';
 import { login, logout } from 'lib/api/auth';
 import { LoginState } from 'modules/auth/state';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useMutation } from 'react-query';
 import { useNavigate } from 'react-router-dom';
+
+interface LoginCheckData {
+  [index: string]: boolean;
+  id: boolean;
+  password: boolean;
+}
 
 function useLogin() {
   const loginMutation = useMutation(login);
@@ -12,13 +19,46 @@ function useLogin() {
 
   const [error, setError] = useState<string>('');
 
+  const [form, setForm] = useState<LoginState>({
+    id: '',
+    password: '',
+  });
+
+  const [check, setCheck] = useState<LoginCheckData>({
+    id: false,
+    password: false,
+  });
   const { register, handleSubmit } = useForm<any>();
 
-  const onSubmit = async (data: LoginState) => {
-    const { email, password } = data;
+  const onChange = (e: any) => {
+    const { value, name } = e.target;
+
+    check[name] = value === '' ? true : false;
+
+    setCheck({ ...check });
+    setError('');
+  };
+
+  const checkInput = () => {
+    check.id = form.id === '' ? true : false;
+    check.password = form.password === '' ? true : false;
+
+    setCheck({ ...check });
+
+    return [form.id, form.password].includes('');
+  };
+
+  const onSubmit = async (data: any) => {
+    data.preventDefault();
+
+    if (checkInput()) {
+      return;
+    }
+
+    const { id, password } = data;
 
     await loginMutation.mutateAsync(
-      { email, password },
+      { id, password },
       {
         onSuccess: (data) => {
           navigate('/login');
@@ -45,7 +85,17 @@ function useLogin() {
     }
   };
 
-  return { error, handleSubmit, onSubmit, register, onLogout };
+  return {
+    form,
+    setForm,
+    check,
+    error,
+    onChange,
+    handleSubmit,
+    onSubmit,
+    register,
+    onLogout,
+  };
 }
 
 export default useLogin;

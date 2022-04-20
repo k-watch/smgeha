@@ -11,7 +11,7 @@ const jwtMiddleware = async (req, res, next) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.user = {
       id: decoded.id,
-      email: decoded.email,
+      userId: decoded.userId,
       username: decoded.username,
     };
     // 토큰의 남은 유효 기간이 3.5일 미만이면 재발급
@@ -23,7 +23,7 @@ const jwtMiddleware = async (req, res, next) => {
       const token = jwt.sign(
         {
           jti: user.id,
-          email: user.email,
+          userId: user.userId,
           username: user.username,
         },
         process.env.JWT_SECRET,

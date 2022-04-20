@@ -4,7 +4,7 @@ import React from 'react';
 import { grey, purple } from '@mui/material/colors';
 
 const FormControlStyle = styled(FormControl)(({ theme }) => ({
-  '& .MuiInputBase-root': {
+  '&.MuiInputBase-root': {
     '& fieldset': {
       borderColor: `${grey[500]}`,
     },

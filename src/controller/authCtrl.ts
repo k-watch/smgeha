@@ -7,7 +7,7 @@ import { User } from '../entity/User';
 /*
   POST /api/auth/register
   {
-    email: 'abcd@abcd.com
+    userId: 'abcd',
     username: 'abcd',
     password: '1234'
   }
@@ -15,7 +15,7 @@ import { User } from '../entity/User';
 export const register = async (req, res) => {
   // Request Body 검증하기
   const schema = Joi.object().keys({
-    email: Joi.string().required(),
+    userId: Joi.string().required(),
     username: Joi.string().alphanum().min(3).max(20).required(),
     password: Joi.string().required(),
   });
@@ -25,17 +25,17 @@ export const register = async (req, res) => {
     return res.status(400).send(validate.error);
   }
 
-  const { email, password, username } = req.body;
+  const { userId, password, username } = req.body;
 
   const user = new User();
-  user.email = email;
+  user.userId = userId;
   user.password = await bcrypt.hash(password, 10);
   user.username = username;
 
   // 이메일 중복 체크
   const exists = await getConnection()
     .getRepository(User)
-    .findOne({ where: { email } });
+    .findOne({ where: { userId } });
 
   if (exists) {
     return res.status(409).send();
@@ -53,16 +53,16 @@ export const register = async (req, res) => {
 /*
   POST /api/auth/login
   {
-    email: 'abcd@abcd.com
+    userId: 'abcd@abcd.com
     password: '1234'
   }
 */
 export const login = async (req, res) => {
-  const { email, password } = req.body;
+  const { userId, password } = req.body;
 
   const user = await getConnection()
     .getRepository(User)
-    .findOne({ where: { email } });
+    .findOne({ where: { userId } });
 
   if (!user) {
     return res.status(401).send();
@@ -76,7 +76,7 @@ export const login = async (req, res) => {
   const token = jwt.sign(
     {
       id: user.id,
-      email: user.email,
+      userId: user.userId,
       username: user.username,
     },
     process.env.JWT_SECRET,
@@ -90,7 +90,7 @@ export const login = async (req, res) => {
     httpOnly: true,
   });
 
-  return res.send({ email: user.email, username: user.username });
+  return res.send({ userId: user.userId, username: user.username });
 };
 
 /*
