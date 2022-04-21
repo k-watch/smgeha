@@ -6,11 +6,10 @@ import React from 'react';
 const Wrap = styled('div')(({ theme }) => ({
   height: '130px',
   backgroundColor: `${grey[200]}`,
-
-  fontSize: '13px',
-  color: `${grey[600]}`,
-  fontWeight: 400,
   borderTop: `1px solid ${grey[400]}`,
+  color: `${grey[600]}`,
+  fontSize: '0.8125rem',
+  fontWeight: 400,
 
   '& a': {
     color: `${lightBlue[900]}`,
@@ -19,48 +18,49 @@ const Wrap = styled('div')(({ theme }) => ({
   '& ul': {
     position: 'relative',
     display: 'flex',
-    paddingTop: '0px',
     maxWidth: '800px',
     margin: '0 auto',
+    paddingTop: '0px',
     padding: '30px 0',
-  },
 
-  '& li': {
-    '& span': {
-      paddingRight: '20px',
-    },
-  },
-
-  '& .blog': {
-    '& img': {
-      marginRight: '5px',
+    '& li': {
+      '& span': {
+        paddingRight: '20px',
+      },
     },
 
-    '& a': {
-      position: 'absolute',
-      display: 'flex',
+    '& .blog': {
+      '& img': {
+        marginRight: '5px',
+      },
 
-      bottom: '12%',
-      right: '17.5%',
-      alignItems: 'center',
-    },
+      '& a': {
+        position: 'absolute',
+        display: 'flex',
+        alignItems: 'center',
+        right: '17.5%',
+        bottom: '12%',
+      },
 
-    '& span': {
-      fontSize: '16px',
-      color: `${grey[600]}`,
-      fontWeight: 600,
+      '& span': {
+        paddingRight: '20px',
+        fontSize: '1rem',
+        fontWeight: 600,
+        color: `${grey[600]}`,
+      },
     },
   },
 
   [theme.breakpoints.down('md')]: {
+    height: '250px',
     '& ul': {
       padding: '30px 30px',
-    },
-    height: '250px',
-    '& .blog': {
-      '& a': {
-        bottom: '-5%',
-        right: '9%',
+
+      '& .blog': {
+        '& a': {
+          right: '9%',
+          bottom: '-5%',
+        },
       },
     },
   },
@@ -113,9 +113,7 @@ function Footer() {
         <div className={'blog'}>
           <a href="https://blog.naver.com/apt4137">
             <img src="/blog.png" alt="blog" />
-            <span>NAVER</span>
-            &nbsp;
-            <span>blog</span>
+            <span>NAVER blog</span>
           </a>
         </div>
       </ul>

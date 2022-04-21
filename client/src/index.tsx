@@ -14,7 +14,9 @@ const queryClient = new QueryClient();
 async function loadUser() {
   try {
     const auth = localStorage.getItem('auth');
-    if (!auth) return; // 로그인 상태가 아니라면 아무것도 안 함
+    // 로그인 상태가 아니라면 패스
+    if (!auth) return;
+
     store.dispatch(setAuth(auth));
     await queryClient.fetchQuery('check', check);
   } catch (e) {

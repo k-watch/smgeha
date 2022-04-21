@@ -9,13 +9,16 @@ export const authSlice = createSlice({
   initialState,
   reducers: {
     setAuth(state, { payload: auth }) {
-      return JSON.parse(auth);
+      state.auth = JSON.parse(auth);
+    },
+    delAuth(state) {
+      state.auth = null;
     },
   },
 });
 
-export const { setAuth } = authSlice.actions;
+export const { setAuth, delAuth } = authSlice.actions;
 
-export const authSelector = (state: any) => state.auth;
+export const authSelector = (state: any) => state.auth.auth;
 
 export default authSlice.reducer;

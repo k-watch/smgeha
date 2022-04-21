@@ -5,8 +5,11 @@ import { lightBlue } from '@mui/material/colors';
 
 const ButtonStyle = styled(MuiButton)({
   borderRadius: 0,
-  backgroundColor: `${lightBlue[400]}`,
   boxShadow: 'none',
+  '&.MuiButton-contained': {
+    color: 'white',
+  },
+
   '&:hover': {
     backgroundColor: `${lightBlue[400]}`,
     boxShadow: 'none',

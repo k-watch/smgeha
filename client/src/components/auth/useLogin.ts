@@ -1,69 +1,101 @@
-import { bool } from 'joi';
-import { login, logout } from 'lib/api/auth';
+import { login } from 'lib/api/auth';
 import { LoginState } from 'modules/auth/state';
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useCallback, useEffect, useState } from 'react';
 import { useMutation } from 'react-query';
 import { useNavigate } from 'react-router-dom';
+import { useCookies } from 'react-cookie';
 
 interface LoginCheckData {
   [index: string]: boolean;
-  id: boolean;
+  userId: boolean;
   password: boolean;
 }
 
 function useLogin() {
   const loginMutation = useMutation(login);
-  const logoutMutation = useMutation(logout);
   const navigate = useNavigate();
 
-  const [error, setError] = useState<string>('');
+  const [cookies, setCookie, removeCookie] = useCookies(['userId']);
 
   const [form, setForm] = useState<LoginState>({
-    id: '',
+    userId: '',
     password: '',
   });
-
+  // 텍스트 필드 에러 표기용
   const [check, setCheck] = useState<LoginCheckData>({
-    id: false,
+    userId: false,
     password: false,
   });
-  const { register, handleSubmit } = useForm<any>();
+  // 버튼 위 표기할 에러 문구
+  const [error, setError] = useState('');
+  // 아이디 저장
+  const [isRemember, setIsRemember] = useState(false);
 
-  const onChange = (e: any) => {
-    const { value, name } = e.target;
+  useEffect(() => {
+    if (cookies.userId) {
+      setForm({ ...form, userId: cookies.userId });
+      setIsRemember(true);
+    }
+  }, []);
 
-    check[name] = value === '' ? true : false;
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const checked = e.target.checked;
 
-    setCheck({ ...check });
-    setError('');
-  };
+      setIsRemember(checked);
+
+      if (checked) {
+        setCookie('userId', form.userId, { maxAge: 24 });
+      } else {
+        removeCookie('userId');
+      }
+    },
+    [form.userId, setCookie, removeCookie],
+  );
+
+  const onChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const { value, name } = e.target;
+
+      check[name] = value === '' ? true : false;
+
+      if (isRemember && name === 'userId') {
+        setCookie('userId', value, { maxAge: 24 });
+      }
+
+      setCheck({ ...check });
+      // 텍스트 필드에 글자 입력 시 버튼 위 에러 문구 초기화
+      setError('');
+    },
+    [check, isRemember, setCookie],
+  );
 
   const checkInput = () => {
-    check.id = form.id === '' ? true : false;
+    check.userId = form.userId === '' ? true : false;
     check.password = form.password === '' ? true : false;
 
     setCheck({ ...check });
 
-    return [form.id, form.password].includes('');
+    return [form.userId, form.password].includes('');
   };
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: React.FormEvent<HTMLFormElement>) => {
     data.preventDefault();
 
+    // 텍스트 필드 모두에 글자가 있을 때 submit
     if (checkInput()) {
       return;
     }
 
-    const { id, password } = data;
+    const { userId, password } = form;
 
     await loginMutation.mutateAsync(
-      { id, password },
+      { userId, password },
       {
         onSuccess: (data) => {
-          navigate('/login');
           try {
             localStorage.setItem('auth', JSON.stringify(data));
+            navigate('/');
           } catch (e) {
             console.log('localStorage is not working');
           }
@@ -76,25 +108,15 @@ function useLogin() {
     );
   };
 
-  const onLogout = () => {
-    try {
-      logoutMutation.mutate();
-      localStorage.removeItem('auth');
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
   return {
     form,
     setForm,
     check,
     error,
+    isRemember,
+    handleChange,
     onChange,
-    handleSubmit,
     onSubmit,
-    register,
-    onLogout,
   };
 }
 

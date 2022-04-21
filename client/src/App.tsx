@@ -7,15 +7,15 @@ import ProductWritePage from 'pages/ProductWritePage';
 import initStyles from 'initStyles';
 import { Global } from '@emotion/react';
 import { createTheme, ThemeProvider } from '@mui/material';
-import { blue } from '@mui/material/colors';
+import { lightBlue } from '@mui/material/colors';
 import Footer from 'components/common/Footer';
-import Header from 'components/common/Header';
+import Header from 'components/common/header/Header';
 
 const theme = createTheme({
   palette: {
     primary: {
       // Purple and green play nicely together.
-      main: blue[500],
+      main: lightBlue[400],
     },
     secondary: {
       // This is green.A700 as hex.
@@ -32,9 +32,9 @@ function App() {
         <BrowserRouter>
           <Header />
           <Routes>
-            <Route path="/write" element={<ProductWritePage />} />
+            <Route path="/" element={<ProductWritePage />} />
             <Route path="/products" element={<ProductsPage />} />
-            <Route path="/" element={<LoginPage />} />
+            <Route path="/login" element={<LoginPage />} />
           </Routes>
           <Footer />
         </BrowserRouter>

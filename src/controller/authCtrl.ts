@@ -8,15 +8,14 @@ import { User } from '../entity/User';
   POST /api/auth/register
   {
     userId: 'abcd',
-    username: 'abcd',
+    name: 'abcd',
     password: '1234'
   }
 */
 export const register = async (req, res) => {
-  // Request Body 검증하기
   const schema = Joi.object().keys({
     userId: Joi.string().required(),
-    username: Joi.string().alphanum().min(3).max(20).required(),
+    name: Joi.string().alphanum().min(3).max(20).required(),
     password: Joi.string().required(),
   });
 
@@ -25,14 +24,14 @@ export const register = async (req, res) => {
     return res.status(400).send(validate.error);
   }
 
-  const { userId, password, username } = req.body;
+  const { userId, password, name } = req.body;
 
   const user = new User();
   user.userId = userId;
   user.password = await bcrypt.hash(password, 10);
-  user.username = username;
+  user.name = name;
 
-  // 이메일 중복 체크
+  // 아이디 중복 체크
   const exists = await getConnection()
     .getRepository(User)
     .findOne({ where: { userId } });
@@ -47,13 +46,13 @@ export const register = async (req, res) => {
     res.status(500).send(e);
   }
 
-  return res.send();
+  res.send();
 };
 
 /*
   POST /api/auth/login
   {
-    userId: 'abcd@abcd.com
+    userId: 'abcd'
     password: '1234'
   }
 */
@@ -77,7 +76,7 @@ export const login = async (req, res) => {
     {
       id: user.id,
       userId: user.userId,
-      username: user.username,
+      name: user.name,
     },
     process.env.JWT_SECRET,
     {
@@ -85,12 +84,12 @@ export const login = async (req, res) => {
     },
   );
 
-  res.cookie('access_token', token, {
+  res.cookie('auth_token', token, {
     maxAge: 1000 * 60 * 60 * 24 * 7, // 7일
     httpOnly: true,
   });
 
-  return res.send({ userId: user.userId, username: user.username });
+  res.send({ userId: user.userId, name: user.name });
 };
 
 /*
@@ -102,12 +101,12 @@ export const check = async (req, res) => {
     // 로그인 중 아님
     return res.status(401).send(); // Unauthorized
   }
-  return res.send(user);
+  res.send(user);
 };
 
 /*
   POST /api/auth/logout
 */
 export const logout = async (req, res) => {
-  return res.clearCookie('access_token').send();
+  res.clearCookie('auth_token').send();
 };
