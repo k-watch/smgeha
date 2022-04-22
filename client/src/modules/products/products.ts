@@ -10,8 +10,7 @@ export const productsSlice = createSlice({
   initialState,
   reducers: {
     setProducts(state, { payload: products }) {
-      debugger;
-      return products;
+      state.list = products;
     },
   },
 });

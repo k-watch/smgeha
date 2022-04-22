@@ -4,6 +4,9 @@ import {
   getHeaderCategory,
 } from 'lib/api/category';
 import { CategoryState } from 'modules/category/state';
+import { setWriteForm } from 'modules/product/product';
+import { setProducts } from 'modules/products/products';
+import { store } from 'modules/store';
 import { useCallback, useEffect, useState } from 'react';
 import { useMutation, useQuery } from 'react-query';
 
@@ -22,23 +25,25 @@ function useWrite() {
     },
   );
 
-  const manuCategiryMutation = useMutation<CategoryState[], Error, number>(
+  const manuMutation = useMutation<CategoryState[], Error, number>(
     findManuCategory,
   );
 
-  const typeCategiryMutation = useMutation<CategoryState[], Error, number>(
+  const typeMutation = useMutation<CategoryState[], Error, number>(
     findTypeCategory,
   );
 
-  const [chipData, setChipData] = useState<CateogryData[]>([]);
+  const [productData, setChipData] = useState<CateogryData[]>([]);
   const [typeSelectData, setTypeSelectData] = useState<CateogryData[]>([]);
   const [manuSelectData, setManuSelectData] = useState<CateogryData[]>([]);
+  const [urlDisabled, setUrlDisabled] = useState(true);
+  const [recommendDisabled, setRecommendDisabled] = useState(false);
 
   const onClick = useCallback((code: number) => {}, []);
 
-  const manuCategory = useCallback(
+  const manuSelect = useCallback(
     (id: number) => {
-      manuCategiryMutation.mutateAsync(id, {
+      manuMutation.mutateAsync(id, {
         onSuccess: (data) => {
           const chipList: Array<CateogryData> = [];
           data.forEach((category) => {
@@ -53,12 +58,12 @@ function useWrite() {
         onError: (error) => {},
       });
     },
-    [manuCategiryMutation],
+    [manuMutation],
   );
 
-  const typeCategory = useCallback(
+  const typeSelect = useCallback(
     (id: number) => {
-      typeCategiryMutation.mutateAsync(id, {
+      typeMutation.mutateAsync(id, {
         onSuccess: (data) => {
           const chipList: Array<CateogryData> = [];
           data.forEach((category) => {
@@ -73,7 +78,7 @@ function useWrite() {
         onError: (error) => {},
       });
     },
-    [typeCategiryMutation],
+    [typeMutation],
   );
 
   const initCatgory = () => {};
@@ -82,8 +87,8 @@ function useWrite() {
     productCategoryQuery.refetch();
     if (productCategoryQuery.data) {
       const id = productCategoryQuery.data[0].id;
-      manuCategory(id);
-      typeCategory(id);
+      manuSelect(id);
+      typeSelect(id);
     }
   }, [productCategoryQuery.data]);
 
@@ -98,20 +103,37 @@ function useWrite() {
     }
   }, [productCategoryQuery.data]);
 
-  const handleClick = useCallback(
+  const productHandleClick = useCallback(
     (id: number) => {
-      chipData.forEach((chip) =>
-        chip.id === id ? (chip.check = true) : (chip.check = false),
+      store.dispatch(setWriteForm({ key: 'code', value: id }));
+      productData.forEach((product) =>
+        product.id === id ? (product.check = true) : (product.check = false),
       );
 
-      setChipData([...chipData]);
-      manuCategory(id);
-      typeCategory(id);
+      setChipData([...productData]);
+      manuSelect(id);
+      typeSelect(id);
     },
-    [chipData, manuCategory, typeCategory],
+    [productData, manuSelect, typeSelect],
   );
 
-  return { handleClick, chipData, typeSelectData, manuSelectData, onClick };
+  const recommendHandleClick = useCallback(() => {
+    store.dispatch(
+      setWriteForm({ key: 'recommend', value: !recommendDisabled }),
+    );
+    setRecommendDisabled(!recommendDisabled);
+  }, [recommendDisabled]);
+
+  return {
+    productHandleClick,
+    productData,
+    typeSelectData,
+    manuSelectData,
+    urlDisabled,
+    setUrlDisabled,
+    recommendHandleClick,
+    onClick,
+  };
 }
 
 export default useWrite;

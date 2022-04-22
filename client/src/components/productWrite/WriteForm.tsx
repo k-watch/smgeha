@@ -1,80 +1,128 @@
 import { styled } from '@mui/material/styles';
-import { Box, Button, Chip, Grid, TextField } from '@mui/material';
+import { Box, Grid, Switch } from '@mui/material';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import useWrite, { CateogryData } from './useWrite';
 import Select from 'components/common/Select';
+import TextField from 'components/common/TextField';
+import Button from 'components/common/Button';
+import Chip from 'components/common/Chip';
+import { grey } from '@mui/material/colors';
 
-const ListItem = styled('li')(({ theme }) => ({
-  margin: theme.spacing(0.5),
+const Wrap = styled('div')(() => ({
+  '& ul': {
+    '& li:last-of-type': {
+      '& .MuiFormControl-root': {
+        marginLeft: 36,
+      },
+    },
+  },
 }));
 
-const FontStyle = styled('span')(() => ({
-  fontWeight: '700',
+const FieldStyle = styled('li')(() => ({
+  position: 'relative',
+  display: 'flex',
+  alignItems: 'center',
+  padding: '20px 0',
+
+  '& p': {
+    width: 60,
+    fontWeight: '500',
+  },
+
+  '& .MuiFormControl-root': {
+    marginLeft: 30,
+  },
+
+  '& .unit': {
+    position: 'absolute',
+    right: 10,
+    width: 20,
+    padding: '15px 0',
+    backgroundColor: 'white',
+    color: `${grey[600]}`,
+  },
+
+  '& .MuiSwitch-switchBase': {
+    '&:hover': {
+      backgroundColor: 'transparent',
+    },
+  },
 }));
 
 function WriteForm() {
-  const { handleClick, chipData, typeSelectData, manuSelectData, onClick } =
-    useWrite();
+  const {
+    typeSelectData,
+    manuSelectData,
+    urlDisabled,
+    setUrlDisabled,
+    onClick,
+  } = useWrite();
   const onSubmit = (data: any) => {
     console.log(data);
   };
 
-  const { control, register, handleSubmit } = useForm<any>();
-
   return (
-    <>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        {chipData.map((chip: CateogryData) => (
-          <ListItem key={chip.id}>
-            <Chip
-              label={chip.name}
-              onClick={() => handleClick(chip.id)}
-              variant={chip.check === true ? 'filled' : 'outlined'}
+    <Wrap>
+      <form onSubmit={onSubmit}>
+        <ul>
+          <FieldStyle>
+            <p>제조사</p>
+            {manuSelectData.length > 0 && (
+              <Select
+                name="manufacture"
+                value={manuSelectData[0].name}
+                menus={manuSelectData}
+                onClick={onClick}
+              />
+            )}
+          </FieldStyle>
+          <FieldStyle>
+            <p>제품명</p>
+            <TextField name="name" fullWidth />
+          </FieldStyle>
+          <FieldStyle>
+            <p>유형</p>
+            {typeSelectData.length > 0 && (
+              <Select
+                name="manufacture"
+                value={typeSelectData[0].name}
+                menus={typeSelectData}
+                onClick={onClick}
+              />
+            )}
+          </FieldStyle>
+          <FieldStyle>
+            <p>크기</p>
+            <TextField
+              name="size"
+              type="number"
+              placeholder="숫자만 입력하세요."
+              fullWidth
+              inputProps={{
+                maxLength: 10,
+                step: '1',
+              }}
             />
-          </ListItem>
-        ))}
-
-        <Grid item={true} sm={4}>
-          <FontStyle>프린터명</FontStyle>
-          {manuSelectData.length > 0 && (
-            <Select
-              name="manufacture"
-              value={manuSelectData[0].name}
-              label="제품"
-              categories={manuSelectData}
-              onClick={onClick}
+            <p className={'unit'}>L</p>
+          </FieldStyle>
+          <FieldStyle>
+            <p>URL</p>
+            <TextField
+              name="url"
+              placeholder="URL을 첨부하려면 클릭하세요."
+              disabled={urlDisabled}
+              fullWidth
             />
-          )}
-        </Grid>
-        <Grid item={true} sm={4}>
-          <TextField {...register('name')} name="name" placeholder="제품명" />
-        </Grid>
-        <Box>
-          {typeSelectData.length > 0 && (
-            <Select
-              name="manufacture"
-              value={typeSelectData[0].name}
-              label="제품"
-              categories={typeSelectData}
-              onClick={onClick}
+            <Switch
+              color="primary"
+              onClick={() => setUrlDisabled(() => !urlDisabled)}
             />
-          )}
-        </Box>
-        <Box>
-          <TextField name="size" placeholder="가나다" />
-        </Box>
-        <Box>
-          <TextField name="image" placeholder="이미지" />
-        </Box>
-        <Box>
-          <TextField name="url" placeholder="URL" />
-        </Box>
+          </FieldStyle>
+        </ul>
         <Button type="submit">저장</Button>
       </form>
-      {/* <Button onClick={onLogout}>로그아웃</Button>
-    {error && <Box>{error}</Box>} */}
-    </>
+    </Wrap>
   );
 }
 

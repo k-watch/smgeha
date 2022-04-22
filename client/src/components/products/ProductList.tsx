@@ -1,6 +1,5 @@
 import { Grid, Skeleton } from '@mui/material';
-import { Box } from '@mui/system';
-import { PorductData } from 'modules/products/state';
+import { ProductData } from 'modules/products/state';
 import React from 'react';
 import useProducts from './useProducts';
 
@@ -24,7 +23,7 @@ function ProductList() {
           : null}
 
         {isSuccess
-          ? data.map((product: PorductData) => (
+          ? data.map((product: ProductData) => (
               <Grid key={product.id} item={true} lg={3}>
                 {product.name}
                 {product.image}

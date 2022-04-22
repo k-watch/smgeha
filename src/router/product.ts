@@ -27,5 +27,6 @@ product.get('/:id', productCtrl.findOneProduct);
 product.post('/', upload.array('file', 5), checkImg, productCtrl.write);
 product.patch('/:id', upload.array('file', 5), productCtrl.update);
 product.delete('/:id', checkLoggedIn, productCtrl.remove);
+product.get('/unit', productCtrl.remove);
 
 export default product;

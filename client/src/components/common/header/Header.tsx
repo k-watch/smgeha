@@ -7,16 +7,14 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import useHeader from './useHeader';
 
 const Wrap = styled('div')(({ theme }) => ({
+  position: 'relative',
+  width: '100%',
   height: '70px',
+  backgroundColor: `white`,
   borderBottom: `1px solid ${grey[300]}`,
   boxShadow: `0px 3px 6px ${grey[200]}`,
-
-  position: 'relative',
-  color: `${grey[500]}`,
   fontWeight: '400',
-  backgroundColor: `white`,
-
-  width: '100%',
+  color: `${grey[500]}`,
 
   '& ul': {
     display: 'flex',

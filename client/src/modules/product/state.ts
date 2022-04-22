@@ -2,6 +2,7 @@
 // {
 //   id: 0,
 //   code: 0 (대분류 코드),
+//   recomment: false (추천상품),
 //   name: '제품명',
 //   manufacture: '제조사',
 //   size: '크기',
@@ -22,6 +23,6 @@ export interface ProductData {
   url?: string;
 }
 
-export interface ProductsState {
-  list: Array<ProductData>;
+export interface ProductState {
+  writeForm: ProductData;
 }

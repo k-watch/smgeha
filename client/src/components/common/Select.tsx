@@ -1,54 +1,45 @@
 import { styled } from '@mui/material/styles';
-import { FormControl, Select as MaterialSelect, MenuItem } from '@mui/material';
-import React from 'react';
-import { grey, purple } from '@mui/material/colors';
+import {
+  FormControl,
+  Select as MuiSelect,
+  MenuItem,
+  SelectProps as MuiSelectProps,
+} from '@mui/material';
+import { grey } from '@mui/material/colors';
 
 const FormControlStyle = styled(FormControl)(({ theme }) => ({
-  '&.MuiInputBase-root': {
+  '& .MuiInputBase-root': {
+    borderRadius: 0,
     '& fieldset': {
-      borderColor: `${grey[500]}`,
+      borderColor: `${grey[400]}`,
     },
     '&.Mui-focused fieldset': {
-      borderColor: `${grey[700]}`,
+      borderColor: `${grey[400]}`,
     },
-    borderRadius: 0,
-    height: 45,
   },
 }));
 
-// const SelectStyle = (props: any) => (
-//   <div
-//   >
-//     <Select {...props}/>
-//   </div>
-// )
+interface SelectProps extends MuiSelectProps {
+  menus: Array<any>;
+  onClick: any;
+}
 
-export type SelectProps = {
-  name: string;
-  label: string;
-  value: any;
-  categories: any;
-  onClick?: (e: any) => void;
-};
-
-function Select({ name, value, label, categories, onClick }: SelectProps) {
-  //   const classes = useStyles();
-
+function Select(props: SelectProps) {
   return (
     <>
-      <FormControlStyle variant="outlined" /*className={classes.formControl}*/>
-        <MaterialSelect name={name} value={value}>
-          {categories &&
-            categories.map((category: any) => (
+      <FormControlStyle variant="outlined" fullWidth>
+        <MuiSelect name={props.name} value={props.value}>
+          {props.menus &&
+            props.menus.map((menu: any) => (
               <MenuItem
-                key={category.id}
-                value={label === '제품' ? category.name : category.name}
-                onClick={onClick ? () => onClick(category.id) : undefined}
+                key={menu.id}
+                value={menu.name}
+                onClick={() => props.onClick(menu.id)}
               >
-                {category.name}
+                {menu.name}
               </MenuItem>
             ))}
-        </MaterialSelect>
+        </MuiSelect>
       </FormControlStyle>
     </>
   );

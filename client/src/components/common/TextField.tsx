@@ -7,14 +7,16 @@ const TextFieldStyle = styled(MuiTextField)({
   '& .MuiOutlinedInput-root': {
     borderRadius: 0,
     '& fieldset': {
-      borderColor: `${grey[500]}`,
+      borderColor: `${grey[400]}`,
     },
-
     '&.Mui-focused fieldset': {
-      border: `1px solid ${grey[500]}`,
+      border: `1px solid ${grey[400]}`,
     },
     '& .MuiFormHelperText-root': {
       marginLeft: 0,
+    },
+    '& .Mui-disabled': {
+      backgroundColor: `${grey[300]}`,
     },
   },
 });
