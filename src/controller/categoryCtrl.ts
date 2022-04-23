@@ -1,6 +1,7 @@
-import { ProdcutCategory } from '../entity/ProductCategory';
-import { getConnection } from 'typeorm';
+import { ProductCategory } from '../entity/ProductCategory';
+import { getConnection, In } from 'typeorm';
 import { Request, Response } from 'express';
+import { ProductUnit } from '../entity/ProductUnit';
 
 /*
   GET /category/header
@@ -8,7 +9,7 @@ import { Request, Response } from 'express';
 */
 export const getHeaderCategory = async (req: Request, res: Response) => {
   const category = await getConnection()
-    .getRepository(ProdcutCategory)
+    .getRepository(ProductCategory)
     .find({ where: { parent: 0 } });
 
   if (category.length === 0) {
@@ -25,7 +26,7 @@ export const findProductManufacture = async (req: Request, res: Response) => {
   const { id } = req.params;
 
   const category = await getConnection()
-    .getRepository(ProdcutCategory)
+    .getRepository(ProductCategory)
     .find({ where: { parent: id, type: 1 } });
 
   if (category.length === 0) {
@@ -42,7 +43,7 @@ export const findProductTypeCategory = async (req: Request, res: Response) => {
   const { id } = req.params;
 
   const category = await getConnection()
-    .getRepository(ProdcutCategory)
+    .getRepository(ProductCategory)
     .find({ where: { parent: id, type: 2 } });
 
   if (category.length === 0) {

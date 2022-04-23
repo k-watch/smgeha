@@ -2,14 +2,17 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { ProductSubImage } from './ProductSubImage';
 import { ProductUnit } from './ProductUnit';
 
 @Entity()
-export class ProdcutCategory {
+export class ProductCategory {
   @PrimaryGeneratedColumn({ type: 'bigint' })
   id: number;
 
@@ -31,6 +34,9 @@ export class ProdcutCategory {
   @UpdateDateColumn()
   updated: Date;
 
-  @OneToOne((type) => ProductUnit, (productUnit) => productUnit.id)
-  productUnit: ProductUnit[];
+  // @OneToMany(
+  //   (type) => ProductUnit,
+  //   (productUnit) => productUnit.productCategory,
+  // )
+  // productUnit: ProductUnit;
 }

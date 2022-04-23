@@ -22,11 +22,14 @@ export const productSlice = createSlice({
     setWriteForm(state, { payload: { key, value } }) {
       state.writeForm[key] = value;
     },
+    unloadWriteForm(state) {
+      return initialState;
+    },
   },
 });
 
-export const { setWriteForm } = productSlice.actions;
+export const { setWriteForm, unloadWriteForm } = productSlice.actions;
 
-export const productSelector = (state: any) => state.product;
+export const productSelector = (state: any) => state.product as ProductState;
 
 export default productSlice.reducer;

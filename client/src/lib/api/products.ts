@@ -5,3 +5,9 @@ export const findAllProduct = async (id: number) => {
 
   return data;
 };
+
+export const findOneProductUnit = async (id: number) => {
+  const { data } = await client.get(`/api/product/unit/${id}`);
+
+  return data;
+};

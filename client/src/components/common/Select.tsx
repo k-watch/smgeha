@@ -34,7 +34,7 @@ function Select(props: SelectProps) {
               <MenuItem
                 key={menu.id}
                 value={menu.name}
-                onClick={() => props.onClick(menu.id)}
+                onClick={() => props.onClick(props.name, menu)}
               >
                 {menu.name}
               </MenuItem>

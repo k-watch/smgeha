@@ -2,16 +2,20 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { ProdcutCategory } from './ProductCategory';
+import { ProductCategory } from './ProductCategory';
 
 @Entity()
 export class ProductUnit {
   @PrimaryGeneratedColumn({ type: 'bigint' })
   id: number;
+
+  @Column({ type: 'bigint' })
+  productId: number;
 
   // 단위명
   @Column({ length: 100 })
@@ -23,6 +27,10 @@ export class ProductUnit {
   @UpdateDateColumn()
   updated: Date;
 
-  @OneToOne((type) => ProdcutCategory, (productCategory) => productCategory.id)
-  prodcutCategory: ProdcutCategory;
+  // @ManyToOne(
+  //   (type) => ProductCategory,
+  //   (productCategory) => productCategory.productUnit,
+  //   {},
+  // )
+  // productCategory: ProductCategory;
 }

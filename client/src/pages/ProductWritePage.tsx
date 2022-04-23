@@ -6,11 +6,11 @@ import { grey } from '@mui/material/colors';
 import WriteFormHeader from 'components/productWrite/WriteFormHeader';
 
 const Wrap = styled('div')(() => ({
-  width: 1107,
+  width: 1257,
   height: '100vh',
   overflow: 'hidden',
+  margin: '0 auto',
   marginTop: 70,
-  padding: '0 calc(25% - 150px)',
   '& .left': {
     float: 'left',
     width: '45%',

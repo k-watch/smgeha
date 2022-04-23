@@ -36,10 +36,11 @@ const FieldStyle = styled('li')(() => ({
 
   '& .unit': {
     position: 'absolute',
-    right: 10,
-    width: 20,
+    right: 15,
+    width: 30,
     padding: '15px 0',
     backgroundColor: 'white',
+    textAlign: 'right',
     color: `${grey[600]}`,
   },
 
@@ -50,48 +51,63 @@ const FieldStyle = styled('li')(() => ({
   },
 }));
 
+const SelectBox = React.memo(({ label, name, list, onClick }: any) => (
+  <>
+    {list && (
+      <>
+        <p>{label}</p>
+
+        <Select
+          name={name}
+          value={list.filter((data: any) => data.check)[0].name}
+          menus={list}
+          onClick={onClick}
+        />
+      </>
+    )}
+  </>
+));
+
 function WriteForm() {
   const {
-    typeSelectData,
-    manuSelectData,
+    selectData,
+    unit,
     urlDisabled,
-    setUrlDisabled,
-    onClick,
+    selectClick,
+    textChange,
+    urlDisabledClick,
   } = useWrite();
   const onSubmit = (data: any) => {
     console.log(data);
   };
-
   return (
     <Wrap>
       <form onSubmit={onSubmit}>
         <ul>
-          <FieldStyle>
-            <p>제조사</p>
-            {manuSelectData.length > 0 && (
-              <Select
+          {selectData && (
+            <FieldStyle>
+              <SelectBox
+                label="제조사"
                 name="manufacture"
-                value={manuSelectData[0].name}
-                menus={manuSelectData}
-                onClick={onClick}
+                list={selectData.manufacture}
+                onClick={selectClick}
               />
-            )}
-          </FieldStyle>
+            </FieldStyle>
+          )}
           <FieldStyle>
             <p>제품명</p>
-            <TextField name="name" fullWidth />
+            <TextField name="name" fullWidth onChange={textChange} />
           </FieldStyle>
-          <FieldStyle>
-            <p>유형</p>
-            {typeSelectData.length > 0 && (
-              <Select
-                name="manufacture"
-                value={typeSelectData[0].name}
-                menus={typeSelectData}
-                onClick={onClick}
+          {selectData && (
+            <FieldStyle>
+              <SelectBox
+                label="유형"
+                name="type"
+                list={selectData.type}
+                onClick={selectClick}
               />
-            )}
-          </FieldStyle>
+            </FieldStyle>
+          )}
           <FieldStyle>
             <p>크기</p>
             <TextField
@@ -103,8 +119,9 @@ function WriteForm() {
                 maxLength: 10,
                 step: '1',
               }}
+              onChange={textChange}
             />
-            <p className={'unit'}>L</p>
+            {unit && <p className={'unit'}>{unit}</p>}
           </FieldStyle>
           <FieldStyle>
             <p>URL</p>
@@ -113,11 +130,9 @@ function WriteForm() {
               placeholder="URL을 첨부하려면 클릭하세요."
               disabled={urlDisabled}
               fullWidth
+              onChange={textChange}
             />
-            <Switch
-              color="primary"
-              onClick={() => setUrlDisabled(() => !urlDisabled)}
-            />
+            <Switch color="primary" onClick={urlDisabledClick} />
           </FieldStyle>
         </ul>
         <Button type="submit">저장</Button>

@@ -1,14 +1,16 @@
-import {
-  findManuCategory,
-  findTypeCategory,
-  getHeaderCategory,
-} from 'lib/api/category';
+import { findManuCategory, findTypeCategory } from 'lib/api/category';
+import { findOneProductUnit } from 'lib/api/products';
 import { CategoryState } from 'modules/category/state';
-import { setWriteForm } from 'modules/product/product';
-import { setProducts } from 'modules/products/products';
+import {
+  productSelector,
+  setWriteForm,
+  unloadWriteForm,
+} from 'modules/product/product';
+import { selectQuery, unitQuery } from 'modules/product/query';
 import { store } from 'modules/store';
 import { useCallback, useEffect, useState } from 'react';
-import { useMutation, useQuery } from 'react-query';
+import { useMutation } from 'react-query';
+import { useSelector } from 'react-redux';
 
 export interface CateogryData {
   id: number;
@@ -16,123 +18,96 @@ export interface CateogryData {
   check: boolean;
 }
 
-function useWrite() {
-  const productCategoryQuery = useQuery<CategoryState[], Error>(
-    'headerCategory',
-    getHeaderCategory,
-    {
-      enabled: false,
-    },
-  );
+export interface ProductUnitData {
+  id: number;
+  name: string;
+}
 
+export interface SelectData {
+  [index: string]: CateogryData[];
+  manufacture: CateogryData[];
+  type: CateogryData[];
+}
+
+function useWrite() {
+  const { writeForm } = useSelector(productSelector);
   const manuMutation = useMutation<CategoryState[], Error, number>(
     findManuCategory,
   );
-
   const typeMutation = useMutation<CategoryState[], Error, number>(
     findTypeCategory,
   );
 
-  const [productData, setChipData] = useState<CateogryData[]>([]);
-  const [typeSelectData, setTypeSelectData] = useState<CateogryData[]>([]);
-  const [manuSelectData, setManuSelectData] = useState<CateogryData[]>([]);
+  const unitMutation = useMutation<ProductUnitData, Error, number>(
+    findOneProductUnit,
+  );
+
+  const [selectData, setSelectData] = useState<SelectData>();
+  const [unit, setUnit] = useState('');
   const [urlDisabled, setUrlDisabled] = useState(true);
-  const [recommendDisabled, setRecommendDisabled] = useState(false);
-
-  const onClick = useCallback((code: number) => {}, []);
-
-  const manuSelect = useCallback(
-    (id: number) => {
-      manuMutation.mutateAsync(id, {
-        onSuccess: (data) => {
-          const chipList: Array<CateogryData> = [];
-          data.forEach((category) => {
-            chipList.push({
-              id: category.id,
-              name: category.name,
-              check: false,
-            });
-          });
-          setManuSelectData(chipList);
-        },
-        onError: (error) => {},
-      });
-    },
-    [manuMutation],
-  );
-
-  const typeSelect = useCallback(
-    (id: number) => {
-      typeMutation.mutateAsync(id, {
-        onSuccess: (data) => {
-          const chipList: Array<CateogryData> = [];
-          data.forEach((category) => {
-            chipList.push({
-              id: category.id,
-              name: category.name,
-              check: false,
-            });
-          });
-          setTypeSelectData(chipList);
-        },
-        onError: (error) => {},
-      });
-    },
-    [typeMutation],
-  );
-
-  const initCatgory = () => {};
 
   useEffect(() => {
-    productCategoryQuery.refetch();
-    if (productCategoryQuery.data) {
-      const id = productCategoryQuery.data[0].id;
-      manuSelect(id);
-      typeSelect(id);
-    }
-  }, [productCategoryQuery.data]);
+    return () => {
+      store.dispatch(unloadWriteForm);
+    };
+  }, []);
 
-  useEffect(() => {
-    const categories = productCategoryQuery.data;
-    if (categories) {
-      const chipList: Array<CateogryData> = [];
-      categories.forEach((category) => {
-        chipList.push({ id: category.id, name: category.name, check: false });
-      });
-      setChipData(chipList);
-    }
-  }, [productCategoryQuery.data]);
-
-  const productHandleClick = useCallback(
-    (id: number) => {
-      store.dispatch(setWriteForm({ key: 'code', value: id }));
-      productData.forEach((product) =>
-        product.id === id ? (product.check = true) : (product.check = false),
-      );
-
-      setChipData([...productData]);
-      manuSelect(id);
-      typeSelect(id);
+  const setFormData = useCallback(
+    async (id: number) => {
+      unitQuery(id, setUnit, unitMutation);
+      selectQuery(id, 'manufacture', setSelectData, manuMutation);
+      selectQuery(id, 'type', setSelectData, typeMutation);
     },
-    [productData, manuSelect, typeSelect],
+    [unitMutation, manuMutation, typeMutation],
   );
 
-  const recommendHandleClick = useCallback(() => {
-    store.dispatch(
-      setWriteForm({ key: 'recommend', value: !recommendDisabled }),
-    );
-    setRecommendDisabled(!recommendDisabled);
-  }, [recommendDisabled]);
+  useEffect(() => {
+    if (writeForm.code !== 0) {
+      setFormData(writeForm.code);
+    }
+  }, [writeForm.code]);
+
+  const selectClick = useCallback(
+    (name: string, data: CateogryData) => {
+      if (selectData) {
+        selectData[name].forEach((select: any) =>
+          select.id === data.id
+            ? (select.check = true)
+            : (select.check = false),
+        );
+
+        setSelectData((prev: any) => ({
+          ...prev,
+          [name]: selectData[name],
+        }));
+
+        store.dispatch(setWriteForm({ key: name, value: data.name }));
+      }
+    },
+    [selectData],
+  );
+
+  const textChange = useCallback((e: any) => {
+    const { value, name } = e.target;
+
+    store.dispatch(setWriteForm({ key: name, value }));
+  }, []);
+
+  const urlDisabledClick = useCallback(() => {
+    setUrlDisabled(!urlDisabled);
+
+    if (!urlDisabled) {
+      store.dispatch(setWriteForm({ key: 'url', value: '' }));
+    }
+  }, [urlDisabled]);
 
   return {
-    productHandleClick,
-    productData,
-    typeSelectData,
-    manuSelectData,
+    selectData,
+    unit,
     urlDisabled,
-    setUrlDisabled,
-    recommendHandleClick,
-    onClick,
+    selectClick,
+    textChange,
+    urlDisabledClick,
   };
 }
 

@@ -14,7 +14,7 @@ interface LoginCheckData {
 function useLogin() {
   const loginMutation = useMutation(login);
   const navigate = useNavigate();
-
+  // 아이디 저장용 쿠키
   const [cookies, setCookie, removeCookie] = useCookies(['userId']);
 
   const [form, setForm] = useState<LoginState>({

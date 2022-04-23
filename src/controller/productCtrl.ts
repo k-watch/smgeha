@@ -7,6 +7,7 @@ import { Product } from '../entity/Product';
 import fs from 'fs';
 import { getMultipleColums } from '../../src/lib/queryManager';
 import { ProductSubImage } from '../../src/entity/ProductSubImage';
+import { ProductUnit } from '../entity/ProductUnit';
 const { promisify } = require('util');
 
 /*
@@ -239,4 +240,21 @@ export const remove = async (req: Request, res: Response) => {
   } catch (e) {
     return res.status(500).send(e);
   }
+};
+
+/*
+  GET /product/unit/:id
+  제품 크기에 대한 단위 가져옴
+*/
+export const findOneUnit = async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  const unit = await getConnection()
+    .getRepository(ProductUnit)
+    .findOne({ where: { productId: id } });
+
+  if (!unit) {
+    return res.status(404).send(); // Not Found
+  }
+  res.send(unit);
 };
