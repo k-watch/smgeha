@@ -13,7 +13,7 @@ const Wrap = styled('div')(() => ({
   marginTop: 70,
   '& .left': {
     float: 'left',
-    width: '45%',
+    width: '50%',
     paddingRight: 50,
     boxSizing: 'border-box',
     borderRight: `2px solid ${grey[300]}`,
@@ -21,7 +21,7 @@ const Wrap = styled('div')(() => ({
   },
   '& .right': {
     float: 'left',
-    width: '45%',
+    width: '50%',
     paddingLeft: 50,
     boxSizing: 'border-box',
   },

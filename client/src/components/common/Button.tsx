@@ -1,7 +1,7 @@
 import React from 'react';
 import { styled } from '@mui/material/styles';
 import { Button as MuiButton, ButtonProps } from '@mui/material';
-import { lightBlue } from '@mui/material/colors';
+import { grey, lightBlue } from '@mui/material/colors';
 
 const ButtonStyle = styled(MuiButton)({
   borderRadius: 0,
@@ -19,6 +19,22 @@ const ButtonStyle = styled(MuiButton)({
     padding: '12px 4px ',
     fontSize: '18px',
     fontWeight: '600',
+  },
+
+  '&.MuiButton-text': {
+    color: `black`,
+    fontSize: 16,
+    fontWeight: '600',
+
+    '& .MuiSvgIcon-root': {
+      paddingRight: 3,
+    },
+
+    '&:hover': {
+      backgroundColor: 'transparent',
+      boxShadow: 'none',
+      color: `${grey[400]}`,
+    },
   },
 });
 
