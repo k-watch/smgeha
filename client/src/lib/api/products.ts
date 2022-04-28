@@ -11,3 +11,9 @@ export const findOneProductUnit = async (id: number) => {
 
   return data;
 };
+
+export const write = async (form: FormData) => {
+  const { data } = await client.post('/api/product', form);
+
+  return data;
+};

@@ -2,12 +2,13 @@ import { Response } from 'express';
 import { Request } from 'express-serve-static-core';
 import Joi from 'joi';
 import { checkImg, deleteFile } from '../../src/lib/fileManager';
-import { getConnection } from 'typeorm';
+import { getConnection, getManager } from 'typeorm';
 import { Product } from '../entity/Product';
 import fs from 'fs';
 import { getMultipleColums } from '../../src/lib/queryManager';
 import { ProductSubImage } from '../../src/entity/ProductSubImage';
 import { ProductUnit } from '../entity/ProductUnit';
+import { ProductRecommend } from '../entity/ProductRecommend';
 const { promisify } = require('util');
 
 /*
@@ -58,6 +59,7 @@ export const findOneProduct = async (req: Request, res: Response) => {
 */
 export const write = async (req: Request, res: Response) => {
   const schema = Joi.object().keys({
+    recommend: Joi.boolean().required(),
     code: Joi.number().required(),
     name: Joi.string().required(),
     manufacture: Joi.string().required(),
@@ -67,6 +69,9 @@ export const write = async (req: Request, res: Response) => {
   });
 
   const unlinkAsync = promisify(fs.unlink);
+
+  const queryRunner = await getConnection().createQueryRunner();
+  await queryRunner.startTransaction();
 
   try {
     const validate = schema.validate(req.body);
@@ -78,8 +83,9 @@ export const write = async (req: Request, res: Response) => {
       return res.status(400).send(validate.error);
     }
 
-    const { code, name, manufacture, size, type, url } = req.body;
+    const { recommend, code, name, manufacture, size, type, url } = req.body;
 
+    // Product Insert
     const product = new Product();
 
     product.code = code;
@@ -94,6 +100,17 @@ export const write = async (req: Request, res: Response) => {
       .getRepository(Product)
       .save(product);
 
+    // ProductRecommend Insert
+    if (recommend === 'true') {
+      const productRecommend = new ProductRecommend();
+      productRecommend.productId = productInfo.id;
+
+      await getConnection()
+        .getRepository(ProductRecommend)
+        .save(productRecommend);
+    }
+
+    // ProductSubImage Insert
     const files = req.files as Array<Express.Multer.File>;
 
     files.map(async (file) => {
@@ -105,12 +122,16 @@ export const write = async (req: Request, res: Response) => {
 
       await getConnection().getRepository(ProductSubImage).save(image);
     });
+    await queryRunner.commitTransaction();
   } catch (e) {
-    console.log(e);
-    return res.status(500).send(e);
+    await queryRunner.rollbackTransaction();
+    res.status(500).send(e);
+    return;
+  } finally {
+    await queryRunner.release();
   }
 
-  return res.send();
+  res.send();
 };
 
 /*
@@ -127,6 +148,7 @@ export const write = async (req: Request, res: Response) => {
 */
 export const update = async (req: Request, res: Response) => {
   const schema = Joi.object().keys({
+    recommend: Joi.boolean().required(),
     code: Joi.number(),
     name: Joi.string(),
     manufacture: Joi.string(),
@@ -138,15 +160,20 @@ export const update = async (req: Request, res: Response) => {
 
   const validate = schema.validate(req.body);
   if (validate.error) {
-    return res.status(400).send(validate.error);
+    res.status(400).send(validate.error);
+    return;
   }
+
+  const queryRunner = await getConnection().createQueryRunner();
+  await queryRunner.startTransaction();
 
   try {
     const { id } = req.params;
 
     // 업데이트 할 컬럼들 셋팅
-    const updateOption = getMultipleColums(req.body);
+    const updateOption = getMultipleColums(req.body, 'recommend');
 
+    // 이미지 파일 업데이트
     if (req.files) {
       updateOption['image'] = req.files[0].filename;
 
@@ -186,19 +213,38 @@ export const update = async (req: Request, res: Response) => {
       });
     }
 
+    // ProductRecommend Delete
+    await getConnection()
+      .createQueryBuilder()
+      .delete()
+      .from(ProductRecommend)
+      .where('product.id', { id })
+      .execute();
+
+    if (req.body.recommend) {
+      const recommend = new ProductRecommend();
+      recommend.productId = Number(id);
+
+      await getConnection().getRepository(ProductRecommend).save(recommend);
+    }
+
     // Product Update
-    const result = await getConnection()
+    await getConnection()
       .createQueryBuilder()
       .update(Product)
       .set(updateOption)
       .where('id = :id', { id })
       .execute();
+
+    await queryRunner.commitTransaction();
   } catch (e) {
-    console.log(e);
+    await queryRunner.rollbackTransaction();
     return res.status(500).send(e);
+  } finally {
+    await queryRunner.release();
   }
 
-  return res.send();
+  res.send();
 };
 
 /*

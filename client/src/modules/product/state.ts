@@ -7,8 +7,11 @@
 //   manufacture: '제조사',
 //   size: '크기',
 //   type: 0,
-//   image: 'image.png',
+//   image: ImageListType,
 //   url: 'url.com'
+
+import { ImageListType } from 'react-images-uploading';
+
 // }
 export interface ProductData {
   [index: string]: any;
@@ -19,7 +22,7 @@ export interface ProductData {
   manufacture: string;
   size: string;
   type: string;
-  image: string;
+  image: ImageListType;
   url?: string;
 }
 

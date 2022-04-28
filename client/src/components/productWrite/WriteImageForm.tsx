@@ -6,7 +6,6 @@ import { grey } from '@mui/material/colors';
 import { styled } from '@mui/material/styles';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import Button from 'components/common/Button';
-import Modal from 'components/common/Modal';
 import Dialog from 'components/common/Dialog';
 
 const ButtonWrap = styled('div')({
@@ -32,7 +31,7 @@ const ListStyle = styled('ul')({
       borderRadius: 4,
     },
 
-    '& span': {
+    '& .imageTitle': {
       position: 'absolute',
       top: 3,
       right: 3,
@@ -41,11 +40,31 @@ const ListStyle = styled('ul')({
       color: 'white',
     },
 
+    '& .imageBtn': {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      position: 'absolute',
+      bottom: 0,
+
+      width: '100%',
+      borderBottomLeftRadius: 4,
+      borderBottomRightRadius: 4,
+      backgroundColor: 'rgba(37, 37, 37, 0.5)',
+
+      '& .MuiButton-root': {
+        minWidth: 45,
+        padding: '6px 0',
+        color: 'white',
+      },
+    },
+
     '&:first-of-type': {
       display: 'block',
       width: 300,
       height: 300,
-      margin: '0 auto',
+      margin: 'auto',
+
       '& img': {
         width: 'inherit',
         height: 'inherit',
@@ -59,7 +78,16 @@ const ListStyle = styled('ul')({
 });
 
 function WriteImageForm() {
-  const { images, maxNumber, onChange, maxSize, acceptType } = useWriteImage();
+  const {
+    images,
+    maxNumber,
+    onChange,
+    maxSize,
+    acceptType,
+    open,
+    handleClose,
+    onError,
+  } = useWriteImage();
   return (
     <div>
       <ReactImageUploading
@@ -69,6 +97,7 @@ function WriteImageForm() {
         maxNumber={maxNumber}
         maxFileSize={maxSize}
         acceptType={acceptType}
+        onError={onError}
       >
         {({
           imageList,
@@ -93,13 +122,23 @@ function WriteImageForm() {
 
             <ListStyle>
               {imageList.map((image, index) => (
-                <li>
+                <li key={index}>
                   <img
                     src={image.dataURL}
                     loading="lazy"
                     alt={`상품-${index}`}
                   />
-                  <span>{index === 0 ? '메인' : index + 1}</span>
+                  <span className="imageTitle">
+                    {index === 0 ? '메인' : index + 1}
+                  </span>
+                  <div className="imageBtn">
+                    <Button variant="text" onClick={() => onImageUpdate(index)}>
+                      <RefreshIcon />
+                    </Button>
+                    <Button variant="text" onClick={() => onImageRemove(index)}>
+                      <DeleteOutlineOutlinedIcon />
+                    </Button>
+                  </div>
                 </li>
               ))}
             </ListStyle>
@@ -107,10 +146,12 @@ function WriteImageForm() {
             {errors && (
               <div>
                 {errors.maxNumber && (
-                  <Dialog init={true}>최대 4장까지 등록 가능합니다.</Dialog>
+                  <Dialog open={open} type="error" onClick={handleClose}>
+                    이미지는 최대 4장까지 등록 가능합니다.
+                  </Dialog>
                 )}
                 {errors.acceptType && (
-                  <Dialog init={true}>
+                  <Dialog open={open} type="error" onClick={handleClose}>
                     jpg / jpeg / png 파일만 등록 가능합니다.
                   </Dialog>
                 )}

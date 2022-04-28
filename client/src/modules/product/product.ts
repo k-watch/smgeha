@@ -10,7 +10,7 @@ const initialState: ProductState = {
     manufacture: '',
     size: '',
     type: '',
-    image: '',
+    image: [],
     url: '',
   },
 };

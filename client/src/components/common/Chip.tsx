@@ -4,8 +4,9 @@ import { grey } from '@mui/material/colors';
 
 const ChipStyle = styled(MuiChip)(({ theme }) => ({
   '&.MuiChip-root': {
-    height: '40px',
-    borderRadius: '19px',
+    height: 40,
+    borderRadius: 19,
+
     '& .MuiChip-label': {
       padding: '0 18px',
       fontSize: '0.9375rem',

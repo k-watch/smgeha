@@ -6,6 +6,8 @@ import { grey, lightBlue } from '@mui/material/colors';
 const ButtonStyle = styled(MuiButton)({
   borderRadius: 0,
   boxShadow: 'none',
+  fontWeight: '600',
+
   '&.MuiButton-contained': {
     color: 'white',
   },
@@ -18,13 +20,11 @@ const ButtonStyle = styled(MuiButton)({
   '&.MuiButton-sizeLarge': {
     padding: '12px 4px ',
     fontSize: '18px',
-    fontWeight: '600',
   },
 
   '&.MuiButton-text': {
     color: `black`,
     fontSize: 16,
-    fontWeight: '600',
 
     '& .MuiSvgIcon-root': {
       paddingRight: 3,
@@ -39,7 +39,11 @@ const ButtonStyle = styled(MuiButton)({
 });
 
 function Button(props: ButtonProps) {
-  return <ButtonStyle {...props}>{props.children}</ButtonStyle>;
+  return (
+    <ButtonStyle disableRipple {...props}>
+      {props.children}
+    </ButtonStyle>
+  );
 }
 
 export default Button;

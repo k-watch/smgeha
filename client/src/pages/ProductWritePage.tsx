@@ -4,6 +4,7 @@ import WriteForm from 'components/productWrite/WriteForm';
 import WriteImageForm from 'components/productWrite/WriteImageForm';
 import { grey } from '@mui/material/colors';
 import WriteFormHeader from 'components/productWrite/WriteFormHeader';
+import WriteBtn from 'components/productWrite/WriteBtn';
 
 const Wrap = styled('div')(() => ({
   width: 1257,
@@ -37,6 +38,7 @@ function ProductWritePage() {
       <div className="right">
         <WriteImageForm />
       </div>
+      <WriteBtn />
     </Wrap>
   );
 }

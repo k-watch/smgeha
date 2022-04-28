@@ -33,10 +33,4 @@ export class ProductCategory {
 
   @UpdateDateColumn()
   updated: Date;
-
-  // @OneToMany(
-  //   (type) => ProductUnit,
-  //   (productUnit) => productUnit.productCategory,
-  // )
-  // productUnit: ProductUnit;
 }

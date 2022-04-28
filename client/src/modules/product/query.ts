@@ -3,7 +3,9 @@ import {
   ProductUnitData,
 } from 'components/productWrite/useWrite';
 import { CategoryState } from 'modules/category/state';
+import { store } from 'modules/store';
 import { UseMutationResult } from 'react-query';
+import { setWriteForm } from './product';
 
 export const unitQuery = async (
   id: number,
@@ -38,6 +40,9 @@ export const selectQuery = async (
         });
       });
 
+      name === 'manufacture'
+        ? store.dispatch(setWriteForm({ key: name, value: list[0].name }))
+        : store.dispatch(setWriteForm({ key: name, value: list[0].id }));
       list[0].check = true;
 
       setData((prev: any) => ({

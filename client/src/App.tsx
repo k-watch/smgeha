@@ -10,6 +10,7 @@ import { createTheme, ThemeProvider } from '@mui/material';
 import { lightBlue } from '@mui/material/colors';
 import Footer from 'components/common/Footer';
 import Header from 'components/common/header/Header';
+import AdminProductsPage from 'pages/admin/AdminProductsPage';
 
 const theme = createTheme({
   palette: {
@@ -32,7 +33,8 @@ function App() {
         <BrowserRouter>
           <Header />
           <Routes>
-            <Route path="/" element={<ProductWritePage />} />
+            <Route path="/" element={<AdminProductsPage />} />
+            <Route path="/write" element={<ProductWritePage />} />
             <Route path="/products" element={<ProductsPage />} />
             <Route path="/login" element={<LoginPage />} />
           </Routes>

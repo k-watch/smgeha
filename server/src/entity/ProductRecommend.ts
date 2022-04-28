@@ -7,16 +7,12 @@ import {
 } from 'typeorm';
 
 @Entity()
-export class ProductUnit {
+export class ProductRecommend {
   @PrimaryGeneratedColumn({ type: 'bigint' })
   id: number;
 
   @Column({ type: 'bigint' })
   productId: number;
-
-  // 단위명
-  @Column({ length: 100 })
-  name: string;
 
   @CreateDateColumn()
   created: Date;

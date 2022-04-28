@@ -135,7 +135,6 @@ function WriteForm() {
             <Switch color="primary" onClick={urlDisabledClick} />
           </FieldStyle>
         </ul>
-        <Button type="submit">저장</Button>
       </form>
     </Wrap>
   );

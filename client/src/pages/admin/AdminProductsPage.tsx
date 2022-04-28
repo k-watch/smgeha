@@ -1,12 +1,13 @@
-import ProductList from 'components/products/ProductList';
+import ProductList from 'components/admin/products/ProductList';
 import { styled } from '@mui/system';
 
 const Wrap = styled('div')(({ theme }) => ({
-  width: '100%',
+  maxWidth: 1257,
+  height: '100vh',
   padding: '0 calc(25% - 150px)',
 }));
 
-function ProductsPage() {
+function AdminProductsPage() {
   return (
     <Wrap>
       <ProductList />
@@ -14,4 +15,4 @@ function ProductsPage() {
   );
 }
 
-export default ProductsPage;
+export default AdminProductsPage;

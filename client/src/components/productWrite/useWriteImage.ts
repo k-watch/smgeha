@@ -1,41 +1,44 @@
 import { useCallback, useState } from 'react';
 import { ImageListType, ImageType } from 'react-images-uploading';
 import imageCompression from 'browser-image-compression';
+import { store } from 'modules/store';
+import { setWriteForm } from 'modules/product/product';
 
 function useWriteImage() {
   const [images, setImages] = useState([]);
   const maxNumber = 5;
   const maxSize = 2 * 1024 * 1024;
   const acceptType = ['jpg', 'jpeg', 'png'];
+  const [open, setOpen] = useState(true);
 
-  const imgComp = (imageList: ImageListType) => {
-    //   imgComp(imageList);
-    const options = {
-      maxSizeMB: 0.5,
-      maxWidthOrHeight: 800,
-      useWebWorker: true,
-    };
+  const handleClose = () => {
+    setOpen(false);
+  };
 
-    try {
-      imageList.forEach(async ({ file }) => {
-        if (file) {
-          const comp = await imageCompression(file, options);
-        }
-      });
-    } catch (e) {
-      console.log(e);
-    }
+  const onError = () => {
+    setOpen(true);
   };
 
   const onChange = useCallback(
     (imageList: ImageListType, addUpdateIndex: number[] | undefined) => {
       setImages(imageList as never[]);
+
+      store.dispatch(setWriteForm({ key: 'image', value: [...imageList] }));
     },
 
     [],
   );
 
-  return { images, maxNumber, onChange, maxSize, acceptType };
+  return {
+    images,
+    maxNumber,
+    onChange,
+    maxSize,
+    acceptType,
+    open,
+    handleClose,
+    onError,
+  };
 }
 
 export default useWriteImage;
