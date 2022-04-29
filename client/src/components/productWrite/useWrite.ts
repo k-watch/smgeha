@@ -53,7 +53,7 @@ function useWrite() {
   }, []);
 
   const setFormData = useCallback(
-    async (id: number) => {
+    (id: number) => {
       unitQuery(id, setUnit, unitMutation);
       selectQuery(id, 'manufacture', setSelectData, manuMutation);
       selectQuery(id, 'type', setSelectData, typeMutation);

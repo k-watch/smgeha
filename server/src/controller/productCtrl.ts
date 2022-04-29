@@ -20,12 +20,28 @@ export const findAllProduct = async (req, res) => {
 
   const products = await getConnection()
     .getRepository(Product)
-    .find({ where: { code: id } });
+    .createQueryBuilder('p')
+    .leftJoin(ProductRecommend, 'pr', 'p.id = pr.product_id')
+    .select([
+      'p.id as id',
+      'p.code as code',
+      '(select name from product_category where id = p.type) as type',
+      'p.name as name',
+      'p.manufacture as manufacture',
+      'concat(p.size, (select name from product_unit where product_id = :code)) as size',
+      'p.image as image',
+      'p.url as url',
+      'if(isnull(pr.id), true, false) as recommend',
+    ])
+    .where('p.code = :code', { code: id })
+    .getRawMany();
 
   if (products.length === 0) {
-    return res.status(404).send(); // Not Found
+    res.status(404).send(); // Not Found
+    return;
   }
-  return res.send(products);
+
+  res.send(products);
 };
 
 /*
