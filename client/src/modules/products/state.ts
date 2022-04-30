@@ -17,7 +17,7 @@ export interface ProductData {
   name: string;
   manufacture: string;
   size: string;
-  type: string;
+  type: number;
   image: string;
   url?: string;
 }

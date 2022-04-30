@@ -7,11 +7,11 @@ import WriteFormHeader from 'components/productWrite/WriteFormHeader';
 import WriteBtn from 'components/productWrite/WriteBtn';
 
 const Wrap = styled('div')(() => ({
-  width: 1257,
   height: '100vh',
   overflow: 'hidden',
   margin: '0 auto',
-  marginTop: 70,
+  paddingTop: 50,
+
   '& .left': {
     float: 'left',
     width: '50%',

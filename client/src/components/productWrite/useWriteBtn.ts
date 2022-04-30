@@ -40,8 +40,8 @@ function useWriteBtn() {
     formData.append('code', String(form.code));
     formData.append('name', form.name);
     formData.append('manufacture', form.manufacture);
-    formData.append('size', form.size);
-    formData.append('type', form.type);
+    formData.append('size', String(form.size));
+    formData.append('type', form.type.toString());
     form.image.forEach((img) => formData.append('file', img.file as Blob));
     if (form.url) {
       formData.append('url', form.url);

@@ -152,6 +152,16 @@ const resetStyle = css`
   a:active {
     text-decoration: none;
   }
+
+  html {
+    position: relative;
+    min-height: 100%;
+    margin: 0;
+  }
+
+  body {
+    min-height: 100%;
+  }
 `;
 
 export default resetStyle;

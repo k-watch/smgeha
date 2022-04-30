@@ -1,4 +1,5 @@
 import { findManuCategory, findTypeCategory } from 'lib/api/category';
+import { findOneProduct } from 'lib/api/product';
 import { findOneProductUnit } from 'lib/api/products';
 import { CategoryState } from 'modules/category/state';
 import {
@@ -7,10 +8,12 @@ import {
   unloadWriteForm,
 } from 'modules/product/product';
 import { selectQuery, unitQuery } from 'modules/product/query';
+import { ProductData } from 'modules/products/state';
 import { store } from 'modules/store';
 import { useCallback, useEffect, useState } from 'react';
 import { useMutation } from 'react-query';
 import { useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 
 export interface CateogryData {
   id: number;
@@ -42,21 +45,33 @@ function useWrite() {
     findOneProductUnit,
   );
 
+  const findOneProductMutation = useMutation<ProductData[], Error, number>(
+    findOneProduct,
+  );
+
   const [selectData, setSelectData] = useState<SelectData>();
   const [unit, setUnit] = useState('');
   const [urlDisabled, setUrlDisabled] = useState(true);
+
+  const { id } = useParams();
 
   useEffect(() => {
     return () => {
       store.dispatch(unloadWriteForm);
     };
-  }, []);
+  });
 
   const setFormData = useCallback(
     (id: number) => {
       unitQuery(id, setUnit, unitMutation);
-      selectQuery(id, 'manufacture', setSelectData, manuMutation);
-      selectQuery(id, 'type', setSelectData, typeMutation);
+      selectQuery(
+        id,
+        'manufacture',
+        writeForm.manufacture,
+        setSelectData,
+        manuMutation,
+      );
+      selectQuery(id, 'type', writeForm.type, setSelectData, typeMutation);
     },
     [unitMutation, manuMutation, typeMutation],
   );
@@ -108,6 +123,7 @@ function useWrite() {
     selectClick,
     textChange,
     urlDisabledClick,
+    writeForm,
   };
 }
 

@@ -25,6 +25,7 @@ export const unitQuery = async (
 export const selectQuery = async (
   id: number,
   name: string,
+  setCode: number | string,
   setData: React.Dispatch<React.SetStateAction<any>>,
   mutation: UseMutationResult<CategoryState[], Error, number>,
 ) => {
@@ -40,10 +41,23 @@ export const selectQuery = async (
         });
       });
 
-      name === 'manufacture'
-        ? store.dispatch(setWriteForm({ key: name, value: list[0].name }))
-        : store.dispatch(setWriteForm({ key: name, value: list[0].id }));
-      list[0].check = true;
+      if (!setCode) {
+        debugger;
+        name === 'manufacture'
+          ? store.dispatch(setWriteForm({ key: name, value: list[0].name }))
+          : store.dispatch(setWriteForm({ key: name, value: list[0].id }));
+        list[0].check = true;
+      } else {
+        for (const l of list) {
+          if (name === 'manufacture' && l.name === setCode) {
+            l.check = true;
+          } else if (name === 'type' && Number(l.id) === setCode) {
+            l.check = true;
+          }
+        }
+
+        debugger;
+      }
 
       setData((prev: any) => ({
         ...prev,

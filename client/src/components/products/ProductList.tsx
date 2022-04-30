@@ -27,7 +27,7 @@ function ProductList() {
               <Grid key={product.id} item={true} lg={3}>
                 {product.name}
                 {product.image}
-                <img src={`/images/${product.image}`} alt="" />
+                <img src={`/images/${product.image}`} alt="" loading="lazy" />
               </Grid>
             ))
           : null}

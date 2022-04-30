@@ -21,18 +21,18 @@ export const findAllProduct = async (req, res) => {
   const products = await getConnection()
     .getRepository(Product)
     .createQueryBuilder('p')
-    .leftJoin(ProductRecommend, 'pr', 'p.id = pr.product_id')
     .select([
       'p.id as id',
       'p.code as code',
       '(select name from product_category where id = p.type) as type',
       'p.name as name',
       'p.manufacture as manufacture',
-      'concat(p.size, (select name from product_unit where product_id = :code)) as size',
+      'concat(p.size, (select name from product_unit where product_id = p.code)) as size',
       'p.image as image',
       'p.url as url',
       'if(isnull(pr.id), true, false) as recommend',
     ])
+    .leftJoin(ProductRecommend, 'pr', 'p.id = pr.product_id')
     .where('p.code = :code', { code: id })
     .getRawMany();
 
@@ -48,17 +48,36 @@ export const findAllProduct = async (req, res) => {
   GET /product/:id
 */
 export const findOneProduct = async (req: Request, res: Response) => {
-  // 동적 파라메터가 정규표현식으로 변경이 되면 첫번째 파라메터를 가져와야 한다. ex: {'0': '1'}
   const { id } = req.params;
 
   const product = await getConnection()
     .getRepository(Product)
-    .findOne({ relations: ['productSubImage'], where: { id } });
+    .createQueryBuilder('p')
+    .select([
+      'p.id as id',
+      'p.code as code',
+      'p.type as type',
+      'p.name as name',
+      'p.manufacture as manufacture',
+      'p.size as size',
+      'p.image as image',
+      'p.url as url',
+      'if(isnull(pr.id), true, false) as recommend',
+    ])
+    .leftJoin(ProductRecommend, 'pr', 'p.id = pr.product_id')
+    .where('p.id = :id', { id })
+    .getRawOne();
+
+  const productSubImage = await getConnection()
+    .getRepository(ProductSubImage)
+    .createQueryBuilder('psi')
+    .where('psi.product_id=:id', { id })
+    .getMany();
 
   if (!product) {
     return res.status(404).send(); // Not Found
   }
-  return res.send(product);
+  return res.send({ product, productSubImage });
 };
 
 /*
@@ -185,6 +204,7 @@ export const update = async (req: Request, res: Response) => {
 
   try {
     const { id } = req.params;
+    let images = [];
 
     // 업데이트 할 컬럼들 셋팅
     const updateOption = getMultipleColums(req.body, 'recommend');
@@ -194,14 +214,12 @@ export const update = async (req: Request, res: Response) => {
       updateOption['image'] = req.files[0].filename;
 
       // path 에서 파일 삭제
-      const images = await getConnection()
+      images = await getConnection()
         .getRepository(ProductSubImage)
         .createQueryBuilder('productsubimage')
         .innerJoinAndSelect('productsubimage.product', 'product')
         .where('product.id=:product_id', { product_id: id })
         .getMany();
-
-      deleteFile(images);
 
       // ProductSubImage Delete
       await getConnection()
@@ -253,6 +271,10 @@ export const update = async (req: Request, res: Response) => {
       .execute();
 
     await queryRunner.commitTransaction();
+
+    if (req.files) {
+      deleteFile(images);
+    }
   } catch (e) {
     await queryRunner.rollbackTransaction();
     return res.status(500).send(e);
@@ -267,9 +289,10 @@ export const update = async (req: Request, res: Response) => {
   DELETE /product/:id
 */
 export const remove = async (req: Request, res: Response) => {
-  // 동적 파라메터가 정규표현식으로 변경이 되면 첫번째 파라메터를 가져와야 한다. ex: {'0': '1'}
-  // const id = req.params[0];
   const { id } = req.params;
+
+  const queryRunner = await getConnection().createQueryRunner();
+  await queryRunner.startTransaction();
 
   try {
     // path 에서 파일 삭제
@@ -280,8 +303,6 @@ export const remove = async (req: Request, res: Response) => {
       .where('product.id=:product_id', { product_id: id })
       .getMany();
 
-    deleteFile(images);
-
     // Product 데이터 삭제
     await getConnection()
       .createQueryBuilder()
@@ -290,18 +311,32 @@ export const remove = async (req: Request, res: Response) => {
       .where('id = :id', { id })
       .execute();
 
+    // ProductRecommend 삭제
+    await getConnection()
+      .createQueryBuilder()
+      .delete()
+      .from(ProductRecommend)
+      .where('product_id=:product_id', { product_id: id })
+      .execute();
+
     // ProductSubImage 삭제
     await getConnection()
       .createQueryBuilder()
       .delete()
       .from(ProductSubImage)
-      .where('product.id', { id })
+      .where('product.id=:product_id', { product_id: id })
       .execute();
 
-    return res.status(204).send(); // No Content (성공하기는 했지만 응답할 데이터는 없음)
+    await queryRunner.commitTransaction();
+    deleteFile(images);
   } catch (e) {
+    await queryRunner.rollbackTransaction();
     return res.status(500).send(e);
+  } finally {
+    await queryRunner.release();
   }
+
+  res.send();
 };
 
 /*

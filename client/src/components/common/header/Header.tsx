@@ -7,7 +7,9 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import useHeader from './useHeader';
 
 const Wrap = styled('div')(({ theme }) => ({
-  position: 'relative',
+  position: 'fixed',
+  top: 0,
+  zIndex: 1,
   width: '100%',
   height: '70px',
   backgroundColor: `white`,
@@ -53,11 +55,11 @@ const Wrap = styled('div')(({ theme }) => ({
     },
   },
 
-  '&.fixedHeader': {
-    position: 'fixed',
-    top: 0,
-    zIndex: 1,
-  },
+  // '&.fixedHeader': {
+  //   position: 'fixed',
+  //   top: 0,
+  //   zIndex: 1,
+  // },
 
   [theme.breakpoints.down('md')]: {
     '& ul': {

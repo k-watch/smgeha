@@ -20,8 +20,8 @@ export interface ProductData {
   code: number;
   name: string;
   manufacture: string;
-  size: string;
-  type: string;
+  size: number;
+  type: number;
   image: ImageListType;
   url?: string;
 }

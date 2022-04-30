@@ -1,12 +1,15 @@
 import { getHeaderCategory } from 'lib/api/category';
 import { CategoryState } from 'modules/category/state';
-import { setWriteForm } from 'modules/product/product';
+import { productSelector, setWriteForm } from 'modules/product/product';
 import { store } from 'modules/store';
 import { useCallback, useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
+import { useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import { CateogryData } from './useWrite';
 
 function useWriteHeader() {
+  const { writeForm } = useSelector(productSelector);
   const categoryQuery = useQuery<CategoryState[], Error>(
     'headerCategory',
     getHeaderCategory,
@@ -14,6 +17,20 @@ function useWriteHeader() {
   );
   const [productData, setChipData] = useState<CateogryData[]>([]);
   const [recommendDisabled, setRecommendDisabled] = useState(false);
+
+  const { id } = useParams();
+
+  useEffect(() => {
+    if (id) {
+      productData.forEach((product) =>
+        Number(product.id) === writeForm.code
+          ? (product.check = true)
+          : (product.check = false),
+      );
+
+      setChipData([...productData]);
+    }
+  }, [writeForm.code]);
 
   useEffect(() => {
     if (categoryQuery.data) {

@@ -11,10 +11,10 @@ function useHeader() {
   const logoutMutation = useMutation(logout);
 
   // 헤더 fixed 를 위한 value
-  const [scrollY, setScrollY] = useState(0);
+  const [scrollY, setScrollY] = useState(window.pageYOffset);
   const [scrollActive, setScrollActive] = useState(true);
 
-  function handleScroll() {
+  const handleScroll = () => {
     // 스크롤이 내려가면 헤더를 fixed로 변환
     if (scrollY <= 30) {
       setScrollY(window.pageYOffset);
@@ -23,15 +23,17 @@ function useHeader() {
       setScrollY(window.pageYOffset);
       setScrollActive(false);
     }
-  }
+  };
 
   // 스크롤 이벤트 생성
   useEffect(() => {
+    // 새로고침 했을 때 스크롤 체크
+    handleScroll();
     window.addEventListener('scroll', handleScroll);
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, []);
+  });
 
   const onLogout = useCallback(() => {
     // 로그아웃 후 로컬 스토리지와 리덕스 null로 변경

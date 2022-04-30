@@ -17,3 +17,9 @@ export const write = async (form: FormData) => {
 
   return data;
 };
+
+export const remove = async (id: number) => {
+  const { data } = await client.delete(`/api/product/${id}`);
+
+  return data;
+};

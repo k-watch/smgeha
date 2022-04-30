@@ -76,6 +76,7 @@ function WriteForm() {
     selectClick,
     textChange,
     urlDisabledClick,
+    writeForm,
   } = useWrite();
   const onSubmit = (data: any) => {
     console.log(data);
@@ -96,7 +97,12 @@ function WriteForm() {
           )}
           <FieldStyle>
             <p>제품명</p>
-            <TextField name="name" fullWidth onChange={textChange} />
+            <TextField
+              name="name"
+              value={writeForm.name}
+              fullWidth
+              onChange={textChange}
+            />
           </FieldStyle>
           {selectData && (
             <FieldStyle>
@@ -113,6 +119,7 @@ function WriteForm() {
             <TextField
               name="size"
               type="number"
+              value={writeForm.size}
               placeholder="숫자만 입력하세요."
               fullWidth
               inputProps={{
@@ -127,6 +134,7 @@ function WriteForm() {
             <p>URL</p>
             <TextField
               name="url"
+              value={writeForm.url}
               placeholder="URL을 첨부하려면 클릭하세요."
               disabled={urlDisabled}
               fullWidth

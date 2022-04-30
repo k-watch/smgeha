@@ -4,7 +4,7 @@ import { grey, lightBlue } from '@mui/material/colors';
 import React from 'react';
 
 const Wrap = styled('div')(({ theme }) => ({
-  height: '130px',
+  height: 130,
   backgroundColor: `${grey[200]}`,
   borderTop: `1px solid ${grey[400]}`,
   color: `${grey[600]}`,
@@ -18,7 +18,7 @@ const Wrap = styled('div')(({ theme }) => ({
   '& ul': {
     position: 'relative',
     display: 'flex',
-    maxWidth: '800px',
+    maxWidth: 800,
     margin: '0 auto',
     paddingTop: '0px',
     padding: '30px 0',
