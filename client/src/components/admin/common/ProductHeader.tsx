@@ -1,8 +1,8 @@
 import { Switch } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Chip from 'components/common/Chip';
-import useWrite, { CateogryData } from './useWrite';
-import useWriteHeader from './useWriteHeader';
+import { CategoryProps } from 'modules/category/props';
+import useWriteHeader from './useProductHeader';
 
 const Wrap = styled('div')(() => ({
   marginBottom: 30,
@@ -26,12 +26,12 @@ const Wrap = styled('div')(() => ({
   },
 }));
 
-function WriteFormHeader() {
+function ProductHeader() {
   const { productData, productClick, recommendClick } = useWriteHeader();
   return (
     <Wrap>
       <ul>
-        {productData.map((product: CateogryData) => (
+        {productData.map((product: CategoryProps) => (
           <li key={product.id}>
             <Chip
               label={product.name}
@@ -49,4 +49,4 @@ function WriteFormHeader() {
   );
 }
 
-export default WriteFormHeader;
+export default ProductHeader;

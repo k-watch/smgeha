@@ -1,6 +1,5 @@
 import { useCallback, useState } from 'react';
-import { ImageListType, ImageType } from 'react-images-uploading';
-import imageCompression from 'browser-image-compression';
+import { ImageListType } from 'react-images-uploading';
 import { store } from 'modules/store';
 import { setWriteForm } from 'modules/product/product';
 

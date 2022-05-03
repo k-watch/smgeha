@@ -4,7 +4,7 @@
 //   code: 0 (대분류 코드),
 //   recomment: false (추천상품),
 //   name: '제품명',
-//   manufacture: '제조사',
+//   manufacture: 0 (제조사),
 //   size: '크기',
 //   type: 0,
 //   image: ImageListType,
@@ -19,7 +19,7 @@ export interface ProductData {
   recommend: boolean;
   code: number;
   name: string;
-  manufacture: string;
+  manufacture: number;
   size: number;
   type: number;
   image: ImageListType;

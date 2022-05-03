@@ -1,50 +1,67 @@
 import { getHeaderCategory } from 'lib/api/category';
-import { CategoryState } from 'modules/category/state';
-import { productSelector, setWriteForm } from 'modules/product/product';
+import { categorySelector, setProductCode } from 'modules/category/category';
+import { CategoryProps } from 'modules/category/props';
+import { CategoryData } from 'modules/category/state';
+import { setWriteForm } from 'modules/product/product';
 import { store } from 'modules/store';
 import { useCallback, useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { CateogryData } from './useWrite';
 
 function useWriteHeader() {
-  const { writeForm } = useSelector(productSelector);
-  const categoryQuery = useQuery<CategoryState[], Error>(
+  const { productCode } = useSelector(categorySelector);
+  const categoryQuery = useQuery<CategoryData[], Error>(
     'headerCategory',
     getHeaderCategory,
     {},
   );
-  const [productData, setChipData] = useState<CateogryData[]>([]);
+  const [productData, setChipData] = useState<CategoryProps[]>([]);
   const [recommendDisabled, setRecommendDisabled] = useState(false);
-
+  let updateInit = false;
   const { id } = useParams();
 
   useEffect(() => {
     if (id) {
+      updateInit = true;
+    }
+  }, [id]);
+
+  useEffect(() => {
+    if (id) {
       productData.forEach((product) =>
-        Number(product.id) === writeForm.code
+        Number(product.id) === productCode
           ? (product.check = true)
           : (product.check = false),
       );
 
       setChipData([...productData]);
     }
-  }, [writeForm.code]);
+  }, [productCode]);
 
   useEffect(() => {
+    debugger;
     if (categoryQuery.data) {
       const categories = categoryQuery.data;
-      const list: Array<CateogryData> = [];
+      const list: Array<CategoryProps> = [];
 
       categories.forEach((category) => {
-        list.push({ id: category.id, name: category.name, check: false });
+        list.push({
+          id: Number(category.id),
+          name: category.name,
+          check: false,
+        });
       });
 
-      list[0].check = true;
+      if (updateInit) {
+        list.filter((data: any) => (data.id === id ? (data.check = true) : 0));
+        updateInit = false;
+      } else {
+        list[0].check = true;
+      }
 
       setChipData([...list]);
-      store.dispatch(setWriteForm({ key: 'code', value: Number(list[0].id) }));
+      store.dispatch(setProductCode(list[0].id));
     }
   }, [categoryQuery.data]);
 
@@ -55,7 +72,7 @@ function useWriteHeader() {
       );
 
       setChipData([...productData]);
-      store.dispatch(setWriteForm({ key: 'code', value: id }));
+      store.dispatch(setProductCode(id));
     },
     [productData],
   );

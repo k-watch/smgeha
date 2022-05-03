@@ -1,10 +1,9 @@
 import { styled } from '@mui/material/styles';
-import { Grid } from '@mui/material';
-import WriteForm from 'components/productWrite/WriteForm';
-import WriteImageForm from 'components/productWrite/WriteImageForm';
 import { grey } from '@mui/material/colors';
-import WriteFormHeader from 'components/productWrite/WriteFormHeader';
-import WriteBtn from 'components/productWrite/WriteBtn';
+import WriteFormHeader from 'components/admin/common/ProductHeader';
+import WriteForm from 'components/admin/productWrite/WriteForm';
+import WriteImageForm from 'components/admin/productWrite/WriteImageForm';
+import WriteBtn from 'components/admin/productWrite/WriteBtn';
 
 const Wrap = styled('div')(() => ({
   height: '100vh',

@@ -6,10 +6,12 @@ import { ImageListType } from 'react-images-uploading';
 import { useSelector } from 'react-redux';
 import imageCompression from 'browser-image-compression';
 import { useMutation } from 'react-query';
+import { categorySelector } from 'modules/category/category';
 
 function useWriteBtn() {
   const form = useSelector(productSelector).writeForm;
   const writeMutation = useMutation(write);
+  const { productCode } = useSelector(categorySelector);
 
   const imgComp = (imageList: ImageListType) => {
     const options = {
@@ -35,18 +37,19 @@ function useWriteBtn() {
     imgComp(form.image);
 
     const formData = new FormData();
-
+    debugger;
     formData.append('recommend', String(form.recommend));
-    formData.append('code', String(form.code));
+    formData.append('code', String(productCode));
     formData.append('name', form.name);
-    formData.append('manufacture', form.manufacture);
+    formData.append('manufacture', String(form.manufacture));
     formData.append('size', String(form.size));
     formData.append('type', form.type.toString());
     form.image.forEach((img) => formData.append('file', img.file as Blob));
     if (form.url) {
       formData.append('url', form.url);
     }
-
+    console.log(formData);
+    return;
     await writeMutation.mutateAsync(formData, {
       onSuccess: (data) => {
         try {

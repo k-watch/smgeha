@@ -3,7 +3,7 @@ import './App.css';
 import LoginPage from 'pages/LoginPage';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import ProductsPage from 'pages/ProductsPage';
-import ProductWritePage from 'pages/ProductWritePage';
+import ProductWritePage from 'pages/admin/ProductWritePage';
 import initStyles from 'initStyles';
 import { Global } from '@emotion/react';
 import { createTheme, ThemeProvider } from '@mui/material';

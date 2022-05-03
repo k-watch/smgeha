@@ -1,12 +1,9 @@
 import { styled } from '@mui/material/styles';
-import { Box, Grid, Switch } from '@mui/material';
+import { Switch } from '@mui/material';
 import React from 'react';
-import { Controller, useForm } from 'react-hook-form';
-import useWrite, { CateogryData } from './useWrite';
+import useWrite from './useWrite';
 import Select from 'components/common/Select';
 import TextField from 'components/common/TextField';
-import Button from 'components/common/Button';
-import Chip from 'components/common/Chip';
 import { grey } from '@mui/material/colors';
 
 const Wrap = styled('div')(() => ({
@@ -70,7 +67,7 @@ const SelectBox = React.memo(({ label, name, list, onClick }: any) => (
 
 function WriteForm() {
   const {
-    selectData,
+    SelectProps,
     unit,
     urlDisabled,
     selectClick,
@@ -85,12 +82,12 @@ function WriteForm() {
     <Wrap>
       <form onSubmit={onSubmit}>
         <ul>
-          {selectData && (
+          {SelectProps && (
             <FieldStyle>
               <SelectBox
                 label="제조사"
                 name="manufacture"
-                list={selectData.manufacture}
+                list={SelectProps.manufacture}
                 onClick={selectClick}
               />
             </FieldStyle>
@@ -104,12 +101,12 @@ function WriteForm() {
               onChange={textChange}
             />
           </FieldStyle>
-          {selectData && (
+          {SelectProps && (
             <FieldStyle>
               <SelectBox
                 label="유형"
                 name="type"
-                list={selectData.type}
+                list={SelectProps.type}
                 onClick={selectClick}
               />
             </FieldStyle>

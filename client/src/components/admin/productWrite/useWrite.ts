@@ -1,7 +1,9 @@
 import { findManuCategory, findTypeCategory } from 'lib/api/category';
 import { findOneProduct } from 'lib/api/product';
 import { findOneProductUnit } from 'lib/api/products';
-import { CategoryState } from 'modules/category/state';
+import { categorySelector } from 'modules/category/category';
+import { CategoryProps } from 'modules/category/props';
+import { CategoryData } from 'modules/category/state';
 import {
   productSelector,
   setWriteForm,
@@ -15,29 +17,24 @@ import { useMutation } from 'react-query';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
-export interface CateogryData {
-  id: number;
-  name: string;
-  check: boolean;
-}
-
 export interface ProductUnitData {
   id: number;
   name: string;
 }
 
-export interface SelectData {
-  [index: string]: CateogryData[];
-  manufacture: CateogryData[];
-  type: CateogryData[];
+export interface SelectProps {
+  [index: string]: CategoryProps[];
+  manufacture: CategoryProps[];
+  type: CategoryProps[];
 }
 
 function useWrite() {
+  const { productCode } = useSelector(categorySelector);
   const { writeForm } = useSelector(productSelector);
-  const manuMutation = useMutation<CategoryState[], Error, number>(
+  const manuMutation = useMutation<CategoryData[], Error, number>(
     findManuCategory,
   );
-  const typeMutation = useMutation<CategoryState[], Error, number>(
+  const typeMutation = useMutation<CategoryData[], Error, number>(
     findTypeCategory,
   );
 
@@ -49,9 +46,11 @@ function useWrite() {
     findOneProduct,
   );
 
-  const [selectData, setSelectData] = useState<SelectData>();
+  const [SelectProps, setSelectProps] = useState<SelectProps>();
   const [unit, setUnit] = useState('');
   const [urlDisabled, setUrlDisabled] = useState(true);
+
+  let updateInit = false;
 
   const { id } = useParams();
 
@@ -61,45 +60,67 @@ function useWrite() {
     };
   });
 
-  const setFormData = useCallback(
-    (id: number) => {
-      unitQuery(id, setUnit, unitMutation);
-      selectQuery(
-        id,
-        'manufacture',
-        writeForm.manufacture,
-        setSelectData,
-        manuMutation,
+  const setSelectData = useCallback(async (name, list, selectId) => {
+    if (updateInit) {
+      list.filter((data: any) =>
+        data.id === selectId ? (data.check = true) : 0,
       );
-      selectQuery(id, 'type', writeForm.type, setSelectData, typeMutation);
-    },
-    [unitMutation, manuMutation, typeMutation],
-  );
+      updateInit = false;
+    } else {
+      list[0].check = true;
+      store.dispatch(setWriteForm({ key: name, value: list[0].id }));
+    }
+
+    setSelectProps((prev: any) => ({
+      ...prev,
+      [name]: list,
+    }));
+  }, []);
+
+  const setFormData = useCallback(async () => {
+    const { manufacture, type } = writeForm;
+    let result = null;
+
+    result = await unitQuery(productCode, setUnit, unitMutation);
+    setUnit(result);
+
+    result = await selectQuery(productCode, manuMutation);
+    setSelectData('manufacture', result, manufacture);
+
+    result = await selectQuery(productCode, typeMutation);
+    setSelectData('type', result, type);
+  }, [writeForm, productCode, unitMutation, manuMutation, typeMutation]);
 
   useEffect(() => {
-    if (writeForm.code !== 0) {
-      setFormData(writeForm.code);
+    if (productCode !== 0) {
+      setFormData();
     }
-  }, [writeForm.code]);
+  }, [productCode]);
+
+  useEffect(() => {
+    if (id) {
+      updateInit = true;
+    }
+  }, [id]);
 
   const selectClick = useCallback(
-    (name: string, data: CateogryData) => {
-      if (selectData) {
-        selectData[name].forEach((select: any) =>
+    (name: string, data: CategoryProps) => {
+      if (SelectProps) {
+        SelectProps[name].forEach((select: any) =>
           select.id === data.id
             ? (select.check = true)
             : (select.check = false),
         );
 
-        setSelectData((prev: any) => ({
+        setSelectProps((prev: any) => ({
           ...prev,
-          [name]: selectData[name],
+          [name]: SelectProps[name],
         }));
 
         store.dispatch(setWriteForm({ key: name, value: data.name }));
       }
     },
-    [selectData],
+    [SelectProps],
   );
 
   const textChange = useCallback((e: any) => {
@@ -117,7 +138,7 @@ function useWrite() {
   }, [urlDisabled]);
 
   return {
-    selectData,
+    SelectProps,
     unit,
     urlDisabled,
     selectClick,

@@ -1,17 +1,17 @@
 import { findAllProducts, remove } from 'lib/api/products';
 import { ProductData } from 'modules/products/state';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useMutation } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 import useDraggableScroll from 'use-draggable-scroll';
-import qs from 'qs';
-import { productSelector, setWriteForm } from 'modules/product/product';
+import { setWriteForm } from 'modules/product/product';
 import { useSelector } from 'react-redux';
 import { findOneProduct } from 'lib/api/product';
 import { store } from 'modules/store';
+import { categorySelector } from 'modules/category/category';
 
 function useProductList() {
-  const { writeForm } = useSelector(productSelector);
+  const { productCode } = useSelector(categorySelector);
 
   const listMutation = useMutation<ProductData[], Error, number>(
     findAllProducts,
@@ -58,11 +58,20 @@ function useProductList() {
     setRemoveSuccessOpen(false);
   };
 
+  const getList = async (id: number) => {
+    await listMutation.mutateAsync(id, {
+      onSuccess: (data) => {},
+      onError: (e) => {
+        console.log(e);
+      },
+    });
+  };
+
   const onRemove = async (id: number) => {
     setRemoveLodingOpen(true);
     await removeMutation.mutateAsync(0, {
       onSuccess: (data) => {
-        getList();
+        getList(productCode);
         setRemoveSuccessOpen(true);
         setRemoveLodingOpen(false);
       },
@@ -73,18 +82,11 @@ function useProductList() {
     });
   };
 
-  const getList = async () => {
-    await listMutation.mutateAsync(1, {
-      onSuccess: (data) => {},
-      onError: (e) => {
-        console.log(e);
-      },
-    });
-  };
-
   useEffect(() => {
-    getList();
-  }, []);
+    if (productCode !== 0) {
+      getList(productCode);
+    }
+  }, [productCode]);
 
   return {
     listMutation,

@@ -7,7 +7,7 @@ const initialState: ProductState = {
     recommend: false,
     code: 0,
     name: '',
-    manufacture: '',
+    manufacture: 0,
     size: 0,
     type: 0,
     image: [],

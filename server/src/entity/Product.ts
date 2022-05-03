@@ -25,8 +25,8 @@ export class Product {
   name: string;
 
   // 제조사
-  @Column({ length: 100 })
-  manufacture: string;
+  @Column()
+  manufacture: number;
 
   // 크기
   @Column({ length: 100 })
