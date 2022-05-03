@@ -2,42 +2,25 @@ import { Response } from 'express';
 import { Request } from 'express-serve-static-core';
 import Joi from 'joi';
 import { checkImg, deleteFile } from '../../src/lib/fileManager';
-import { getConnection, getManager } from 'typeorm';
+import { getConnection, getCustomRepository, getManager } from 'typeorm';
 import { Product } from '../entity/Product';
 import fs from 'fs';
 import { getMultipleColums } from '../../src/lib/queryManager';
 import { ProductSubImage } from '../../src/entity/ProductSubImage';
 import { ProductUnit } from '../entity/ProductUnit';
 import { ProductRecommend } from '../entity/ProductRecommend';
-const { promisify } = require('util');
+import * as productService from '../service/product.service';
 
 /*
   GET /products/:id
 */
 export const findAllProduct = async (req, res) => {
-  // 동적 파라메터가 정규표현식으로 변경이 되면 첫번째 파라메터를 가져와야 한다. ex: {'0': '1'}
   const { id } = req.params;
 
-  const products = await getConnection()
-    .getRepository(Product)
-    .createQueryBuilder('p')
-    .select([
-      'p.id as id',
-      'p.code as code',
-      '(select name from product_category where id = p.type) as type',
-      'p.name as name',
-      'p.manufacture as manufacture',
-      'concat(p.size, (select name from product_unit where product_id = p.code)) as size',
-      'p.image as image',
-      'p.url as url',
-      'if(isnull(pr.id), true, false) as recommend',
-    ])
-    .leftJoin(ProductRecommend, 'pr', 'p.id = pr.product_id')
-    .where('p.code = :code', { code: id })
-    .getRawMany();
+  const products = await productService.findAllProduct(id);
 
-  if (products.length === 0) {
-    res.status(404).send(); // Not Found
+  if (!products) {
+    res.status(404).send({ status: 404, msg: 'Not Found' });
     return;
   }
 
@@ -47,35 +30,14 @@ export const findAllProduct = async (req, res) => {
 /*
   GET /product/:id
 */
-export const findOneProduct = async (req: Request, res: Response) => {
+export const findOneProduct = async (req, res) => {
   const { id } = req.params;
 
-  const product = await getConnection()
-    .getRepository(Product)
-    .createQueryBuilder('p')
-    .select([
-      'p.id as id',
-      'p.code as code',
-      'p.type as type',
-      'p.name as name',
-      'p.manufacture as manufacture',
-      'p.size as size',
-      'p.image as image',
-      'p.url as url',
-      'if(isnull(pr.id), true, false) as recommend',
-    ])
-    .leftJoin(ProductRecommend, 'pr', 'p.id = pr.product_id')
-    .where('p.id = :id', { id })
-    .getRawOne();
-
-  const productSubImage = await getConnection()
-    .getRepository(ProductSubImage)
-    .createQueryBuilder('psi')
-    .where('psi.product_id=:id', { id })
-    .getMany();
+  const { product, productSubImage } = await productService.findOneProduct(id);
 
   if (!product) {
-    return res.status(404).send(); // Not Found
+    res.status(404).send({ status: 404, msg: 'Not Found' }); // Not Found
+    return;
   }
   return res.send({ product, productSubImage });
 };
@@ -90,9 +52,15 @@ export const findOneProduct = async (req: Request, res: Response) => {
     type: 0,
     image: file [png, jpg, jpeg],
     url: 'url.com'
+    recoomend: boolean (추천기능)
   }
 */
 export const write = async (req: Request, res: Response) => {
+  if (req.files.length === 0) {
+    res.status(400).send({ status: 400, msg: 'Image Not Found' });
+    return;
+  }
+
   const schema = Joi.object().keys({
     recommend: Joi.boolean().required(),
     code: Joi.number().required(),
@@ -103,67 +71,21 @@ export const write = async (req: Request, res: Response) => {
     url: Joi.string(),
   });
 
-  const unlinkAsync = promisify(fs.unlink);
-
-  const queryRunner = await getConnection().createQueryRunner();
-  await queryRunner.startTransaction();
+  const validate = schema.validate(req.body);
+  if (validate.error) {
+    // 누락된 정보가 있다면 등록된 파일 삭제
+    if (req.files) {
+      deleteFile(req.files);
+    }
+    res.status(400).send({ status: 400, msg: validate.error });
+    return;
+  }
 
   try {
-    const validate = schema.validate(req.body);
-    if (validate.error) {
-      // 누락된 정보가 있다면 등록된 파일 삭제
-      if (req.files) {
-        deleteFile(req.files);
-      }
-      return res.status(400).send(validate.error);
-    }
-
-    const { recommend, code, name, manufacture, size, type, url } = req.body;
-
-    // Product Insert
-    const product = new Product();
-
-    product.code = code;
-    product.name = name;
-    product.manufacture = manufacture;
-    product.size = size;
-    product.type = type;
-    product.image = req.files[0].filename;
-    product.url = url;
-
-    const productInfo = await getConnection()
-      .getRepository(Product)
-      .save(product);
-
-    // ProductRecommend Insert
-    if (recommend === 'true') {
-      const productRecommend = new ProductRecommend();
-      productRecommend.productId = productInfo.id;
-
-      await getConnection()
-        .getRepository(ProductRecommend)
-        .save(productRecommend);
-    }
-
-    // ProductSubImage Insert
-    const files = req.files as Array<Express.Multer.File>;
-
-    files.map(async (file) => {
-      const image = new ProductSubImage();
-      image.product = productInfo;
-      image.name = file.filename;
-      image.mimetype = file.mimetype;
-      image.path = file.path;
-
-      await getConnection().getRepository(ProductSubImage).save(image);
-    });
-    await queryRunner.commitTransaction();
+    await productService.write(req.body, req.files);
   } catch (e) {
-    await queryRunner.rollbackTransaction();
-    res.status(500).send(e);
+    res.status(500).send({ status: e, msg: e.message });
     return;
-  } finally {
-    await queryRunner.release();
   }
 
   res.send();
@@ -179,9 +101,10 @@ export const write = async (req: Request, res: Response) => {
     type: 0,
     image: 'image.png',
     url: 'url.com'
+    recommend: boolean (추천기능)
   }
 */
-export const update = async (req: Request, res: Response) => {
+export const update = async (req, res) => {
   const schema = Joi.object().keys({
     recommend: Joi.boolean().required(),
     code: Joi.number(),
@@ -189,7 +112,6 @@ export const update = async (req: Request, res: Response) => {
     manufacture: Joi.string(),
     size: Joi.string(),
     type: Joi.number(),
-    image: Joi.string(),
     url: Joi.string(),
   });
 
@@ -199,87 +121,13 @@ export const update = async (req: Request, res: Response) => {
     return;
   }
 
-  const queryRunner = await getConnection().createQueryRunner();
-  await queryRunner.startTransaction();
-
   try {
     const { id } = req.params;
-    let images = [];
 
-    // 업데이트 할 컬럼들 셋팅
-    const updateOption = getMultipleColums(req.body, 'recommend');
-
-    // 이미지 파일 업데이트
-    if (req.files) {
-      updateOption['image'] = req.files[0].filename;
-
-      // path 에서 파일 삭제
-      images = await getConnection()
-        .getRepository(ProductSubImage)
-        .createQueryBuilder('productsubimage')
-        .innerJoinAndSelect('productsubimage.product', 'product')
-        .where('product.id=:product_id', { product_id: id })
-        .getMany();
-
-      // ProductSubImage Delete
-      await getConnection()
-        .createQueryBuilder()
-        .delete()
-        .from(ProductSubImage)
-        .where('product.id', { id })
-        .execute();
-
-      // ProductSubImage Insert
-      const files = req.files as Array<Express.Multer.File>;
-
-      const product = await getConnection()
-        .getRepository(Product)
-        .findOne({ where: { id } });
-
-      files.map(async (file) => {
-        const image = new ProductSubImage();
-        image.product = product;
-        image.name = file.filename;
-        image.mimetype = file.mimetype;
-        image.path = file.path;
-
-        await getConnection().getRepository(ProductSubImage).save(image);
-      });
-    }
-
-    // ProductRecommend Delete
-    await getConnection()
-      .createQueryBuilder()
-      .delete()
-      .from(ProductRecommend)
-      .where('product.id', { id })
-      .execute();
-
-    if (req.body.recommend) {
-      const recommend = new ProductRecommend();
-      recommend.productId = Number(id);
-
-      await getConnection().getRepository(ProductRecommend).save(recommend);
-    }
-
-    // Product Update
-    await getConnection()
-      .createQueryBuilder()
-      .update(Product)
-      .set(updateOption)
-      .where('id = :id', { id })
-      .execute();
-
-    await queryRunner.commitTransaction();
-
-    if (req.files) {
-      deleteFile(images);
-    }
+    productService.update(id, req.body, req.files);
   } catch (e) {
-    await queryRunner.rollbackTransaction();
-    return res.status(500).send(e);
-  } finally {
-    await queryRunner.release();
+    res.status(500).send({ status: e, msg: e.message });
+    return;
   }
 
   res.send();
@@ -291,49 +139,11 @@ export const update = async (req: Request, res: Response) => {
 export const remove = async (req: Request, res: Response) => {
   const { id } = req.params;
 
-  const queryRunner = await getConnection().createQueryRunner();
-  await queryRunner.startTransaction();
-
   try {
-    // path 에서 파일 삭제
-    const images = await getConnection()
-      .getRepository(ProductSubImage)
-      .createQueryBuilder('productsubimage')
-      .innerJoinAndSelect('productsubimage.product', 'product')
-      .where('product.id=:product_id', { product_id: id })
-      .getMany();
-
-    // Product 데이터 삭제
-    await getConnection()
-      .createQueryBuilder()
-      .delete()
-      .from(Product)
-      .where('id = :id', { id })
-      .execute();
-
-    // ProductRecommend 삭제
-    await getConnection()
-      .createQueryBuilder()
-      .delete()
-      .from(ProductRecommend)
-      .where('product_id=:product_id', { product_id: id })
-      .execute();
-
-    // ProductSubImage 삭제
-    await getConnection()
-      .createQueryBuilder()
-      .delete()
-      .from(ProductSubImage)
-      .where('product.id=:product_id', { product_id: id })
-      .execute();
-
-    await queryRunner.commitTransaction();
-    deleteFile(images);
+    productService.remove(id);
   } catch (e) {
-    await queryRunner.rollbackTransaction();
-    return res.status(500).send(e);
-  } finally {
-    await queryRunner.release();
+    res.status(500).send({ status: e, msg: e.message });
+    return;
   }
 
   res.send();
@@ -346,12 +156,11 @@ export const remove = async (req: Request, res: Response) => {
 export const findOneUnit = async (req: Request, res: Response) => {
   const { id } = req.params;
 
-  const unit = await getConnection()
-    .getRepository(ProductUnit)
-    .findOne({ where: { productId: id } });
+  const unit = await productService.findOneUnit(id);
 
   if (!unit) {
-    return res.status(404).send(); // Not Found
+    res.status(404).send({ status: 404, msg: 'Not Found' });
+    return;
   }
   res.send(unit);
 };

@@ -1,8 +1,10 @@
 import Joi from 'joi';
-import { DataTypeNotSupportedError, getConnection } from 'typeorm';
+import { getConnection, getCustomRepository } from 'typeorm';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { User } from '../entity/User';
+import * as authService from '../service/auth.service';
+import { Request, Response } from 'express';
 
 /*
   POST /api/auth/register
@@ -21,29 +23,20 @@ export const register = async (req, res) => {
 
   const validate = schema.validate(req.body);
   if (validate.error) {
-    return res.status(400).send(validate.error);
-  }
-
-  const { userId, password, name } = req.body;
-
-  const user = new User();
-  user.userId = userId;
-  user.password = await bcrypt.hash(password, 10);
-  user.name = name;
-
-  // 아이디 중복 체크
-  const exists = await getConnection()
-    .getRepository(User)
-    .findOne({ where: { userId } });
-
-  if (exists) {
-    return res.status(409).send();
+    res.status(400).send({ status: 400, msg: validate.error });
+    return;
   }
 
   try {
-    await getConnection().getRepository(User).save(user);
+    const result = await authService.register(req.body);
+
+    if (!result) {
+      res.status(409).send({ status: 409, msg: 'Confilt Auth' });
+      return;
+    }
   } catch (e) {
-    res.status(500).send(e);
+    res.status(500).send({ status: 500, msg: e.message });
+    return;
   }
 
   res.send();
@@ -57,19 +50,10 @@ export const register = async (req, res) => {
   }
 */
 export const login = async (req, res) => {
-  const { userId, password } = req.body;
-
-  const user = await getConnection()
-    .getRepository(User)
-    .findOne({ where: { userId } });
+  const user = await authService.login(req.body);
 
   if (!user) {
-    return res.status(401).send();
-  }
-
-  const compare = await bcrypt.compare(password, user.password);
-  if (!compare) {
-    return res.status(401).send();
+    return res.status(401).send({ status: 401, msg: 'Invalid Id or Password' });
   }
 
   const token = jwt.sign(
@@ -99,7 +83,8 @@ export const check = async (req, res) => {
   const user = req.user;
   if (!user) {
     // 로그인 중 아님
-    return res.status(401).send(); // Unauthorized
+    res.status(401).send({ status: 401, msg: 'Not Login' });
+    return;
   }
   res.send(user);
 };
