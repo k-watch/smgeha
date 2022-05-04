@@ -6,6 +6,12 @@ export const getHeaderCategory = async () => {
   return data;
 };
 
+export const findProductWirteCategory = async (id: number) => {
+  const { data } = await client.get(`/api/category/productWirteCategory/${id}`);
+
+  return data;
+};
+
 export const findManuCategory = async (id: number) => {
   const { data } = await client.get(`/api/category/productManufacture/${id}`);
 

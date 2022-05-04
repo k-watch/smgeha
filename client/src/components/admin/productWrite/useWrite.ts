@@ -1,58 +1,55 @@
-import { findManuCategory, findTypeCategory } from 'lib/api/category';
-import { findOneProduct } from 'lib/api/product';
-import { findOneProductUnit } from 'lib/api/products';
-import { categorySelector } from 'modules/category/category';
+import { findProductWirteCategory } from 'lib/api/category';
+import { findOneProductUnit, findOneProductWrite } from 'lib/api/product';
+import { categorySelector, setProductCode } from 'modules/category/category';
 import { CategoryProps } from 'modules/category/props';
-import { CategoryData } from 'modules/category/state';
+import { ProductWriteCategoryData } from 'modules/category/state';
 import {
   productSelector,
   setWriteForm,
   unloadWriteForm,
 } from 'modules/product/product';
-import { selectQuery, unitQuery } from 'modules/product/query';
-import { ProductData } from 'modules/products/state';
+import { SelectProps } from 'modules/product/props';
+import {
+  productWriteQuery,
+  selectQuery,
+  unitQuery,
+} from 'modules/product/query';
+import { ProductUnitData } from 'modules/product/state';
+import { ProductData } from 'modules/product/state';
 import { store } from 'modules/store';
 import { useCallback, useEffect, useState } from 'react';
 import { useMutation } from 'react-query';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
-export interface ProductUnitData {
-  id: number;
-  name: string;
-}
-
-export interface SelectProps {
-  [index: string]: CategoryProps[];
-  manufacture: CategoryProps[];
-  type: CategoryProps[];
+// 제품 수정 ENUM
+enum UPDATE {
+  NONE = 0,
+  START,
+  END,
 }
 
 function useWrite() {
+  const { id } = useParams();
+
   const { productCode } = useSelector(categorySelector);
   const { writeForm } = useSelector(productSelector);
-  const manuMutation = useMutation<CategoryData[], Error, number>(
-    findManuCategory,
-  );
-  const typeMutation = useMutation<CategoryData[], Error, number>(
-    findTypeCategory,
-  );
 
+  const productWriteMutation = useMutation<ProductData, Error, number>(
+    findOneProductWrite,
+  );
   const unitMutation = useMutation<ProductUnitData, Error, number>(
     findOneProductUnit,
   );
-
-  const findOneProductMutation = useMutation<ProductData[], Error, number>(
-    findOneProduct,
+  const categoryMutation = useMutation<ProductWriteCategoryData, Error, number>(
+    findProductWirteCategory,
   );
 
+  // 제품 수정 State
+  const [updateInit, setUpdateInit] = useState(UPDATE.START);
   const [SelectProps, setSelectProps] = useState<SelectProps>();
   const [unit, setUnit] = useState('');
   const [urlDisabled, setUrlDisabled] = useState(true);
-
-  let updateInit = false;
-
-  const { id } = useParams();
 
   useEffect(() => {
     return () => {
@@ -60,70 +57,107 @@ function useWrite() {
     };
   });
 
-  const setSelectData = useCallback(async (name, list, selectId) => {
-    if (updateInit) {
-      list.filter((data: any) =>
-        data.id === selectId ? (data.check = true) : 0,
-      );
-      updateInit = false;
+  const setSelectData = useCallback(async (name, category, selectId) => {
+    // 헤더 버튼을 클릭했을 때
+    if (selectId === 0) {
+      category[0].check = true;
+      store.dispatch(setWriteForm({ key: name, value: category[0].id }));
     } else {
-      list[0].check = true;
-      store.dispatch(setWriteForm({ key: name, value: list[0].id }));
+      // 제품을 수정할 때
+      for (const data of category) {
+        if (data.id === selectId) {
+          data.check = true;
+          break;
+        }
+      }
+      setUpdateInit(UPDATE.NONE);
     }
 
     setSelectProps((prev: any) => ({
       ...prev,
-      [name]: list,
+      [name]: category,
     }));
   }, []);
 
-  const setFormData = useCallback(async () => {
-    const { manufacture, type } = writeForm;
-    let result = null;
+  // init
+  // 헤더 버튼 클릭: true
+  // 제품 수정: false
+  const initFormData = useCallback(
+    async (init: boolean) => {
+      const { manufacture, type } = writeForm;
 
-    result = await unitQuery(productCode, setUnit, unitMutation);
-    setUnit(result);
+      const unit = await unitQuery(productCode, unitMutation);
+      setUnit(unit);
 
-    result = await selectQuery(productCode, manuMutation);
-    setSelectData('manufacture', result, manufacture);
+      const { manuCategory, typeCategory } = await selectQuery(
+        productCode,
+        categoryMutation,
+      );
 
-    result = await selectQuery(productCode, typeMutation);
-    setSelectData('type', result, type);
-  }, [writeForm, productCode, unitMutation, manuMutation, typeMutation]);
+      setSelectData('manufacture', manuCategory, init ? 0 : manufacture);
+      setSelectData('type', typeCategory, init ? 0 : type);
+    },
+    [writeForm, productCode, unitMutation, categoryMutation, setSelectData],
+  );
 
   useEffect(() => {
-    if (productCode !== 0) {
-      setFormData();
+    // 제품 정보를 모두 읽어오면 폼 데이터를 초기화
+    if (updateInit === UPDATE.END) {
+      initFormData(false);
     }
-  }, [productCode]);
+  }, [updateInit]);
+
+  // 제품 정보 로드
+  const findProduct = useCallback(async () => {
+    const product = await productWriteQuery(Number(id), productWriteMutation);
+
+    Object.keys(product).forEach((name) => {
+      store.dispatch(setWriteForm({ key: name, value: product[name] }));
+    });
+    store.dispatch(setProductCode(product.code));
+
+    setUpdateInit(UPDATE.END);
+  }, []);
 
   useEffect(() => {
     if (id) {
-      updateInit = true;
+      // 제품 수정
+      findProduct();
+    } else if (!id) {
+      // 제품 등록
+      setUpdateInit(UPDATE.NONE);
     }
   }, [id]);
 
+  useEffect(() => {
+    // 제품 등록
+    if (productCode && updateInit === UPDATE.NONE) {
+      store.dispatch(unloadWriteForm());
+      initFormData(true);
+    }
+  }, [productCode]);
+
   const selectClick = useCallback(
-    (name: string, data: CategoryProps) => {
+    (name: string, category: CategoryProps) => {
       if (SelectProps) {
-        SelectProps[name].forEach((select: any) =>
-          select.id === data.id
+        for (const select of SelectProps[name]) {
+          select.id === category.id
             ? (select.check = true)
-            : (select.check = false),
-        );
+            : (select.check = false);
+        }
 
         setSelectProps((prev: any) => ({
           ...prev,
           [name]: SelectProps[name],
         }));
 
-        store.dispatch(setWriteForm({ key: name, value: data.name }));
+        store.dispatch(setWriteForm({ key: name, value: category.name }));
       }
     },
     [SelectProps],
   );
 
-  const textChange = useCallback((e: any) => {
+  const textChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const { value, name } = e.target;
 
     store.dispatch(setWriteForm({ key: name, value }));
@@ -138,13 +172,13 @@ function useWrite() {
   }, [urlDisabled]);
 
   return {
+    writeForm,
     SelectProps,
     unit,
     urlDisabled,
     selectClick,
     textChange,
     urlDisabledClick,
-    writeForm,
   };
 }
 

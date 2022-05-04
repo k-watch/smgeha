@@ -9,8 +9,8 @@ import Button from 'components/common/Button';
 import Dialog from 'components/common/Dialog';
 
 const ButtonWrap = styled('div')({
-  textAlign: 'right',
   paddingBottom: 15,
+  textAlign: 'right',
 });
 
 const ListStyle = styled('ul')({
@@ -80,13 +80,13 @@ const ListStyle = styled('ul')({
 function WriteImageForm() {
   const {
     images,
+    open,
     maxNumber,
-    onChange,
     maxSize,
     acceptType,
-    open,
     handleClose,
     onError,
+    onChange,
   } = useWriteImage();
   return (
     <div>

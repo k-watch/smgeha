@@ -5,6 +5,7 @@ import useWrite from './useWrite';
 import Select from 'components/common/Select';
 import TextField from 'components/common/TextField';
 import { grey } from '@mui/material/colors';
+import { CategoryProps } from 'modules/category/props';
 
 const Wrap = styled('div')(() => ({
   '& ul': {
@@ -24,7 +25,7 @@ const FieldStyle = styled('li')(() => ({
 
   '& p': {
     width: 60,
-    fontWeight: '500',
+    fontWeight: 500,
   },
 
   '& .MuiFormControl-root': {
@@ -48,46 +49,52 @@ const FieldStyle = styled('li')(() => ({
   },
 }));
 
-const SelectBox = React.memo(({ label, name, list, onClick }: any) => (
-  <>
-    {list && (
-      <>
-        <p>{label}</p>
+interface SelectBoxProps {
+  label: string;
+  name: string;
+  category: CategoryProps[];
+  onClick: (name: string, category: CategoryProps) => void;
+}
 
-        <Select
-          name={name}
-          value={list.filter((data: any) => data.check)[0].name}
-          menus={list}
-          onClick={onClick}
-        />
-      </>
-    )}
-  </>
-));
+const SelectBox = React.memo(
+  ({ label, name, category, onClick }: SelectBoxProps) => (
+    <>
+      {category && (
+        <>
+          <p>{label}</p>
+
+          <Select
+            name={name}
+            value={category.filter((data: CategoryProps) => data.check)[0].name}
+            menus={category}
+            onClick={onClick}
+          />
+        </>
+      )}
+    </>
+  ),
+);
 
 function WriteForm() {
   const {
+    writeForm,
     SelectProps,
     unit,
     urlDisabled,
     selectClick,
     textChange,
     urlDisabledClick,
-    writeForm,
   } = useWrite();
-  const onSubmit = (data: any) => {
-    console.log(data);
-  };
   return (
     <Wrap>
-      <form onSubmit={onSubmit}>
+      <form>
         <ul>
           {SelectProps && (
             <FieldStyle>
               <SelectBox
                 label="제조사"
                 name="manufacture"
-                list={SelectProps.manufacture}
+                category={SelectProps.manufacture}
                 onClick={selectClick}
               />
             </FieldStyle>
@@ -95,9 +102,9 @@ function WriteForm() {
           <FieldStyle>
             <p>제품명</p>
             <TextField
-              name="name"
-              value={writeForm.name}
               fullWidth
+              name="name"
+              value={writeForm.name || ''}
               onChange={textChange}
             />
           </FieldStyle>
@@ -106,7 +113,7 @@ function WriteForm() {
               <SelectBox
                 label="유형"
                 name="type"
-                list={SelectProps.type}
+                category={SelectProps.type}
                 onClick={selectClick}
               />
             </FieldStyle>
@@ -114,11 +121,11 @@ function WriteForm() {
           <FieldStyle>
             <p>크기</p>
             <TextField
+              fullWidth
               name="size"
               type="number"
-              value={writeForm.size}
+              value={writeForm.size || ''}
               placeholder="숫자만 입력하세요."
-              fullWidth
               inputProps={{
                 maxLength: 10,
                 step: '1',
@@ -130,11 +137,11 @@ function WriteForm() {
           <FieldStyle>
             <p>URL</p>
             <TextField
+              fullWidth
               name="url"
-              value={writeForm.url}
+              value={writeForm.url || ''}
               placeholder="URL을 첨부하려면 클릭하세요."
               disabled={urlDisabled}
-              fullWidth
               onChange={textChange}
             />
             <Switch color="primary" onClick={urlDisabledClick} />

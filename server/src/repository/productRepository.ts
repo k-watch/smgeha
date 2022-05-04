@@ -1,6 +1,7 @@
 import { EntityRepository, getConnection, Repository } from 'typeorm';
 import { Product } from '../entity/Product';
 import { ProductRecommend } from '../entity/ProductRecommend';
+import { ProductUnit } from '../entity/ProductUnit';
 import product from '../router/product';
 
 @EntityRepository(Product)
@@ -46,8 +47,10 @@ export class ProductRepository extends Repository<Product> {
           'p.image as image',
           'p.url as url',
           'if(isnull(pr.id), true, false) as recommend',
+          'pu.name as unit',
         ])
         .leftJoin(ProductRecommend, 'pr', 'p.id = pr.product_id')
+        .innerJoin(ProductUnit, 'pu', 'p.code = pu.product_id')
         .where('p.id = :id', { id })
         .getRawOne();
 
@@ -65,6 +68,34 @@ export class ProductRepository extends Repository<Product> {
         .set(updateOption)
         .where('id = :id', { id })
         .execute();
+    } catch (e) {
+      throw Error(e);
+    }
+  };
+
+  findOneProductWrite = async (id: string) => {
+    try {
+      const product = await getConnection()
+        .getRepository(Product)
+        .createQueryBuilder('p')
+        .select([
+          'p.id as id',
+          `if(isnull(pr.id), 'true', 'false') as recommend`,
+          'p.code as code',
+          'p.name as name',
+          'p.manufacture as manufacture',
+          'p.size as size',
+          'p.type as type',
+          'p.image as image',
+          'p.url as url',
+          'pu.name as unit',
+        ])
+        .leftJoin(ProductRecommend, 'pr', 'p.id = pr.product_id')
+        .innerJoin(ProductUnit, 'pu', 'p.code = pu.product_id')
+        .where('p.id = :id', { id })
+        .getRawOne();
+
+      return product;
     } catch (e) {
       throw Error(e);
     }

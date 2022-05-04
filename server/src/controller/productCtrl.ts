@@ -43,6 +43,23 @@ export const findOneProduct = async (req, res) => {
 };
 
 /*
+  GET /productWrite/:id
+*/
+export const findOneProductWrite = async (req, res) => {
+  const { id } = req.params;
+
+  const { product, productSubImage } = await productService.findOneProductWrite(
+    id,
+  );
+
+  if (!product) {
+    res.status(404).send({ status: 404, msg: 'Not Found' }); // Not Found
+    return;
+  }
+  return res.send({ product, productSubImage });
+};
+
+/*
   POST /product
   {
     code: 0,

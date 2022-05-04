@@ -3,7 +3,7 @@ import { grey } from '@mui/material/colors';
 import WriteFormHeader from 'components/admin/common/ProductHeader';
 import WriteForm from 'components/admin/productWrite/WriteForm';
 import WriteImageForm from 'components/admin/productWrite/WriteImageForm';
-import WriteBtn from 'components/admin/productWrite/WriteBtn';
+import WriteSummit from 'components/admin/productWrite/WriteSummit';
 
 const Wrap = styled('div')(() => ({
   height: '100vh',
@@ -37,7 +37,7 @@ function ProductWritePage() {
       <div className="right">
         <WriteImageForm />
       </div>
-      <WriteBtn />
+      <WriteSummit />
     </Wrap>
   );
 }

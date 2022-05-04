@@ -1,5 +1,4 @@
 import { Password } from '@mui/icons-material';
-import { write } from 'lib/api/products';
 import { productSelector } from 'modules/product/product';
 import { useCallback } from 'react';
 import { ImageListType } from 'react-images-uploading';
@@ -7,10 +6,15 @@ import { useSelector } from 'react-redux';
 import imageCompression from 'browser-image-compression';
 import { useMutation } from 'react-query';
 import { categorySelector } from 'modules/category/category';
+import { write } from 'lib/api/product';
+import { useParams } from 'react-router-dom';
 
-function useWriteBtn() {
+function useWriteSummit() {
+  const { id } = useParams();
   const form = useSelector(productSelector).writeForm;
+
   const writeMutation = useMutation(write);
+
   const { productCode } = useSelector(categorySelector);
 
   const imgComp = (imageList: ImageListType) => {
@@ -37,7 +41,6 @@ function useWriteBtn() {
     imgComp(form.image);
 
     const formData = new FormData();
-    debugger;
     formData.append('recommend', String(form.recommend));
     formData.append('code', String(productCode));
     formData.append('name', form.name);
@@ -61,7 +64,7 @@ function useWriteBtn() {
     });
   }, [form, writeMutation]);
 
-  return { onClick };
+  return { id, onClick };
 }
 
-export default useWriteBtn;
+export default useWriteSummit;

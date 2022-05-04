@@ -1,45 +1,71 @@
-import { ProductUnitData } from 'components/admin/productWrite/useWrite';
 import { CategoryProps } from 'modules/category/props';
-import { CategoryData } from 'modules/category/state';
-import { store } from 'modules/store';
+import { CategoryData, ProductWriteCategoryData } from 'modules/category/state';
 import { UseMutationResult } from 'react-query';
-import { setWriteForm } from './product';
+import { ProductData, ProductUnitData } from './state';
+
+export const productWriteQuery = async (
+  id: number,
+  mutation: UseMutationResult<ProductData, Error, number>,
+) => {
+  let product: Partial<ProductData> = {};
+  await mutation.mutateAsync(id, {
+    onSuccess: (data: ProductData) => {
+      product = { ...data.product };
+    },
+    onError: (e) => {
+      console.log(e);
+    },
+  });
+
+  return product;
+};
 
 export const unitQuery = async (
   id: number,
-  setData: React.Dispatch<React.SetStateAction<any>>,
   mutation: UseMutationResult<ProductUnitData, Error, number>,
 ) => {
-  let name = '';
+  let unit = '';
   await mutation.mutateAsync(id, {
     onSuccess: (data) => {
-      name = data.name;
+      unit = data.name;
     },
     onError: (error) => {
       console.log(error);
     },
   });
-  return name;
+
+  return unit;
 };
 
 export const selectQuery = async (
   id: number,
-  mutation: UseMutationResult<CategoryData[], Error, number>,
+  mutation: UseMutationResult<ProductWriteCategoryData, Error, number>,
 ) => {
-  const list: Array<CategoryProps> = [];
+  let manuCategory = Array<CategoryProps>();
+  let typeCategory = Array<CategoryProps>();
+
   await mutation.mutateAsync(id, {
     onSuccess: (data) => {
-      data.forEach((category: CategoryData) => {
-        list.push({
-          id: Number(category.id),
-          name: category.name,
-          check: false,
-        });
-      });
+      const initCategory = (category: CategoryData[]) => {
+        const list = new Array<CategoryProps>();
+        for (const item of category) {
+          list.push({
+            id: Number(item.id),
+            name: item.name,
+            check: false,
+          });
+        }
+
+        return list;
+      };
+
+      manuCategory = initCategory(data.manuCategory);
+      typeCategory = initCategory(data.typeCategory);
     },
     onError: (error) => {
       console.log(error);
     },
   });
-  return list;
+
+  return { manuCategory, typeCategory };
 };

@@ -1,4 +1,4 @@
-import { findAllProducts, remove } from 'lib/api/products';
+import { findAllProducts } from 'lib/api/products';
 import { ProductData } from 'modules/products/state';
 import { useEffect, useRef, useState } from 'react';
 import { useMutation } from 'react-query';
@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import useDraggableScroll from 'use-draggable-scroll';
 import { setWriteForm } from 'modules/product/product';
 import { useSelector } from 'react-redux';
-import { findOneProduct } from 'lib/api/product';
+import { findOneProduct, findOneProductWrite, remove } from 'lib/api/product';
 import { store } from 'modules/store';
 import { categorySelector } from 'modules/category/category';
 
@@ -29,28 +29,10 @@ function useProductList() {
   const [productInfo, setPorductInfo] = useState<ProductData>();
   const navigate = useNavigate();
 
-  const findOneProductMutation = useMutation<ProductData[], Error, number>(
-    findOneProduct,
-  );
-
-  const test = async (id: number) => {
-    await findOneProductMutation.mutateAsync(id, {
-      onSuccess: (data: any) => {
-        Object.keys(data.product).forEach((d) => {
-          store.dispatch(setWriteForm({ key: d, value: data.product[d] }));
-        });
-        navigate(`/write/${id}`);
-      },
-      onError: (e: any) => {
-        console.log(e);
-      },
-    });
-  };
-
   useEffect(() => {
     if (productInfo) {
       const { id } = productInfo;
-      test(id);
+      navigate(`/write/${id}`);
     }
   }, [productInfo]);
 

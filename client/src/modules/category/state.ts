@@ -10,6 +10,11 @@ export interface CategoryData {
   parent: number;
 }
 
+export interface ProductWriteCategoryData {
+  manuCategory: CategoryData[];
+  typeCategory: CategoryData[];
+}
+
 export interface CategoryState {
   productCode: number;
 }

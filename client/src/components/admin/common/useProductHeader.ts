@@ -2,7 +2,7 @@ import { getHeaderCategory } from 'lib/api/category';
 import { categorySelector, setProductCode } from 'modules/category/category';
 import { CategoryProps } from 'modules/category/props';
 import { CategoryData } from 'modules/category/state';
-import { setWriteForm } from 'modules/product/product';
+import { productSelector, setWriteForm } from 'modules/product/product';
 import { store } from 'modules/store';
 import { useCallback, useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
@@ -11,70 +11,52 @@ import { useParams } from 'react-router-dom';
 
 function useWriteHeader() {
   const { productCode } = useSelector(categorySelector);
+  const { writeForm } = useSelector(productSelector);
+
   const categoryQuery = useQuery<CategoryData[], Error>(
     'headerCategory',
     getHeaderCategory,
     {},
   );
-  const [productData, setChipData] = useState<CategoryProps[]>([]);
+  const [productCategory, setProductCategory] = useState<CategoryProps[]>([]);
   const [recommendDisabled, setRecommendDisabled] = useState(false);
-  let updateInit = false;
-  const { id } = useParams();
+
+  // 외부에서 헤더를 건드릴 때 (제품 수정을 위해 정보 로드)
+  useEffect(() => {
+    productClick(productCode);
+    setRecommendDisabled(writeForm.recommend);
+  }, [productCode, writeForm.recommend]);
 
   useEffect(() => {
-    if (id) {
-      updateInit = true;
-    }
-  }, [id]);
-
-  useEffect(() => {
-    if (id) {
-      productData.forEach((product) =>
-        Number(product.id) === productCode
-          ? (product.check = true)
-          : (product.check = false),
-      );
-
-      setChipData([...productData]);
-    }
-  }, [productCode]);
-
-  useEffect(() => {
-    debugger;
     if (categoryQuery.data) {
       const categories = categoryQuery.data;
-      const list: Array<CategoryProps> = [];
+      const tempList: Array<CategoryProps> = [];
 
       categories.forEach((category) => {
-        list.push({
+        tempList.push({
           id: Number(category.id),
           name: category.name,
           check: false,
         });
       });
 
-      if (updateInit) {
-        list.filter((data: any) => (data.id === id ? (data.check = true) : 0));
-        updateInit = false;
-      } else {
-        list[0].check = true;
-      }
+      tempList[0].check = true;
 
-      setChipData([...list]);
-      store.dispatch(setProductCode(list[0].id));
+      setProductCategory([...tempList]);
+      store.dispatch(setProductCode(tempList[0].id));
     }
   }, [categoryQuery.data]);
 
   const productClick = useCallback(
     (id: number) => {
-      productData.forEach((product) =>
-        product.id === id ? (product.check = true) : (product.check = false),
-      );
+      for (const product of productCategory) {
+        product.id === id ? (product.check = true) : (product.check = false);
+      }
 
-      setChipData([...productData]);
+      setProductCategory([...productCategory]);
       store.dispatch(setProductCode(id));
     },
-    [productData],
+    [productCategory],
   );
 
   const recommendClick = useCallback(() => {
@@ -85,8 +67,9 @@ function useWriteHeader() {
   }, [recommendDisabled]);
 
   return {
+    productCategory,
     productClick,
-    productData,
+    recommendDisabled,
     recommendClick,
   };
 }

@@ -19,6 +19,23 @@ export const getHeaderCategory = async (req, res) => {
 };
 
 /*
+  GET /category/productWirteCategory/:id
+  작성폼에 필요한 카테고리 가져옴
+*/
+export const findProductWirteCategory = async (req, res) => {
+  const { id } = req.params;
+
+  const manuCategory = await categoryService.findProductManufacture(id);
+  const typeCategory = await categoryService.findProductTypeCategory(id);
+
+  if (!manuCategory && !typeCategory) {
+    res.status(404).send({ status: 404, msg: 'Not Found' });
+    return;
+  }
+  res.send({ manuCategory, typeCategory });
+};
+
+/*
   GET /category/productManufacture/:id
   parent 에 해당하는 카테고리 가져옴
 */

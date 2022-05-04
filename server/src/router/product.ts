@@ -24,6 +24,7 @@ export const upload = multer({
 const product = Router();
 
 product.get('/:id', productCtrl.findOneProduct);
+product.get('/write/:id', productCtrl.findOneProductWrite);
 product.post('/', upload.array('file', 5), checkImg, productCtrl.write);
 product.patch('/:id', upload.array('file', 5), productCtrl.update);
 product.delete('/:id', /*checkLoggedIn,*/ productCtrl.remove);

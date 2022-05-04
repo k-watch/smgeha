@@ -36,6 +36,21 @@ export const findOneProduct = async (id: string) => {
   return { product, productSubImage };
 };
 
+export const findOneProductWrite = async (id: string) => {
+  const product = await getCustomRepository(
+    ProductRepository,
+  ).findOneProductWrite(id);
+
+  const productSubImage = await getCustomRepository(
+    ProductSubImageRepository,
+  ).findById(id);
+
+  if (!product) {
+    return null;
+  }
+  return { product, productSubImage };
+};
+
 export const write = async (
   { recommend, code, name, manufacture, size, type, url },
   files,

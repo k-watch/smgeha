@@ -97,13 +97,17 @@ function Header() {
             <MenuIcon />
           </li>
           <li>
-            <img src="/logo.png" alt="logo" />
+            <a href="/">
+              <img src="/logo.png" alt="logo" />
+            </a>
           </li>
         </Mobile>
 
         <Desktop>
           <li>
-            <img src="/logo.png" alt="logo" />
+            <a href="/">
+              <img src="/logo.png" alt="logo" />
+            </a>
           </li>
           <li>
             <span>냉장고</span>

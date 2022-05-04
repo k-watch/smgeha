@@ -5,7 +5,7 @@ function AdminProductsPage() {
   return (
     <>
       <ProductHeader />
-      <ProductList />;
+      <ProductList />
     </>
   );
 }

@@ -20,6 +20,7 @@ export interface ProductData {
   type: number;
   image: string;
   url?: string;
+  unit: string;
 }
 
 export interface ProductsState {

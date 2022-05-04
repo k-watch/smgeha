@@ -27,11 +27,12 @@ const Wrap = styled('div')(() => ({
 }));
 
 function ProductHeader() {
-  const { productData, productClick, recommendClick } = useWriteHeader();
+  const { productCategory, productClick, recommendDisabled, recommendClick } =
+    useWriteHeader();
   return (
     <Wrap>
       <ul>
-        {productData.map((product: CategoryProps) => (
+        {productCategory.map((product: CategoryProps) => (
           <li key={product.id}>
             <Chip
               label={product.name}
@@ -42,7 +43,11 @@ function ProductHeader() {
         ))}
         <li>
           추천상품
-          <Switch color="primary" onClick={recommendClick} />
+          <Switch
+            color="primary"
+            checked={Boolean(recommendDisabled)}
+            onClick={recommendClick}
+          />
         </li>
       </ul>
     </Wrap>

@@ -5,10 +5,10 @@ import { setWriteForm } from 'modules/product/product';
 
 function useWriteImage() {
   const [images, setImages] = useState([]);
+  const [open, setOpen] = useState(true);
   const maxNumber = 5;
   const maxSize = 2 * 1024 * 1024;
   const acceptType = ['jpg', 'jpeg', 'png'];
-  const [open, setOpen] = useState(true);
 
   const handleClose = () => {
     setOpen(false);
@@ -30,13 +30,13 @@ function useWriteImage() {
 
   return {
     images,
+    open,
     maxNumber,
-    onChange,
     maxSize,
     acceptType,
-    open,
     handleClose,
     onError,
+    onChange,
   };
 }
 
