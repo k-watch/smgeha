@@ -6,6 +6,7 @@ import WriteImageForm from 'components/admin/productWrite/WriteImageForm';
 import WriteSummit from 'components/admin/productWrite/WriteSummit';
 
 const Wrap = styled('div')(() => ({
+  minWidth: 1257,
   height: '100vh',
   overflow: 'hidden',
   margin: '0 auto',
@@ -14,6 +15,7 @@ const Wrap = styled('div')(() => ({
   '& .left': {
     float: 'left',
     width: '50%',
+    height: 480,
     paddingRight: 50,
     boxSizing: 'border-box',
     borderRight: `2px solid ${grey[300]}`,
@@ -22,8 +24,12 @@ const Wrap = styled('div')(() => ({
   '& .right': {
     float: 'left',
     width: '50%',
+    height: 480,
     paddingLeft: 50,
     boxSizing: 'border-box',
+  },
+  '& .button': {
+    float: 'right',
   },
 }));
 
@@ -37,7 +43,9 @@ function ProductWritePage() {
       <div className="right">
         <WriteImageForm />
       </div>
-      <WriteSummit />
+      <div className="button">
+        <WriteSummit />
+      </div>
     </Wrap>
   );
 }

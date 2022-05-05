@@ -1,5 +1,7 @@
 import * as React from 'react';
 import {
+  Alert,
+  AlertTitle,
   Dialog as MuiDialog,
   DialogProps as MuiDialogProps,
   styled,
@@ -13,53 +15,43 @@ import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined';
 import { grey, red } from '@mui/material/colors';
 
 const Wrap = styled('div')({
-  maxWidth: 360,
+  minWidth: 360,
 
-  '& .error': {
-    display: 'flex',
-    color: `${red[700]}`,
-  },
+  '& .MuiAlert-root': {
+    padding: 15,
+    fontSize: 16,
+    fontWeight: 500,
 
-  '& .MuiTypography-root': {
-    fontSize: 17,
-    fontWeight: 700,
-
-    '& .MuiSvgIcon-root': {
-      paddingRight: 5,
+    '& .MuiTypography-root': {
+      marginBottom: 15,
+      fontSize: 17,
+      fontWeight: 600,
     },
-  },
-  '& .MuiDialogContentText-root': {
-    fontSize: 15,
-  },
-
-  '& .MuiDialogActions-root': {
-    padding: 10,
-    backgroundColor: `${grey[100]}`,
   },
 });
 
 interface DialogProps extends MuiDialogProps {
-  type: 'error';
+  type: 'error' | 'warning';
 }
 
 function Dialog(props: DialogProps) {
   return (
     <MuiDialog open={props.open} onClick={props.onClick}>
       <Wrap>
-        <DialogTitle>
-          {props.type === 'error'}
-          {
-            <div className="error">
-              <ErrorOutlineOutlinedIcon />
-              {'ERROR'}
-            </div>
-          }
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText>{props.children}</DialogContentText>
-        </DialogContent>
+        {props.type === 'error' && (
+          <Alert severity="error">
+            <AlertTitle>에러</AlertTitle>
+            {props.children}
+          </Alert>
+        )}
+        {props.type === 'warning' && (
+          <Alert severity="warning">
+            <AlertTitle>주의</AlertTitle>
+            {props.children}
+          </Alert>
+        )}
         <DialogActions>
-          <Button variant="contained" onClick={() => props.onClick}>
+          <Button variant="text" size="small" onClick={() => props.onClick}>
             확인
           </Button>
         </DialogActions>

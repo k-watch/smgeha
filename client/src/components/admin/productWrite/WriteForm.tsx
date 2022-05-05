@@ -144,7 +144,11 @@ function WriteForm() {
               disabled={urlDisabled}
               onChange={textChange}
             />
-            <Switch color="primary" onClick={urlDisabledClick} />
+            <Switch
+              color="primary"
+              checked={Boolean(!urlDisabled)}
+              onClick={urlDisabledClick}
+            />
           </FieldStyle>
         </ul>
       </form>

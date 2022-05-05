@@ -1,12 +1,12 @@
 import { getConnection, getCustomRepository } from 'typeorm';
 import { Product } from '../entity/Product';
 import { ProductRecommend } from '../entity/ProductRecommend';
-import { ProductSubImage } from '../entity/ProductSubImage';
+import { ProductImgInfo } from '../entity/ProductImgInfo';
 import { deleteFile } from '../lib/fileManager';
 import { getMultipleColums } from '../lib/queryManager';
 import { ProductRecommendRepository } from '../repository/productRecommendRepository';
 import { ProductRepository } from '../repository/productRepository';
-import { ProductSubImageRepository } from '../repository/productSubImageRepository';
+import { ProductImgInfoRepository } from '../repository/productImgInfoRepository';
 import { ProductUnitRepository } from '../repository/productUnitRepository';
 
 export const findAllProduct = async (id: string) => {
@@ -26,14 +26,14 @@ export const findOneProduct = async (id: string) => {
     id,
   );
 
-  const productSubImage = await getCustomRepository(
-    ProductSubImageRepository,
+  const productImgInfo = await getCustomRepository(
+    ProductImgInfoRepository,
   ).findById(id);
 
   if (!product) {
     return null;
   }
-  return { product, productSubImage };
+  return { product, productImgInfo };
 };
 
 export const findOneProductWrite = async (id: string) => {
@@ -41,14 +41,14 @@ export const findOneProductWrite = async (id: string) => {
     ProductRepository,
   ).findOneProductWrite(id);
 
-  const productSubImage = await getCustomRepository(
-    ProductSubImageRepository,
-  ).findById(id);
+  const productImgInfo = await getCustomRepository(
+    ProductImgInfoRepository,
+  ).findByProductId(id);
 
   if (!product) {
     return null;
   }
-  return { product, productSubImage };
+  return { product, productImgInfo };
 };
 
 export const write = async (
@@ -84,17 +84,17 @@ export const write = async (
         .save(productRecommend);
     }
 
-    // ProductSubImage 저장
+    // ProductImgInfo 저장
     const images = files as Array<Express.Multer.File>;
 
     images.map(async (file) => {
-      const image = new ProductSubImage();
+      const image = new ProductImgInfo();
       image.product = productInfo;
       image.name = file.filename;
       image.mimetype = file.mimetype;
       image.path = file.path;
 
-      await getConnection().getRepository(ProductSubImage).save(image);
+      await getConnection().getRepository(ProductImgInfo).save(image);
     });
     await queryRunner.commitTransaction();
   } catch (e) {
@@ -121,27 +121,25 @@ export const update = async (id, data, files) => {
 
       // 파일 삭제를 위해 path 를 받아옴
       pathList = await getCustomRepository(
-        ProductSubImageRepository,
+        ProductImgInfoRepository,
       ).findByProductId(id);
 
-      // ProductSubImage 삭제
-      await getCustomRepository(ProductSubImageRepository).DeleteByProductId(
-        id,
-      );
+      // ProductImgInfo 삭제
+      await getCustomRepository(ProductImgInfoRepository).DeleteByProductId(id);
 
-      // ProductSubImage 저장을 위해 ProductId 받아옴
+      // ProductImgInfo 저장을 위해 ProductId 받아옴
       const images = files as Array<Express.Multer.File>;
 
       const product = await getCustomRepository(ProductRepository).findOne(id);
 
       images.map(async (file) => {
-        const image = new ProductSubImage();
+        const image = new ProductImgInfo();
         image.product = product;
         image.name = file.filename;
         image.mimetype = file.mimetype;
         image.path = file.path;
 
-        await getCustomRepository(ProductSubImageRepository).save(image);
+        await getCustomRepository(ProductImgInfoRepository).save(image);
       });
     }
     // 이미지 파일 업데이트 종료
@@ -184,7 +182,7 @@ export const remove = async (id) => {
   try {
     // 파일 삭제를 위해 path 를 받아옴
     let pathList = await getCustomRepository(
-      ProductSubImageRepository,
+      ProductImgInfoRepository,
     ).findByProductId(id);
 
     // Product 삭제
@@ -193,8 +191,8 @@ export const remove = async (id) => {
     // ProductRecommend 삭제
     await getCustomRepository(ProductRecommendRepository).DeleteByProdcutId(id);
 
-    // ProductSubImage 삭제
-    await getCustomRepository(ProductSubImageRepository).DeleteByProductId(id);
+    // ProductImgInfo 삭제
+    await getCustomRepository(ProductImgInfoRepository).DeleteByProductId(id);
 
     await queryRunner.commitTransaction();
 

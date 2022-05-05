@@ -1,12 +1,12 @@
 import { EntityRepository, getConnection, Repository } from 'typeorm';
-import { ProductSubImage } from '../entity/ProductSubImage';
+import { ProductImgInfo } from '../entity/ProductImgInfo';
 
-@EntityRepository(ProductSubImage)
-export class ProductSubImageRepository extends Repository<ProductSubImage> {
+@EntityRepository(ProductImgInfo)
+export class ProductImgInfoRepository extends Repository<ProductImgInfo> {
   findById = async (id: string) => {
     try {
       const images = await getConnection()
-        .getRepository(ProductSubImage)
+        .getRepository(ProductImgInfo)
         .find({ where: { id } });
 
       return images;
@@ -18,8 +18,8 @@ export class ProductSubImageRepository extends Repository<ProductSubImage> {
   findByProductId = async (id: string) => {
     try {
       const images = await getConnection()
-        .getRepository(ProductSubImage)
-        .createQueryBuilder('productsubimage')
+        .getRepository(ProductImgInfo)
+        .createQueryBuilder('productImgInfo')
         .where('product_id=:product_id', { product_id: id })
         .getMany();
 
@@ -34,7 +34,7 @@ export class ProductSubImageRepository extends Repository<ProductSubImage> {
       await getConnection()
         .createQueryBuilder()
         .delete()
-        .from(ProductSubImage)
+        .from(ProductImgInfo)
         .where('product_id=:product_id', { product_id: id })
         .execute();
     } catch (e) {

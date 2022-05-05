@@ -9,7 +9,7 @@ import {
 import { Product } from './Product';
 
 @Entity()
-export class ProductSubImage {
+export class ProductImgInfo {
   @PrimaryGeneratedColumn({ type: 'bigint' })
   id: number;
 
@@ -28,7 +28,7 @@ export class ProductSubImage {
   @UpdateDateColumn()
   updated: Date;
 
-  @ManyToOne((type) => Product, (product) => product.productSubImage, {
+  @ManyToOne((type) => Product, (product) => product.productImgInfo, {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })

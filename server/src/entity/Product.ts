@@ -9,7 +9,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { ProductRecommend } from './ProductRecommend';
-import { ProductSubImage } from './ProductSubImage';
+import { ProductImgInfo } from './ProductImgInfo';
 
 @Entity()
 export class Product {
@@ -51,8 +51,8 @@ export class Product {
   updated: Date;
 
   @OneToMany(
-    (type) => ProductSubImage,
-    (productSubImage) => productSubImage.product,
+    (type) => ProductImgInfo,
+    (productImgInfo) => productImgInfo.product,
   )
-  productSubImage: ProductSubImage[];
+  productImgInfo: ProductImgInfo[];
 }

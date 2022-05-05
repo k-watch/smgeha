@@ -27,6 +27,7 @@ export interface ProductData {
 
 export interface ProductState {
   writeForm: ProductData;
+  loadImage: string[];
 }
 
 export interface ProductUnitData {

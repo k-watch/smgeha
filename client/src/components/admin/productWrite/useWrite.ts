@@ -5,6 +5,7 @@ import { CategoryProps } from 'modules/category/props';
 import { ProductWriteCategoryData } from 'modules/category/state';
 import {
   productSelector,
+  setLoadImage,
   setWriteForm,
   unloadWriteForm,
 } from 'modules/product/product';
@@ -84,7 +85,7 @@ function useWrite() {
   // 제품 수정: false
   const initFormData = useCallback(
     async (init: boolean) => {
-      const { manufacture, type } = writeForm;
+      const { manufacture, type, url } = writeForm;
 
       const unit = await unitQuery(productCode, unitMutation);
       setUnit(unit);
@@ -96,6 +97,10 @@ function useWrite() {
 
       setSelectData('manufacture', manuCategory, init ? 0 : manufacture);
       setSelectData('type', typeCategory, init ? 0 : type);
+
+      if (url) {
+        setUrlDisabled(false);
+      }
     },
     [writeForm, productCode, unitMutation, categoryMutation, setSelectData],
   );
@@ -109,11 +114,24 @@ function useWrite() {
 
   // 제품 정보 로드
   const findProduct = useCallback(async () => {
-    const product = await productWriteQuery(Number(id), productWriteMutation);
+    let { product, productImgInfo } = await productWriteQuery(
+      Number(id),
+      productWriteMutation,
+    );
 
     Object.keys(product).forEach((name) => {
-      store.dispatch(setWriteForm({ key: name, value: product[name] }));
+      if (name !== 'image') {
+        store.dispatch(setWriteForm({ key: name, value: product[name] }));
+      }
     });
+
+    let imageList = [];
+    if (productImgInfo) {
+      for (const image of productImgInfo) {
+        imageList.push(image.name);
+      }
+    }
+    store.dispatch(setLoadImage(imageList));
     store.dispatch(setProductCode(product.code));
 
     setUpdateInit(UPDATE.END);
@@ -151,7 +169,7 @@ function useWrite() {
           [name]: SelectProps[name],
         }));
 
-        store.dispatch(setWriteForm({ key: name, value: category.name }));
+        store.dispatch(setWriteForm({ key: name, value: category.id }));
       }
     },
     [SelectProps],

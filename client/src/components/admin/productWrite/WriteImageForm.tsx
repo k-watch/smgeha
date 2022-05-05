@@ -19,9 +19,9 @@ const ListStyle = styled('ul')({
   '& li': {
     position: 'relative',
     display: 'inline-block',
-    width: 133,
-    height: 133,
-    marginTop: 15,
+    width: 132,
+    height: 132,
+    marginTop: 11.5,
     marginRight: 11.5,
 
     '& img': {
@@ -61,8 +61,8 @@ const ListStyle = styled('ul')({
 
     '&:first-of-type': {
       display: 'block',
-      width: 300,
-      height: 300,
+      width: 280,
+      height: 280,
       margin: 'auto',
 
       '& img': {
@@ -124,7 +124,11 @@ function WriteImageForm() {
               {imageList.map((image, index) => (
                 <li key={index}>
                   <img
-                    src={image.dataURL}
+                    src={
+                      image.dataURL
+                        ? image.dataURL
+                        : `/images/${image.file?.name}`
+                    }
                     loading="lazy"
                     alt={`상품-${index}`}
                   />

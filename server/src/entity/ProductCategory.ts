@@ -8,7 +8,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { ProductSubImage } from './ProductSubImage';
+import { ProductImgInfo } from './ProductImgInfo';
 import { ProductUnit } from './ProductUnit';
 
 @Entity()

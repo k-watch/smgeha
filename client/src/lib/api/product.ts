@@ -25,6 +25,17 @@ export const write = async (form: FormData) => {
   return data;
 };
 
+// interface test {
+//   id: string;
+//   formData: FormData;
+// }
+
+export const update = async ({ id, formData }: any) => {
+  const { data } = await client.patch(`/api/product/${id}`, formData);
+
+  return data;
+};
+
 export const remove = async (id: number) => {
   const { data } = await client.delete(`/api/product/${id}`);
 

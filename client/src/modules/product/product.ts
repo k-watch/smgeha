@@ -13,6 +13,7 @@ const initialState: ProductState = {
     image: [],
     url: '',
   },
+  loadImage: [],
 };
 
 export const productSlice = createSlice({
@@ -23,12 +24,16 @@ export const productSlice = createSlice({
       state.writeForm[key] = value;
     },
     unloadWriteForm(state) {
-      return initialState;
+      state.writeForm = { ...initialState.writeForm };
+    },
+    setLoadImage(state, action) {
+      state.loadImage = [...action.payload];
     },
   },
 });
 
-export const { setWriteForm, unloadWriteForm } = productSlice.actions;
+export const { setWriteForm, unloadWriteForm, setLoadImage } =
+  productSlice.actions;
 
 export const productSelector = (state: any) => state.product as ProductState;
 
