@@ -16,10 +16,8 @@ import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import Button from 'components/common/Button';
 import useProductList from './useProductList';
-import { ProductData } from 'modules/products/state';
+import { ProductsData } from 'modules/products/state';
 import CloseIcon from '@mui/icons-material/Close';
-import Dialog from 'components/common/Dialog';
-import { AnyAsyncThunk } from '@reduxjs/toolkit/dist/matchers';
 
 const ChipStyle = styled(Chip)({
   marginBottom: 6,
@@ -191,7 +189,7 @@ function ProductList() {
               ))
             : null}
           {data &&
-            data.map((product: ProductData) => (
+            data.map((product: ProductsData) => (
               <Grid key={product.id} item lg={3} md={4} sm={4} xs={12}>
                 <div className="imgWrap">
                   <img src={`images/${product.image}`} alt={product.name} />

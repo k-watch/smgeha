@@ -42,7 +42,7 @@ function ProductHeader() {
           </li>
         ))}
         <li>
-          추천상품
+          추천제품
           <Switch
             color="primary"
             checked={Boolean(recommendDisabled)}

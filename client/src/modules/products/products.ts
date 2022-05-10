@@ -3,6 +3,7 @@ import { ProductsState } from './state';
 
 const initialState: ProductsState = {
   list: [],
+  recommendList: [],
 };
 
 export const productsSlice = createSlice({
@@ -11,12 +12,13 @@ export const productsSlice = createSlice({
   reducers: {
     setProducts(state, { payload: products }) {
       state.list = products;
+      state.recommendList = products.filter((p: any) => p.recommend === 1);
     },
   },
 });
 
 export const { setProducts } = productsSlice.actions;
 
-export const productsSelector = (state: any) => state.products;
+export const productsSelector = (state: any) => state.products as ProductsState;
 
 export default productsSlice.reducer;

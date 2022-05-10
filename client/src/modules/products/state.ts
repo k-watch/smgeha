@@ -9,10 +9,10 @@
 //   image: 'image.png',
 //   url: 'url.com'
 // }
-export interface ProductData {
+export interface ProductsData {
   [index: string]: any;
   id: number;
-  recommend: boolean;
+  recommend: number;
   code: number;
   name: string;
   manufacture: string;
@@ -24,5 +24,6 @@ export interface ProductData {
 }
 
 export interface ProductsState {
-  list: Array<ProductData>;
+  list: Array<ProductsData>;
+  recommendList: Array<ProductsData>;
 }

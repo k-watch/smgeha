@@ -7,7 +7,6 @@ import { store } from 'modules/store';
 import { useCallback, useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import { useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
 
 function useWriteHeader() {
   const { productCode } = useSelector(categorySelector);

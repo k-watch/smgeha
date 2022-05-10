@@ -5,6 +5,9 @@ import { Desktop, Mobile } from 'lib/styles/common';
 import MenuIcon from '@mui/icons-material/Menu';
 import LogoutIcon from '@mui/icons-material/Logout';
 import useHeader from './useHeader';
+import Button from '../Button';
+import { Drawer } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 
 const Wrap = styled('div')(({ theme }) => ({
   position: 'fixed',
@@ -22,7 +25,7 @@ const Wrap = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     padding: '0 calc(25% - 150px)',
-    paddingTop: '20px',
+    paddingTop: 20,
 
     '& img': {
       width: 130,
@@ -55,14 +58,10 @@ const Wrap = styled('div')(({ theme }) => ({
     },
   },
 
-  // '&.fixedHeader': {
-  //   position: 'fixed',
-  //   top: 0,
-  //   zIndex: 1,
-  // },
-
   [theme.breakpoints.down('md')]: {
     '& ul': {
+      paddingTop: 15,
+
       '& li': {
         '& img': {
           width: 130,
@@ -86,46 +85,109 @@ const Wrap = styled('div')(({ theme }) => ({
   },
 }));
 
+const DrawerStyles = styled(Drawer)(({ theme }) => ({
+  '& .MuiPaper-root': {
+    width: 300,
+    '& li': {
+      padding: '18px 15px',
+      borderBottom: `1px solid ${grey[300]}`,
+      fontSize: 17,
+      fontWeight: 300,
+      color: `${grey[800]}`,
+
+      '&:first-of-type': {
+        borderBottom: 0,
+        padding: '5px 0',
+
+        '& .MuiSvgIcon-root': {
+          fontSize: 35,
+          color: `${grey[700]}`,
+        },
+      },
+
+      '&:nth-of-type(2)': {
+        display: 'flex',
+        justifyContent: 'center',
+        margin: '10px 50px 40px 50px',
+        padding: 0,
+        borderBottom: 0,
+      },
+
+      '&:nth-of-type(3)': {
+        borderTop: `1px solid ${grey[300]}`,
+      },
+
+      '&:hover': {
+        cursor: 'pointer',
+
+        '& span': {
+          color: `${lightBlue[400]}`,
+        },
+      },
+    },
+  },
+}));
+
 function Header() {
-  const { auth, scrollActive, onLogout } = useHeader();
+  const { auth, categories, onClick, onLogout, drawerFlag, setDrawerFlag } =
+    useHeader();
 
   return (
-    <Wrap className={scrollActive ? 'none' : 'fixedHeader'}>
+    <Wrap>
       <ul>
         <Mobile>
-          <li>
-            <MenuIcon />
+          <li key={'menu'}>
+            <Button variant="text" onClick={() => setDrawerFlag(true)}>
+              <MenuIcon />
+            </Button>
           </li>
-          <li>
+          <li key={'logo'}>
             <a href="/">
               <img src="/logo.png" alt="logo" />
             </a>
           </li>
+          <DrawerStyles
+            anchor="left"
+            open={drawerFlag}
+            onClose={() => setDrawerFlag(false)}
+          >
+            <li key="close">
+              <Button variant="text" onClick={() => setDrawerFlag(false)}>
+                <CloseIcon />
+              </Button>
+            </li>
+            <li key="logo">
+              <a href="/">
+                <img src="/logo.png" alt="logo" />
+              </a>
+            </li>
+            {categories &&
+              categories.map((category: any) => (
+                <li key={category.code}>
+                  <span onClick={() => onClick(Number(category.id))}>
+                    {category.name}
+                  </span>
+                </li>
+              ))}
+          </DrawerStyles>
         </Mobile>
 
         <Desktop>
-          <li>
+          <li key="logo">
             <a href="/">
               <img src="/logo.png" alt="logo" />
             </a>
           </li>
-          <li>
-            <span>냉장고</span>
-          </li>
-          <li>
-            <span>에어컨</span>
-          </li>
-          <li>
-            <span>세탁기</span>
-          </li>
-          <li>
-            <span>TV</span>
-          </li>
-          <li>
-            <span>기타</span>
-          </li>
+          {categories &&
+            categories.map((category) => (
+              <li key={category.id}>
+                <span onClick={() => onClick(Number(category.id))}>
+                  {category.name}
+                </span>
+              </li>
+            ))}
         </Desktop>
-        <li>
+        <li key="admin">
           <span>
             <ManageAccountsOutlinedIcon />
           </span>

@@ -1,5 +1,5 @@
 import { findAllProducts } from 'lib/api/products';
-import { ProductData } from 'modules/products/state';
+import { ProductsData } from 'modules/products/state';
 import { useEffect, useRef, useState } from 'react';
 import { useMutation } from 'react-query';
 import { useNavigate } from 'react-router-dom';
@@ -13,7 +13,7 @@ import { categorySelector } from 'modules/category/category';
 function useProductList() {
   const { productCode } = useSelector(categorySelector);
 
-  const listMutation = useMutation<ProductData[], Error, number>(
+  const listMutation = useMutation<ProductsData[], Error, number>(
     findAllProducts,
   );
   const removeMutation = useMutation<any, Error, number>(remove);
@@ -26,7 +26,7 @@ function useProductList() {
 
   const [removeLodingOpen, setRemoveLodingOpen] = useState(false);
   const [removeSuccessOpen, setRemoveSuccessOpen] = useState(false);
-  const [productInfo, setPorductInfo] = useState<ProductData>();
+  const [productInfo, setPorductInfo] = useState<ProductsData>();
   const navigate = useNavigate();
 
   useEffect(() => {

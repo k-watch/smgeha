@@ -20,10 +20,11 @@ export class ProductRepository extends Repository<Product> {
           'concat(p.size, (select name from product_unit where product_id = p.code)) as size',
           'p.image as image',
           'p.url as url',
-          'if(isnull(pr.id), true, false) as recommend',
+          'if(isnull(pr.id), false, true) as recommend',
         ])
         .leftJoin(ProductRecommend, 'pr', 'p.id = pr.product_id')
         .where('p.code = :code', { code: id })
+        .orderBy('p.updated', 'DESC')
         .getRawMany();
 
       return products;
@@ -46,7 +47,7 @@ export class ProductRepository extends Repository<Product> {
           'p.size as size',
           'p.image as image',
           'p.url as url',
-          'if(isnull(pr.id), true, false) as recommend',
+          'if(isnull(pr.id), false, true) as recommend',
           'pu.name as unit',
         ])
         .leftJoin(ProductRecommend, 'pr', 'p.id = pr.product_id')

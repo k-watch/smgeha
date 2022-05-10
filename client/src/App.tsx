@@ -16,12 +16,7 @@ import { styled } from '@mui/system';
 const theme = createTheme({
   palette: {
     primary: {
-      // Purple and green play nicely together.
       main: lightBlue[400],
-    },
-    secondary: {
-      // This is green.A700 as hex.
-      main: '#11cb5f',
     },
   },
 });
@@ -30,6 +25,11 @@ const Wrap = styled('div')(({ theme }) => ({
   maxWidth: 1257,
   padding: '0 calc(25% - 150px)',
   paddingTop: 80,
+
+  [theme.breakpoints.down('sm')]: {
+    padding: '0 20px',
+    paddingTop: 60,
+  },
 }));
 
 function App() {
@@ -41,10 +41,10 @@ function App() {
           <Header />
           <Wrap>
             <Routes>
-              <Route path="/" element={<AdminProductsPage />} />
+              <Route path="/admin" element={<AdminProductsPage />} />
               <Route path={'/write'} element={<ProductWritePage />} />
               <Route path={'/write/:id'} element={<ProductWritePage />} />
-              <Route path="/products" element={<ProductsPage />} />
+              <Route path="/" element={<ProductsPage />} />
               <Route path="/login" element={<LoginPage />} />
             </Routes>
           </Wrap>

@@ -1,39 +1,39 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { authSelector } from 'modules/auth/auth';
-import { useMutation } from 'react-query';
+import { useMutation, useQuery } from 'react-query';
 import { delAuth } from 'modules/auth/auth';
 import { store } from 'modules/store';
 import { logout } from 'lib/api/auth';
+import { getHeaderCategory } from 'lib/api/category';
+import { CategoryData } from 'modules/category/state';
+import { setProductCode } from 'modules/category/category';
 
 function useHeader() {
   const auth = useSelector(authSelector);
+
+  const categoryQuery = useQuery<CategoryData[], Error>(
+    'headerCategory',
+    getHeaderCategory,
+    {},
+  );
   const logoutMutation = useMutation(logout);
 
-  // 헤더 fixed 를 위한 value
-  const [scrollY, setScrollY] = useState(window.pageYOffset);
-  const [scrollActive, setScrollActive] = useState(true);
+  const [categories, setCategories] = useState<CategoryData[]>([]);
+  const [drawerFlag, setDrawerFlag] = useState(false);
 
-  const handleScroll = () => {
-    // 스크롤이 내려가면 헤더를 fixed로 변환
-    if (scrollY <= 30) {
-      setScrollY(window.pageYOffset);
-      setScrollActive(true);
-    } else {
-      setScrollY(window.pageYOffset);
-      setScrollActive(false);
-    }
-  };
+  const onClick = useCallback((id: number) => {
+    store.dispatch(setProductCode(id));
+  }, []);
 
-  // 스크롤 이벤트 생성
   useEffect(() => {
-    // 새로고침 했을 때 스크롤 체크
-    handleScroll();
-    window.addEventListener('scroll', handleScroll);
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  });
+    if (categoryQuery.data) {
+      const categories = categoryQuery.data;
+
+      setCategories([...categories]);
+      store.dispatch(setProductCode(Number(categories[0].id)));
+    }
+  }, [categoryQuery.data]);
 
   const onLogout = useCallback(() => {
     // 로그아웃 후 로컬 스토리지와 리덕스 null로 변경
@@ -46,7 +46,7 @@ function useHeader() {
     }
   }, [logoutMutation]);
 
-  return { auth, scrollActive, onLogout };
+  return { auth, categories, onClick, onLogout, drawerFlag, setDrawerFlag };
 }
 
 export default useHeader;
