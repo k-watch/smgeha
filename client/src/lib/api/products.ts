@@ -5,3 +5,15 @@ export const findAllProducts = async (id: number) => {
 
   return data;
 };
+
+/*
+  POST /api/products
+  {
+    name: string
+  }
+*/
+export const findOneProductByName = async (name: string) => {
+  const { data } = await client.post(`/api/products`, { name });
+
+  return data;
+};

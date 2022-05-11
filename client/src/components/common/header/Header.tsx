@@ -8,6 +8,8 @@ import useHeader from './useHeader';
 import Button from '../Button';
 import { Drawer } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import SearchIcon from '@mui/icons-material/Search';
+import Search from '../Search';
 
 const Wrap = styled('div')(({ theme }) => ({
   position: 'fixed',
@@ -129,15 +131,23 @@ const DrawerStyles = styled(Drawer)(({ theme }) => ({
 }));
 
 function Header() {
-  const { auth, categories, onClick, onLogout, drawerFlag, setDrawerFlag } =
-    useHeader();
+  const {
+    auth,
+    categories,
+    menuFlag,
+    setMenuFlag,
+    searchFlag,
+    setSearchFlag,
+    onHeaderClick,
+    onLogout,
+  } = useHeader();
 
   return (
     <Wrap>
       <ul>
         <Mobile>
           <li key={'menu'}>
-            <Button variant="text" onClick={() => setDrawerFlag(true)}>
+            <Button variant="text" onClick={() => setMenuFlag(true)}>
               <MenuIcon />
             </Button>
           </li>
@@ -148,11 +158,11 @@ function Header() {
           </li>
           <DrawerStyles
             anchor="left"
-            open={drawerFlag}
-            onClose={() => setDrawerFlag(false)}
+            open={menuFlag}
+            onClose={() => setMenuFlag(false)}
           >
             <li key="close">
-              <Button variant="text" onClick={() => setDrawerFlag(false)}>
+              <Button variant="text" onClick={() => setMenuFlag(false)}>
                 <CloseIcon />
               </Button>
             </li>
@@ -164,7 +174,7 @@ function Header() {
             {categories &&
               categories.map((category: any) => (
                 <li key={category.code}>
-                  <span onClick={() => onClick(Number(category.id))}>
+                  <span onClick={() => onHeaderClick(Number(category.id))}>
                     {category.name}
                   </span>
                 </li>
@@ -181,13 +191,16 @@ function Header() {
           {categories &&
             categories.map((category) => (
               <li key={category.id}>
-                <span onClick={() => onClick(Number(category.id))}>
+                <span onClick={() => onHeaderClick(Number(category.id))}>
                   {category.name}
                 </span>
               </li>
             ))}
         </Desktop>
         <li key="admin">
+          <span onClick={() => setSearchFlag(true)}>
+            <SearchIcon />
+          </span>
           <span>
             <ManageAccountsOutlinedIcon />
           </span>
@@ -198,6 +211,7 @@ function Header() {
           )}
         </li>
       </ul>
+      <Search searchFlag={searchFlag} setSearchFlag={setSearchFlag} />
     </Wrap>
   );
 }

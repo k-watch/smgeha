@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { authSelector } from 'modules/auth/auth';
-import { useMutation, useQuery } from 'react-query';
+import { useQuery } from 'react-query';
 import { delAuth } from 'modules/auth/auth';
 import { store } from 'modules/store';
 import { logout } from 'lib/api/auth';
@@ -15,17 +15,19 @@ function useHeader() {
   const categoryQuery = useQuery<CategoryData[], Error>(
     'headerCategory',
     getHeaderCategory,
-    {},
+    { enabled: false },
   );
-  const logoutMutation = useMutation(logout);
 
   const [categories, setCategories] = useState<CategoryData[]>([]);
-  const [drawerFlag, setDrawerFlag] = useState(false);
+  const [menuFlag, setMenuFlag] = useState(false);
+  const [searchFlag, setSearchFlag] = useState(false);
 
-  const onClick = useCallback((id: number) => {
-    store.dispatch(setProductCode(id));
+  // 최초 한 번 카테고리 데이터 불러옴
+  useEffect(() => {
+    categoryQuery.refetch();
   }, []);
 
+  // 카데고리 데이터 세팅
   useEffect(() => {
     if (categoryQuery.data) {
       const categories = categoryQuery.data;
@@ -35,18 +37,31 @@ function useHeader() {
     }
   }, [categoryQuery.data]);
 
-  const onLogout = useCallback(() => {
+  const onHeaderClick = useCallback((id: number) => {
+    store.dispatch(setProductCode(id));
+  }, []);
+
+  const onLogout = useCallback(async () => {
     // 로그아웃 후 로컬 스토리지와 리덕스 null로 변경
     try {
-      logoutMutation.mutate();
+      await logout();
       localStorage.removeItem('auth');
       store.dispatch(delAuth());
     } catch (e) {
       console.log(e);
     }
-  }, [logoutMutation]);
+  }, []);
 
-  return { auth, categories, onClick, onLogout, drawerFlag, setDrawerFlag };
+  return {
+    auth,
+    categories,
+    menuFlag,
+    setMenuFlag,
+    searchFlag,
+    setSearchFlag,
+    onHeaderClick,
+    onLogout,
+  };
 }
 
 export default useHeader;

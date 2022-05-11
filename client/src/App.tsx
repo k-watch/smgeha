@@ -12,6 +12,7 @@ import Footer from 'components/common/Footer';
 import Header from 'components/common/header/Header';
 import AdminProductsPage from 'pages/admin/AdminProductsPage';
 import { styled } from '@mui/system';
+import ProductPage from 'pages/ProductPage';
 
 const theme = createTheme({
   palette: {
@@ -45,6 +46,7 @@ function App() {
               <Route path={'/write'} element={<ProductWritePage />} />
               <Route path={'/write/:id'} element={<ProductWritePage />} />
               <Route path="/" element={<ProductsPage />} />
+              <Route path="/product/:id" element={<ProductPage />} />
               <Route path="/login" element={<LoginPage />} />
             </Routes>
           </Wrap>

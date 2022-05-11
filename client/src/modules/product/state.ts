@@ -34,3 +34,12 @@ export interface ProductUnitData {
   id: number;
   name: string;
 }
+
+export interface productImgData {
+  name: string;
+}
+
+export interface ProductInfoData {
+  product: ProductData;
+  productImgInfo: productImgData[];
+}

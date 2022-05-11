@@ -2,9 +2,9 @@ import { ProductsData } from 'modules/products/state';
 import { styled } from '@mui/system';
 import useProductsRecommend from './useProductsRecommend';
 import Slider from 'react-slick';
+import { grey } from '@mui/material/colors';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import { grey } from '@mui/material/colors';
 
 const Wrap = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -26,7 +26,7 @@ const Wrap = styled('div')(({ theme }) => ({
     backgroundColor: 'white',
     textAlign: 'center',
     color: `${grey[800]}`,
-    fontSize: 33,
+    fontSize: '2.0625rem',
     fontWeight: 700,
 
     [theme.breakpoints.down('sm')]: {
@@ -62,7 +62,7 @@ const ListStyle = styled('div')(({ theme }) => ({
       zIndex: 1,
       margin: 15,
       padding: 4,
-      fontSize: 35,
+      fontSize: '2.1875rem',
       fontWeight: 700,
       color: 'white',
     },
@@ -99,20 +99,20 @@ const ListStyle = styled('div')(({ theme }) => ({
       '& .manufacture': {
         display: 'inline-block',
         padding: 5,
-        fontSize: 14,
+        fontSize: '0.875rem',
         fontWeight: 500,
         border: '1px solid white',
         borderRadius: 6,
       },
 
       '& .title': {
-        fontSize: 30,
+        fontSize: '1.875rem',
         fontWeight: 800,
       },
 
       '& .content': {
         display: 'flex',
-        fontSize: 18,
+        fontSize: '1.125rem',
         fontWeight: 500,
 
         '& p': {
@@ -124,7 +124,7 @@ const ListStyle = styled('div')(({ theme }) => ({
 }));
 
 function ProductsRecommend() {
-  const { recommendList, settings } = useProductsRecommend();
+  const { recommendList, settings, onClick } = useProductsRecommend();
 
   return (
     <Wrap>
@@ -132,7 +132,7 @@ function ProductsRecommend() {
       <Slider {...settings}>
         {recommendList &&
           recommendList.map((product: ProductsData, index: number) => (
-            <ListStyle key={product.id}>
+            <ListStyle key={product.id} onClick={() => onClick(product.id)}>
               <li>
                 <p className="number">
                   {(index + 1).toString().padStart(2, '0')}

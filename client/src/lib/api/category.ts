@@ -1,7 +1,7 @@
 import client from 'modules/client';
 
 export const getHeaderCategory = async () => {
-  debugger;
+  // debugger;
   const { data } = await client.get(`/api/category/header`);
 
   return data;

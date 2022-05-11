@@ -28,6 +28,20 @@ export const findAllProduct = async (req, res) => {
 };
 
 /*
+  POST /products
+  {
+    search: string
+  }
+*/
+export const findOneProductByName = async (req, res) => {
+  const { name } = req.body;
+
+  const products = await productService.findOneProductByName(name);
+
+  res.send(products);
+};
+
+/*
   GET /product/:id
 */
 export const findOneProduct = async (req, res) => {

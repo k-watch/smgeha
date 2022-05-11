@@ -21,6 +21,14 @@ export const findAllProduct = async (id: string) => {
   return products;
 };
 
+export const findOneProductByName = async (name: string) => {
+  const products = await getCustomRepository(
+    ProductRepository,
+  ).findOneProductByName(name);
+
+  return products;
+};
+
 export const findOneProduct = async (id: string) => {
   const product = await getCustomRepository(ProductRepository).findOneProduct(
     id,
@@ -28,7 +36,7 @@ export const findOneProduct = async (id: string) => {
 
   const productImgInfo = await getCustomRepository(
     ProductImgInfoRepository,
-  ).findById(id);
+  ).findByProductId(id);
 
   if (!product) {
     return null;

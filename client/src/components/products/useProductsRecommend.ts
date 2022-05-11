@@ -1,5 +1,6 @@
 import { productsSelector } from 'modules/products/products';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 function useProductsRecommend() {
   const { recommendList } = useSelector(productsSelector);
@@ -28,8 +29,13 @@ function useProductsRecommend() {
       },
     ],
   };
+  const navigate = useNavigate();
 
-  return { recommendList, settings };
+  const onClick = (id: number) => {
+    navigate(`product/${id}`);
+  };
+
+  return { recommendList, settings, onClick };
 }
 
 export default useProductsRecommend;

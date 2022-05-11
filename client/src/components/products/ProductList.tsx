@@ -3,7 +3,7 @@ import { styled } from '@mui/system';
 import { lightBlue } from '@mui/material/colors';
 import { Chip, Grid, Skeleton } from '@mui/material';
 import { ProductsData } from 'modules/products/state';
-import useProducts from './useProducts';
+import useProductList from './useProductList';
 
 const ChipStyle = styled(Chip)({
   marginBottom: 6,
@@ -15,7 +15,7 @@ const ChipStyle = styled(Chip)({
 
     '& .MuiChip-label': {
       padding: '5px 10px',
-      fontSize: 12,
+      fontSize: '0.75rem',
       fontWeight: 600,
       color: `${grey[700]}`,
     },
@@ -65,7 +65,7 @@ const Wrap = styled('div')(({ theme }) => ({
     },
 
     '& .manufacture': {
-      fontSize: 12,
+      fontSize: '0.75rem',
       fontWeight: 400,
       color: `${grey[600]}`,
     },
@@ -83,7 +83,7 @@ const Wrap = styled('div')(({ theme }) => ({
     '& .size': {
       display: 'flex',
       alignItems: 'center',
-      fontSize: 15,
+      fontSize: '0.9375rem',
       color: `${grey[800]}`,
       '& .MuiSvgIcon-root': {
         fontSize: 16,
@@ -115,8 +115,20 @@ const Wrap = styled('div')(({ theme }) => ({
   },
 }));
 
+const NoContentWrap = styled('div')(({ theme }) => ({
+  margin: '0 auto',
+  padding: '85px 0',
+  textAlign: 'center',
+
+  '& p': {
+    margin: '15px 0',
+    fontSize: '1.125rem',
+    color: `${grey[700]}`,
+  },
+}));
+
 function ProductList() {
-  const { slideRef, onMouseDown, isLoading, list } = useProducts();
+  const { list, isLoading, slideRef, onMouseDown } = useProductList();
 
   return (
     <>
@@ -136,7 +148,7 @@ function ProductList() {
                 </Grid>
               ))
             : null}
-          {list &&
+          {list.length !== 0 ? (
             list.map((product: ProductsData) => (
               <Grid key={product.id} item lg={3} md={4} sm={6} xs={6}>
                 <div className="imgWrap">
@@ -162,7 +174,13 @@ function ProductList() {
                   </div>
                 </div>
               </Grid>
-            ))}
+            ))
+          ) : (
+            <NoContentWrap>
+              <img src="/logo.png" alt="logo" />
+              <p>찾으시는 결과가 없습니다.</p>
+            </NoContentWrap>
+          )}
         </Grid>
       </Wrap>
     </>

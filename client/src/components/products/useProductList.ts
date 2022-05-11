@@ -8,7 +8,7 @@ import { useMutation } from 'react-query';
 import { useSelector } from 'react-redux';
 import useDraggableScroll from 'use-draggable-scroll';
 
-function useProducts() {
+function useProductList() {
   const { productCode } = useSelector(categorySelector);
   const { list } = useSelector(productsSelector);
 
@@ -23,7 +23,7 @@ function useProducts() {
     direction: 'horizontal',
   });
 
-  const getProducts = useCallback(
+  const getProductList = useCallback(
     async (id: number) => {
       await findAllProductsMutation.mutateAsync(id, {
         onSuccess: (data) => {
@@ -39,11 +39,11 @@ function useProducts() {
 
   useEffect(() => {
     if (productCode) {
-      getProducts(productCode);
+      getProductList(productCode);
     }
   }, [productCode]);
 
-  return { slideRef, onMouseDown, isLoading, list };
+  return { list, isLoading, slideRef, onMouseDown };
 }
 
-export default useProducts;
+export default useProductList;
