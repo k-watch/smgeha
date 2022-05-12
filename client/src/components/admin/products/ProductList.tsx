@@ -217,12 +217,14 @@ function ProductList() {
                     <ChipStyle label={product.size} />
                   </div>
 
-                  <p className="link">
-                    <InsertLinkOutlinedIcon />
-                    <Tooltip title="www.naver.com www.naver.com" arrow>
-                      <a href="www.naver.com">www.naver.com www.naver.com</a>
-                    </Tooltip>
-                  </p>
+                  {product.url && (
+                    <p className="link">
+                      <InsertLinkOutlinedIcon />
+                      <Tooltip title={product.url} arrow>
+                        <a href={product.url}>{product.url}</a>
+                      </Tooltip>
+                    </p>
+                  )}
                   {product.recommend ? <p className="recommend">추천</p> : null}
                 </div>
               </Grid>

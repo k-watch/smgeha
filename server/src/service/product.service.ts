@@ -83,7 +83,7 @@ export const write = async (
       .save(product);
 
     // ProductRecommend 저장
-    if (recommend === 'true') {
+    if (Boolean(recommend) === true) {
       const productRecommend = new ProductRecommend();
       productRecommend.productId = productInfo.id;
 
@@ -156,7 +156,7 @@ export const update = async (id, data, files) => {
     await getCustomRepository(ProductRecommendRepository).DeleteByProdcutId(id);
 
     // ProductRecommend 저장
-    if (data.recommend) {
+    if (Boolean(data.recommend) === true) {
       const recommend = new ProductRecommend();
       recommend.productId = Number(id);
 

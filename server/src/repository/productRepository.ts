@@ -94,7 +94,7 @@ export class ProductRepository extends Repository<Product> {
         .createQueryBuilder('p')
         .select([
           'p.id as id',
-          `if(isnull(pr.id), 'true', 'false') as recommend`,
+          `if(isnull(pr.id), 'false', 'true') as recommend`,
           'p.code as code',
           'p.name as name',
           'p.manufacture as manufacture',

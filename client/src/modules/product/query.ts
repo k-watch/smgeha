@@ -7,34 +7,28 @@ export const productWriteQuery = async (
   id: number,
   mutation: UseMutationResult<ProductData, Error, number>,
 ) => {
-  let result: Partial<ProductData> = {};
-  await mutation.mutateAsync(id, {
-    onSuccess: (data: ProductData) => {
-      result = { ...data };
+  return await mutation.mutateAsync(id, {
+    onSuccess: async (data: ProductData) => {
+      return data;
     },
-    onError: (e) => {
+    onError: async (e) => {
       console.log(e);
     },
   });
-
-  return result;
 };
 
 export const unitQuery = async (
   id: number,
   mutation: UseMutationResult<ProductUnitData, Error, number>,
 ) => {
-  let unit = '';
-  await mutation.mutateAsync(id, {
-    onSuccess: (data) => {
-      unit = data.name;
+  return await mutation.mutateAsync(id, {
+    onSuccess: async (data) => {
+      return data;
     },
-    onError: (error) => {
+    onError: async (error) => {
       console.log(error);
     },
   });
-
-  return unit;
 };
 
 export const selectQuery = async (

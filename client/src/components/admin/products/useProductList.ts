@@ -51,7 +51,7 @@ function useProductList() {
 
   const onRemove = async (id: number) => {
     setRemoveLodingOpen(true);
-    await removeMutation.mutateAsync(0, {
+    await removeMutation.mutateAsync(id, {
       onSuccess: (data) => {
         getList(productCode);
         setRemoveSuccessOpen(true);

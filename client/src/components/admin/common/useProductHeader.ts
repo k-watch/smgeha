@@ -7,6 +7,7 @@ import { store } from 'modules/store';
 import { useCallback, useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import { useSelector } from 'react-redux';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 function useWriteHeader() {
   const { productCode } = useSelector(categorySelector);
@@ -19,6 +20,16 @@ function useWriteHeader() {
   );
   const [productCategory, setProductCategory] = useState<CategoryProps[]>([]);
   const [recommendDisabled, setRecommendDisabled] = useState(false);
+  const [path, setPath] = useState(true);
+
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    if (pathname === '/admin') {
+      setPath(false);
+    }
+  }, [pathname]);
 
   // 외부에서 헤더를 건드릴 때 (제품 수정을 위해 정보 로드)
   useEffect(() => {
@@ -70,6 +81,8 @@ function useWriteHeader() {
     productClick,
     recommendDisabled,
     recommendClick,
+    path,
+    navigate,
   };
 }
 

@@ -8,6 +8,7 @@ import { logout } from 'lib/api/auth';
 import { getHeaderCategory } from 'lib/api/category';
 import { CategoryData } from 'modules/category/state';
 import { setProductCode } from 'modules/category/category';
+import { useNavigate } from 'react-router-dom';
 
 function useHeader() {
   const auth = useSelector(authSelector);
@@ -21,6 +22,8 @@ function useHeader() {
   const [categories, setCategories] = useState<CategoryData[]>([]);
   const [menuFlag, setMenuFlag] = useState(false);
   const [searchFlag, setSearchFlag] = useState(false);
+
+  const navigate = useNavigate();
 
   // 최초 한 번 카테고리 데이터 불러옴
   useEffect(() => {
@@ -37,9 +40,13 @@ function useHeader() {
     }
   }, [categoryQuery.data]);
 
-  const onHeaderClick = useCallback((id: number) => {
-    store.dispatch(setProductCode(id));
-  }, []);
+  const onHeaderClick = useCallback(
+    (id: number) => {
+      store.dispatch(setProductCode(id));
+      navigate('/');
+    },
+    [navigate],
+  );
 
   const onLogout = useCallback(async () => {
     // 로그아웃 후 로컬 스토리지와 리덕스 null로 변경
@@ -60,6 +67,7 @@ function useHeader() {
     searchFlag,
     setSearchFlag,
     onHeaderClick,
+    navigate,
     onLogout,
   };
 }

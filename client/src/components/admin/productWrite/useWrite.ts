@@ -88,7 +88,7 @@ function useWrite() {
       const { manufacture, type, url } = writeForm;
 
       const unit = await unitQuery(productCode, unitMutation);
-      setUnit(unit);
+      setUnit(unit.name);
 
       const { manuCategory, typeCategory } = await selectQuery(
         productCode,
@@ -114,27 +114,31 @@ function useWrite() {
 
   // 제품 정보 로드
   const findProduct = useCallback(async () => {
-    let { product, productImgInfo } = await productWriteQuery(
-      Number(id),
-      productWriteMutation,
-    );
+    try {
+      let { product, productImgInfo } = await productWriteQuery(
+        Number(id),
+        productWriteMutation,
+      );
 
-    Object.keys(product).forEach((name) => {
-      if (name !== 'image') {
-        store.dispatch(setWriteForm({ key: name, value: product[name] }));
-      }
-    });
+      Object.keys(product).forEach((name) => {
+        if (name !== 'image') {
+          store.dispatch(setWriteForm({ key: name, value: product[name] }));
+        }
+      });
 
-    let imageList = [];
-    if (productImgInfo) {
-      for (const image of productImgInfo) {
-        imageList.push(image.name);
+      let imageList = [];
+      if (productImgInfo) {
+        for (const image of productImgInfo) {
+          imageList.push(image.name);
+        }
       }
+      store.dispatch(setLoadImage(imageList));
+      store.dispatch(setProductCode(product.code));
+
+      setUpdateInit(UPDATE.END);
+    } catch (e) {
+      console.log(e);
     }
-    store.dispatch(setLoadImage(imageList));
-    store.dispatch(setProductCode(product.code));
-
-    setUpdateInit(UPDATE.END);
   }, []);
 
   useEffect(() => {
@@ -154,6 +158,14 @@ function useWrite() {
       initFormData(true);
     }
   }, [productCode]);
+
+  useEffect(() => {
+    // 제품 등록
+    if (updateInit === UPDATE.NONE) {
+      store.dispatch(unloadWriteForm());
+      initFormData(true);
+    }
+  }, [updateInit]);
 
   const selectClick = useCallback(
     (name: string, category: CategoryProps) => {

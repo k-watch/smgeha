@@ -7,7 +7,7 @@ import WriteSummit from 'components/admin/productWrite/WriteSummit';
 
 const Wrap = styled('div')(() => ({
   minWidth: 1257,
-  height: '100vh',
+  height: '72vh',
   overflow: 'hidden',
   margin: '0 auto',
   paddingTop: 50,

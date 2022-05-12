@@ -139,6 +139,7 @@ function Header() {
     searchFlag,
     setSearchFlag,
     onHeaderClick,
+    navigate,
     onLogout,
   } = useHeader();
 
@@ -172,8 +173,8 @@ function Header() {
               </a>
             </li>
             {categories &&
-              categories.map((category: any) => (
-                <li key={category.code}>
+              categories.map((category) => (
+                <li key={category.id}>
                   <span onClick={() => onHeaderClick(Number(category.id))}>
                     {category.name}
                   </span>
@@ -201,7 +202,7 @@ function Header() {
           <span onClick={() => setSearchFlag(true)}>
             <SearchIcon />
           </span>
-          <span>
+          <span onClick={() => navigate('/admin')}>
             <ManageAccountsOutlinedIcon />
           </span>
           {auth && (
