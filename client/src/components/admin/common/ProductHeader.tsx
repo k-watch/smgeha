@@ -71,7 +71,7 @@ function ProductHeader() {
           </li>
         ) : (
           <li>
-            <EditOutlinedIcon onClick={() => navigate('/write')} />
+            <EditOutlinedIcon onClick={() => navigate('/admin/write')} />
           </li>
         )}
       </ul>

@@ -1,17 +1,13 @@
 import Joi from 'joi';
-import { getConnection, getCustomRepository } from 'typeorm';
-import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { User } from '../entity/User';
 import * as authService from '../service/auth.service';
-import { Request, Response } from 'express';
 
 /*
   POST /api/auth/register
   {
-    userId: 'abcd',
-    name: 'abcd',
-    password: '1234'
+    userId: string,
+    name: string,
+    password: string
   }
 */
 export const register = async (req, res) => {
@@ -45,8 +41,8 @@ export const register = async (req, res) => {
 /*
   POST /api/auth/login
   {
-    userId: 'abcd'
-    password: '1234'
+    userId: string
+    password: string
   }
 */
 export const login = async (req, res) => {
@@ -69,7 +65,7 @@ export const login = async (req, res) => {
   );
 
   res.cookie('auth_token', token, {
-    maxAge: 1000 * 60 * 60 * 24 * 7, // 7일
+    maxAge: 1000 * 60 * 60 * 24 * 7,
     httpOnly: true,
   });
 

@@ -1,14 +1,7 @@
 import { Response } from 'express';
 import { Request } from 'express-serve-static-core';
 import Joi from 'joi';
-import { checkImg, deleteFile } from '../../src/lib/fileManager';
-import { getConnection, getCustomRepository, getManager } from 'typeorm';
-import { Product } from '../entity/Product';
-import fs from 'fs';
-import { getMultipleColums } from '../../src/lib/queryManager';
-import { ProductImgInfo } from '../../src/entity/ProductImgInfo';
-import { ProductUnit } from '../entity/ProductUnit';
-import { ProductRecommend } from '../entity/ProductRecommend';
+import { deleteFile } from '../../src/lib/fileManager';
 import * as productService from '../service/product.service';
 
 /*
@@ -17,20 +10,22 @@ import * as productService from '../service/product.service';
 export const findAllProduct = async (req, res) => {
   const { id } = req.params;
 
-  const products = await productService.findAllProduct(id);
+  const { products, recommendProducts } = await productService.findAllProduct(
+    id,
+  );
 
   if (!products) {
     res.status(404).send({ status: 404, msg: 'Not Found' });
     return;
   }
 
-  res.send(products);
+  res.send({ products, recommendProducts });
 };
 
 /*
   POST /products
   {
-    search: string
+    name: string
   }
 */
 export const findOneProductByName = async (req, res) => {

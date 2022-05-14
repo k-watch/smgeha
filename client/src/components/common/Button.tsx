@@ -1,4 +1,3 @@
-import React from 'react';
 import { styled } from '@mui/material/styles';
 import { Button as MuiButton, ButtonProps } from '@mui/material';
 import { grey, lightBlue } from '@mui/material/colors';

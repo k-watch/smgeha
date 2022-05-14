@@ -42,12 +42,12 @@ function App() {
           <Header />
           <Wrap>
             <Routes>
-              <Route path="/admin" element={<AdminProductsPage />} />
-              <Route path={'/write'} element={<ProductWritePage />} />
-              <Route path={'/write/:id'} element={<ProductWritePage />} />
               <Route path="/" element={<ProductsPage />} />
               <Route path="/product/:id" element={<ProductPage />} />
+              <Route path="/admin" element={<AdminProductsPage />} />
               <Route path="/login" element={<LoginPage />} />
+              <Route path={'admin/write'} element={<ProductWritePage />} />
+              <Route path={'admin/write/:id'} element={<ProductWritePage />} />
             </Routes>
           </Wrap>
           <Footer />

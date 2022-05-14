@@ -155,7 +155,7 @@ function ProductList() {
     removeSuccessOpen,
     setPorductInfo,
   } = useProductList();
-  const { isLoading, isSuccess, data } = listMutation;
+  const { isLoading, data } = listMutation;
 
   const action = (
     <>
@@ -173,7 +173,7 @@ function ProductList() {
   return (
     <>
       <Wrap>
-        <Grid container spacing={3}>
+        <Grid container spacing={2}>
           {isLoading
             ? Array.from(new Array(10)).map((item, index) => (
                 <Grid key={index} item md={3} sm={4} xs={12}>
@@ -189,7 +189,7 @@ function ProductList() {
               ))
             : null}
           {data &&
-            data.map((product: ProductsData) => (
+            data.products.map((product: ProductsData) => (
               <Grid key={product.id} item lg={3} md={4} sm={4} xs={12}>
                 <div className="imgWrap">
                   <img src={`images/${product.image}`} alt={product.name} />

@@ -2,12 +2,9 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  ManyToOne,
-  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Product } from './Product';
 
 @Entity()
 export class ProductRecommend {

@@ -8,13 +8,17 @@ import 'slick-carousel/slick/slick-theme.css';
 
 const Wrap = styled('div')(({ theme }) => ({
   position: 'relative',
+  width: '95vw',
+  marginLeft: 'calc(-50vw + 53.2%)',
   marginBottom: 30,
-  padding: 25,
-  border: `2px solid ${grey[300]}`,
-  borderRadius: 10,
+  paddingTop: 25,
+  paddingBottom: 18,
+  borderTop: `2px solid ${grey[300]}`,
+  borderBottom: `2px solid ${grey[300]}`,
 
   [theme.breakpoints.down('sm')]: {
-    padding: 10,
+    width: 'inherit',
+    marginLeft: 0,
   },
 
   '& h1': {
@@ -33,12 +37,31 @@ const Wrap = styled('div')(({ theme }) => ({
       fontSize: 25,
     },
   },
+
+  '& .slides': {
+    position: 'relative',
+    '& .slick-prev, .slick-next': {
+      position: 'absolute',
+      top: '50%',
+      opacity: 'none',
+      '&:before': {
+        fontSize: 30,
+      },
+    },
+    '& .slick-prev': {
+      left: 5,
+      zIndex: 1,
+    },
+    '& .slick-next': {
+      right: 15,
+      zIndex: 1,
+    },
+  },
 }));
 
 const ListStyle = styled('div')(({ theme }) => ({
   '& li': {
     position: 'relative',
-    margin: 10,
 
     '& img': {
       transform: 'scale(1.0)',
@@ -82,7 +105,6 @@ const ListStyle = styled('div')(({ theme }) => ({
         left: 0,
         height: '100%',
         objectFit: 'cover',
-        borderRadius: 8,
       },
     },
 
@@ -124,14 +146,14 @@ const ListStyle = styled('div')(({ theme }) => ({
 }));
 
 function ProductsRecommend() {
-  const { recommendList, settings, onClick } = useProductsRecommend();
+  const { recommendProducts, settings, onClick } = useProductsRecommend();
 
   return (
     <Wrap>
       <h1>추천 제품</h1>
       <Slider {...settings}>
-        {recommendList &&
-          recommendList.map((product: ProductsData, index: number) => (
+        {recommendProducts &&
+          recommendProducts.map((product: ProductsData, index: number) => (
             <ListStyle key={product.id} onClick={() => onClick(product.id)}>
               <li>
                 <p className="number">

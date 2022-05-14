@@ -161,7 +161,7 @@ function useWrite() {
 
   useEffect(() => {
     // 제품 등록
-    if (updateInit === UPDATE.NONE) {
+    if (!id && updateInit === UPDATE.NONE) {
       store.dispatch(unloadWriteForm());
       initFormData(true);
     }

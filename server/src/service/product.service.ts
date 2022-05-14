@@ -14,11 +14,15 @@ export const findAllProduct = async (id: string) => {
     id,
   );
 
+  const recommendProducts = await getCustomRepository(
+    ProductRepository,
+  ).findAllRecommendProduct(id);
+
   if (products.length === 0) {
     return null;
   }
 
-  return products;
+  return { products, recommendProducts };
 };
 
 export const findOneProductByName = async (name: string) => {

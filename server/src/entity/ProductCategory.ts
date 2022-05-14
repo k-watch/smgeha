@@ -2,14 +2,9 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinColumn,
-  OneToMany,
-  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { ProductImgInfo } from './ProductImgInfo';
-import { ProductUnit } from './ProductUnit';
 
 @Entity()
 export class ProductCategory {

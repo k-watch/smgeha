@@ -1,3 +1,4 @@
+import { ImageListType } from 'react-images-uploading';
 // PorductData
 // {
 //   id: 0,
@@ -10,8 +11,6 @@
 //   image: ImageListType,
 //   url: 'url.com'
 // }
-import { ImageListType } from 'react-images-uploading';
-
 export interface ProductData {
   [index: string]: any;
   id: number;

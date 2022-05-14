@@ -2,7 +2,6 @@ import ReactImageUploading from 'react-images-uploading';
 import useWriteImage from './useWriteImage';
 import AddPhotoAlternateOutlinedIcon from '@mui/icons-material/AddPhotoAlternateOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
-import { grey } from '@mui/material/colors';
 import { styled } from '@mui/material/styles';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import Button from 'components/common/Button';

@@ -128,29 +128,33 @@ const NoContentWrap = styled('div')(({ theme }) => ({
 }));
 
 function ProductList() {
-  const { list, isLoading, slideRef, onMouseDown } = useProductList();
+  const { products, isLoading, slideRef, onMouseDown, onClick } =
+    useProductList();
 
   return (
     <>
       <Wrap>
-        <Grid container spacing={3}>
-          {isLoading
-            ? Array.from(new Array(12)).map((item, index) => (
-                <Grid key={index} item lg={3} md={4} sm={6} xs={12}>
-                  <Skeleton
-                    animation="wave"
-                    variant="rectangular"
-                    height={225}
-                  />
-                  <Skeleton animation="wave" />
-                  <Skeleton animation="wave" height={23} />
-                  <Skeleton animation="wave" height={28} />
-                </Grid>
-              ))
-            : null}
-          {list.length !== 0 ? (
-            list.map((product: ProductsData) => (
-              <Grid key={product.id} item lg={3} md={4} sm={6} xs={6}>
+        <Grid container spacing={2}>
+          {isLoading ? (
+            Array.from(new Array(12)).map((item, index) => (
+              <Grid key={index} item lg={3} md={4} sm={6} xs={12}>
+                <Skeleton animation="wave" variant="rectangular" height={225} />
+                <Skeleton animation="wave" />
+                <Skeleton animation="wave" height={23} />
+                <Skeleton animation="wave" height={28} />
+              </Grid>
+            ))
+          ) : products.length !== 0 ? (
+            products.map((product: ProductsData) => (
+              <Grid
+                key={product.id}
+                item
+                lg={3}
+                md={4}
+                sm={6}
+                xs={6}
+                onClick={() => onClick(product.id)}
+              >
                 <div className="imgWrap">
                   <img src={`images/${product.image}`} alt={product.name} />
                 </div>

@@ -1,4 +1,3 @@
-import { request } from 'express';
 import jwt from 'jsonwebtoken';
 import { getConnection } from 'typeorm';
 import { User } from '../entity/User';
@@ -33,7 +32,7 @@ const jwtMiddleware = async (req, res, next) => {
         },
       );
       res.cookie('auth_token', token, {
-        maxAge: 1000 * 60 * 60 * 24 * 7, // 7일
+        maxAge: 1000 * 60 * 60 * 24 * 7,
         httpOnly: true,
       });
     }

@@ -2,7 +2,6 @@ import { EntityRepository, getConnection, Repository } from 'typeorm';
 import { Product } from '../entity/Product';
 import { ProductRecommend } from '../entity/ProductRecommend';
 import { ProductUnit } from '../entity/ProductUnit';
-import product from '../router/product';
 
 @EntityRepository(Product)
 export class ProductRepository extends Repository<Product> {
@@ -25,6 +24,32 @@ export class ProductRepository extends Repository<Product> {
         .leftJoin(ProductRecommend, 'pr', 'p.id = pr.product_id')
         .where('p.code = :code', { code: id })
         .orderBy('p.updated', 'DESC')
+        .getRawMany();
+
+      return products;
+    } catch (e) {
+      throw Error(e);
+    }
+  };
+
+  findAllRecommendProduct = async (id: string) => {
+    try {
+      const products = await getConnection()
+        .getRepository(Product)
+        .createQueryBuilder('p')
+        .select([
+          'p.id as id',
+          'p.code as code',
+          '(select name from product_category where id = p.type) as type',
+          'p.name as name',
+          '(select name from product_category where id = p.manufacture) as manufacture',
+          'concat(p.size, (select name from product_unit where product_id = p.code)) as size',
+          'p.image as image',
+          'p.url as url',
+          'if(isnull(pr.id), false, true) as recommend',
+        ])
+        .innerJoin(ProductRecommend, 'pr', 'p.id = pr.product_id')
+        .orderBy('rand()')
         .getRawMany();
 
       return products;

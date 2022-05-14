@@ -2,13 +2,10 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinColumn,
   OneToMany,
-  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { ProductRecommend } from './ProductRecommend';
 import { ProductImgInfo } from './ProductImgInfo';
 
 @Entity()

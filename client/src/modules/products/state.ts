@@ -24,6 +24,6 @@ export interface ProductsData {
 }
 
 export interface ProductsState {
-  list: Array<ProductsData>;
-  recommendList: Array<ProductsData>;
+  products: Array<ProductsData>;
+  recommendProducts: Array<ProductsData>;
 }

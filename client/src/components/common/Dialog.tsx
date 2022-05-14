@@ -1,4 +1,3 @@
-import * as React from 'react';
 import {
   Alert,
   AlertTitle,
@@ -7,12 +6,7 @@ import {
   styled,
 } from '@mui/material';
 import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
 import Button from './Button';
-import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined';
-import { grey, red } from '@mui/material/colors';
 
 const Wrap = styled('div')({
   minWidth: 360,
