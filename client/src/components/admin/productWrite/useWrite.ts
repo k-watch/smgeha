@@ -54,9 +54,9 @@ function useWrite() {
 
   useEffect(() => {
     return () => {
-      store.dispatch(unloadWriteForm);
+      store.dispatch(unloadWriteForm());
     };
-  });
+  }, []);
 
   const setSelectData = useCallback(async (name, category, selectId) => {
     // 헤더 버튼을 클릭했을 때

@@ -1,5 +1,8 @@
 import client from 'modules/client';
 
+/*
+  GET /api/products
+*/
 export const findAllProducts = async (id: number) => {
   const { data } = await client.get(`/api/products/${id}`);
 

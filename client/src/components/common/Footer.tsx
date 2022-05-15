@@ -1,7 +1,6 @@
 import { styled } from '@mui/system';
 import { Grid } from '@mui/material';
 import { grey, lightBlue } from '@mui/material/colors';
-import React from 'react';
 
 const Wrap = styled('div')(({ theme }) => ({
   height: 130,

@@ -147,12 +147,12 @@ function Header() {
     <Wrap>
       <ul>
         <Mobile>
-          <li key={'menu'}>
+          <li>
             <Button variant="text" onClick={() => setMenuFlag(true)}>
               <MenuIcon />
             </Button>
           </li>
-          <li key={'logo'}>
+          <li>
             <a href="/">
               <img src="/logo.png" alt="logo" />
             </a>
@@ -162,12 +162,12 @@ function Header() {
             open={menuFlag}
             onClose={() => setMenuFlag(false)}
           >
-            <li key="close">
+            <li>
               <Button variant="text" onClick={() => setMenuFlag(false)}>
                 <CloseIcon />
               </Button>
             </li>
-            <li key="logo">
+            <li>
               <a href="/">
                 <img src="/logo.png" alt="logo" />
               </a>
@@ -184,7 +184,7 @@ function Header() {
         </Mobile>
 
         <Desktop>
-          <li key="logo">
+          <li>
             <a href="/">
               <img src="/logo.png" alt="logo" />
             </a>
@@ -198,17 +198,19 @@ function Header() {
               </li>
             ))}
         </Desktop>
-        <li key="admin">
+        <li>
           <span onClick={() => setSearchFlag(true)}>
             <SearchIcon />
           </span>
-          <span onClick={() => navigate('/admin')}>
-            <ManageAccountsOutlinedIcon />
-          </span>
           {auth && (
-            <span onClick={onLogout}>
-              <LogoutIcon />
-            </span>
+            <>
+              <span onClick={() => navigate('/admin')}>
+                <ManageAccountsOutlinedIcon />
+              </span>
+              <span onClick={onLogout}>
+                <LogoutIcon />
+              </span>
+            </>
           )}
         </li>
       </ul>

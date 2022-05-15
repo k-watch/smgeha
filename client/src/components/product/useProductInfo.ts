@@ -20,7 +20,10 @@ function useProductInfo() {
     slidesToScroll: 1,
     autoplay: true,
     autoplaySpeed: 3000,
-    arrows: false,
+    arrows: true,
+    initialSlide: 1,
+    adaptiveHeight: true,
+    className: 'slides',
   };
 
   const getInfo = async () => {

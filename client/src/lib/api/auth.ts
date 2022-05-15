@@ -4,8 +4,8 @@ import client from 'modules/client';
 /*
   POST /api/auth/login
   {
-    userId: 'abcd'
-    password: '1234'
+    userId: string
+    password: string
   }
 */
 export const login = async ({ userId, password }: LoginState) => {

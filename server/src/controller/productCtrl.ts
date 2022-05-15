@@ -71,13 +71,13 @@ export const findOneProductWrite = async (req, res) => {
 /*
   POST /product
   {
-    code: 0,
-    name: '제품명',
-    manufacture: '제조사',
-    size: '크기',
-    type: 0,
+    code: number,
+    name: string,
+    manufacture: string,
+    size: number,
+    type: number,
     image: file [png, jpg, jpeg],
-    url: 'url.com'
+    url: string,
     recoomend: boolean (추천기능)
   }
 */
@@ -120,14 +120,14 @@ export const write = async (req: Request, res: Response) => {
 /*
   PATCH /product/:id
   {
-    code: 0,
-    name: '제품명',
-    manufacture: '제조사',
-    size: '크기',
-    type: 0,
-    image: 'image.png',
-    url: 'url.com'
-    recommend: boolean (추천기능)
+    code: number,
+    name: string,
+    manufacture: string,
+    size: number,
+    type: number,
+    image: file [png, jpg, jpeg],
+    url: string,
+    recoomend: boolean (추천기능)
   }
 */
 export const update = async (req, res) => {

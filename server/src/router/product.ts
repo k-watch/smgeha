@@ -23,29 +23,22 @@ export const upload = multer({
 
 const product = Router();
 
-// product.get('/:id', productCtrl.findOneProduct);
-// product.get('/write/:id', checkLoggedIn, productCtrl.findOneProductWrite);
-// product.post(
-//   '/',
-//   checkLoggedIn,
-//   upload.array('file', 5),
-//   checkImg,
-//   productCtrl.write,
-// );
-// product.patch(
-//   '/:id',
-//   checkLoggedIn,
-//   upload.array('file', 5),
-//   productCtrl.update,
-// );
-// product.delete('/:id', checkLoggedIn, productCtrl.remove);
-// product.get('/unit/:id', productCtrl.findOneUnit);
-
 product.get('/:id', productCtrl.findOneProduct);
-product.get('/write/:id', productCtrl.findOneProductWrite);
-product.post('/', upload.array('file', 5), checkImg, productCtrl.write);
-product.patch('/:id', upload.array('file', 5), productCtrl.update);
-product.delete('/:id', productCtrl.remove);
+product.get('/write/:id', checkLoggedIn, productCtrl.findOneProductWrite);
+product.post(
+  '/',
+  checkLoggedIn,
+  upload.array('file', 5),
+  checkImg,
+  productCtrl.write,
+);
+product.patch(
+  '/:id',
+  checkLoggedIn,
+  upload.array('file', 5),
+  productCtrl.update,
+);
+product.delete('/:id', checkLoggedIn, productCtrl.remove);
 product.get('/unit/:id', productCtrl.findOneUnit);
 
 export default product;

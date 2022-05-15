@@ -1,4 +1,3 @@
-import React from 'react';
 import './App.css';
 import LoginPage from 'pages/LoginPage';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
@@ -13,6 +12,8 @@ import Header from 'components/common/header/Header';
 import AdminProductsPage from 'pages/admin/AdminProductsPage';
 import { styled } from '@mui/system';
 import ProductPage from 'pages/ProductPage';
+import ProtectedRoutes from 'modules/router/ProtectedRoutes';
+import PublicRoutes from 'modules/router/PublicRoutes';
 
 const theme = createTheme({
   palette: {
@@ -44,10 +45,17 @@ function App() {
             <Routes>
               <Route path="/" element={<ProductsPage />} />
               <Route path="/product/:id" element={<ProductPage />} />
-              <Route path="/admin" element={<AdminProductsPage />} />
-              <Route path="/login" element={<LoginPage />} />
-              <Route path={'admin/write'} element={<ProductWritePage />} />
-              <Route path={'admin/write/:id'} element={<ProductWritePage />} />
+              <Route path="/" element={<PublicRoutes />}>
+                <Route path="/login" element={<LoginPage />} />
+              </Route>
+              <Route path="/" element={<ProtectedRoutes />}>
+                <Route path="/admin" element={<AdminProductsPage />} />
+                <Route path={'admin/write'} element={<ProductWritePage />} />
+                <Route
+                  path={'admin/write/:id'}
+                  element={<ProductWritePage />}
+                />
+              </Route>
             </Routes>
           </Wrap>
           <Footer />

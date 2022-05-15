@@ -24,7 +24,7 @@ export const productSlice = createSlice({
       state.writeForm[key] = value;
     },
     unloadWriteForm(state) {
-      state.writeForm = { ...initialState.writeForm };
+      return initialState;
     },
     setLoadImage(state, action) {
       state.loadImage = [...action.payload];

@@ -221,7 +221,13 @@ function ProductList() {
                     <p className="link">
                       <InsertLinkOutlinedIcon />
                       <Tooltip title={product.url} arrow>
-                        <a href={product.url}>{product.url}</a>
+                        <a
+                          href={product.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {product.url}
+                        </a>
                       </Tooltip>
                     </p>
                   )}

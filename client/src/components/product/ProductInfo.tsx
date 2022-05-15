@@ -13,6 +13,26 @@ const Wrap = styled('div')(({ theme }) => ({
     objectFit: 'cover',
   },
 
+  '& .slides': {
+    position: 'relative',
+    '& .slick-prev, .slick-next': {
+      position: 'absolute',
+      top: '50%',
+      opacity: 'none',
+      '&:before': {
+        fontSize: 30,
+      },
+    },
+    '& .slick-prev': {
+      left: 5,
+      zIndex: 1,
+    },
+    '& .slick-next': {
+      right: 15,
+      zIndex: 1,
+    },
+  },
+
   '& .contentWrap': {
     position: 'relative',
     height: '100%',
@@ -64,7 +84,7 @@ function ProductInfo() {
   return (
     <Wrap>
       <Grid container>
-        <Grid lg={6} sm={12} xs={12}>
+        <Grid item lg={6} sm={12} xs={12}>
           <Slider {...settings}>
             {product &&
               product.image.map((image, index) => (
@@ -72,7 +92,7 @@ function ProductInfo() {
               ))}
           </Slider>
         </Grid>
-        <Grid lg={6} sm={12} xs={12}>
+        <Grid item lg={6} sm={12} xs={12}>
           {product && (
             <div className="contentWrap">
               <p className="manufacture">{product.manufacture} </p>

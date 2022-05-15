@@ -16,7 +16,7 @@ function useWriteHeader() {
   const categoryQuery = useQuery<CategoryData[], Error>(
     'headerCategory',
     getHeaderCategory,
-    {},
+    { enabled: false },
   );
   const [productCategory, setProductCategory] = useState<CategoryProps[]>([]);
   const [recommendDisabled, setRecommendDisabled] = useState(false);
@@ -24,6 +24,10 @@ function useWriteHeader() {
 
   const navigate = useNavigate();
   const { pathname } = useLocation();
+
+  useEffect(() => {
+    categoryQuery.refetch();
+  }, []);
 
   useEffect(() => {
     if (pathname === '/admin') {
@@ -34,7 +38,7 @@ function useWriteHeader() {
   // 외부에서 헤더를 건드릴 때 (제품 수정을 위해 정보 로드)
   useEffect(() => {
     productClick(productCode);
-    setRecommendDisabled(writeForm.recommend);
+    setRecommendDisabled(JSON.parse(writeForm.recommend.toString()));
   }, [productCode, writeForm.recommend]);
 
   useEffect(() => {

@@ -54,6 +54,7 @@ function useHeader() {
       await logout();
       localStorage.removeItem('auth');
       store.dispatch(delAuth());
+      navigate('/');
     } catch (e) {
       console.log(e);
     }
