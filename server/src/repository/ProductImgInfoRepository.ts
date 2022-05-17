@@ -19,8 +19,9 @@ export class ProductImgInfoRepository extends Repository<ProductImgInfo> {
     try {
       const images = await getConnection()
         .getRepository(ProductImgInfo)
-        .createQueryBuilder('productImgInfo')
+        .createQueryBuilder('pi')
         .where('product_id=:product_id', { product_id: id })
+        .orderBy('pi.created')
         .getMany();
 
       return images;
