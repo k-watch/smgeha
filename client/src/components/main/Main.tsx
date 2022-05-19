@@ -3,10 +3,11 @@ import { Grid } from '@mui/material';
 import { Fade } from 'react-awesome-reveal';
 import { grey } from '@mui/material/colors';
 
-const Wrap = styled('div')(() => ({
-  '&:before': {
-    width: '100vh',
-    background: 'black',
+const Wrap = styled('div')(({ theme }) => ({
+  marginTop: 100,
+
+  [theme.breakpoints.down('md')]: {
+    marginTop: 50,
   },
 
   '& .header': {
@@ -55,8 +56,6 @@ const Wrap = styled('div')(() => ({
 }));
 
 const HeaderWrap = styled('div')({
-  marginTop: 100,
-
   '& img': {
     width: '100%',
     maxHeight: 500,
