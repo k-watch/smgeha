@@ -43,7 +43,7 @@ function useHeader() {
   const onHeaderClick = useCallback(
     (id: number) => {
       store.dispatch(setProductCode(id));
-      navigate('/');
+      navigate('/products');
     },
     [navigate],
   );

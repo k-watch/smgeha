@@ -14,6 +14,7 @@ import { styled } from '@mui/system';
 import ProductPage from 'pages/ProductPage';
 import ProtectedRoutes from 'modules/router/ProtectedRoutes';
 import PublicRoutes from 'modules/router/PublicRoutes';
+import Main from 'components/common/main/Main';
 
 const theme = createTheme({
   palette: {
@@ -43,7 +44,8 @@ function App() {
           <Header />
           <Wrap>
             <Routes>
-              <Route path="/" element={<ProductsPage />} />
+              <Route path="/" element={<Main />} />
+              <Route path="/products" element={<ProductsPage />} />
               <Route path="/product/:id" element={<ProductPage />} />
               <Route path="/" element={<PublicRoutes />}>
                 <Route path="/login" element={<LoginPage />} />
