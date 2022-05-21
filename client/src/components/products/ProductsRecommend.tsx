@@ -8,17 +8,27 @@ import 'slick-carousel/slick/slick-theme.css';
 
 const Wrap = styled('div')(({ theme }) => ({
   position: 'relative',
-  width: '95vw',
-  marginLeft: 'calc(-50vw + 53.2%)',
+  width: '98.9vw',
+  height: '16vw',
+  marginLeft: 'calc(-50vw + 50.9%)',
   marginBottom: 30,
-  paddingTop: 25,
-  paddingBottom: 18,
-  borderTop: `2px solid ${grey[300]}`,
-  borderBottom: `2px solid ${grey[300]}`,
+  padding: '30px 0',
+  backgroundColor: `${grey[50]}`,
+
+  [theme.breakpoints.down('lg')]: {
+    height: '29vw',
+  },
+
+  [theme.breakpoints.down('md')]: {
+    width: 'inherit',
+    height: '41vw',
+    marginLeft: 0,
+  },
 
   [theme.breakpoints.down('sm')]: {
-    width: 'inherit',
-    marginLeft: 0,
+    height: '68vw',
+    marginBottom: 20,
+    padding: '20px 0',
   },
 
   '& h1': {
@@ -27,34 +37,49 @@ const Wrap = styled('div')(({ theme }) => ({
     left: '50%',
     transform: 'translate(-50%, -50%)',
     padding: 20,
-    backgroundColor: 'white',
-    textAlign: 'center',
     color: `${grey[800]}`,
-    fontSize: '2.0625rem',
+    fontSize: '2rem',
     fontWeight: 700,
 
     [theme.breakpoints.down('sm')]: {
-      fontSize: 25,
+      fontSize: '1.5625rem',
     },
   },
 
   '& .slides': {
     position: 'relative',
+    height: 'inherit',
     '& .slick-prev, .slick-next': {
       position: 'absolute',
       top: '50%',
       opacity: 'none',
+
       '&:before': {
-        fontSize: 30,
+        fontSize: '1.875rem',
       },
     },
     '& .slick-prev': {
-      left: 5,
+      left: 20,
       zIndex: 1,
     },
     '& .slick-next': {
-      right: 15,
+      right: 30,
       zIndex: 1,
+    },
+
+    [theme.breakpoints.down('sm')]: {
+      '& .slick-prev, .slick-next': {
+        '&:before': {
+          fontSize: '1.5625rem',
+        },
+      },
+
+      '& .slick-prev': {
+        left: 5,
+      },
+      '& .slick-next': {
+        right: 10,
+      },
     },
   },
 }));
@@ -62,6 +87,11 @@ const Wrap = styled('div')(({ theme }) => ({
 const ListStyle = styled('div')(({ theme }) => ({
   '& li': {
     position: 'relative',
+    margin: '0 15px',
+
+    [theme.breakpoints.down('sm')]: {
+      margin: 0,
+    },
 
     '& img': {
       transform: 'scale(1.0)',
@@ -71,7 +101,6 @@ const ListStyle = styled('div')(({ theme }) => ({
     '&:hover': {
       cursor: 'pointer',
       borderRadius: 8,
-
       '& img': {
         transform: 'scale(1.2)',
         transition: '.3s',
@@ -80,23 +109,29 @@ const ListStyle = styled('div')(({ theme }) => ({
 
     '& .number': {
       position: 'absolute',
-      top: -5,
-      right: 0,
+      top: 7,
+      right: 7,
       zIndex: 1,
-      margin: 15,
-      padding: 4,
-      fontSize: '2.1875rem',
+      fontSize: '1.5625rem',
       fontWeight: 700,
       color: 'white',
     },
 
     '& .imgWrap': {
       position: 'relative',
-      marginBottom: 7,
       width: '100%',
       height: 0,
-      paddingBottom: '100%',
+      marginBottom: 7,
+      paddingBottom: '70%',
       overflow: 'hidden',
+
+      [theme.breakpoints.down('lg')]: {
+        paddingBottom: '96%',
+      },
+
+      [theme.breakpoints.down('sm')]: {
+        paddingBottom: '77%',
+      },
 
       '& img': {
         width: '100%',
@@ -105,40 +140,58 @@ const ListStyle = styled('div')(({ theme }) => ({
         left: 0,
         height: '100%',
         objectFit: 'cover',
+        borderRadius: 8,
       },
     },
 
     '& .contentWrap': {
       position: 'absolute',
-      bottom: -10,
-      margin: 20,
+      bottom: 10,
+      left: 10,
       color: 'white',
 
       '& p': {
-        marginBottom: 10,
+        marginTop: 10,
+        marginRight: 10,
       },
 
       '& .manufacture': {
         display: 'inline-block',
         padding: 5,
-        fontSize: '0.875rem',
+        fontSize: '0.8125rem',
         fontWeight: 500,
         border: '1px solid white',
         borderRadius: 6,
       },
 
       '& .title': {
-        fontSize: '1.875rem',
+        fontSize: '1.5625rem',
         fontWeight: 800,
       },
 
       '& .content': {
         display: 'flex',
-        fontSize: '1.125rem',
+        fontSize: '16px',
         fontWeight: 500,
+      },
 
+      [theme.breakpoints.down('sm')]: {
         '& p': {
-          marginRight: 10,
+          marginTop: 7,
+          marginRight: 7,
+        },
+
+        '& .manufacture': {
+          fontSize: '0.625rem',
+        },
+
+        '& .title': {
+          fontSize: '1.375rem',
+          fontWeight: 700,
+        },
+
+        '& .content': {
+          fontSize: '0.875rem',
         },
       },
     },

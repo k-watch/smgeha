@@ -14,7 +14,7 @@ import { styled } from '@mui/system';
 import ProductPage from 'pages/ProductPage';
 import ProtectedRoutes from 'modules/router/ProtectedRoutes';
 import PublicRoutes from 'modules/router/PublicRoutes';
-import Main from 'components/common/main/Main';
+import Main from 'components/main/Main';
 
 const theme = createTheme({
   palette: {

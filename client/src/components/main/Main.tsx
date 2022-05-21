@@ -4,18 +4,18 @@ import { Fade } from 'react-awesome-reveal';
 import { grey } from '@mui/material/colors';
 
 const Wrap = styled('div')(({ theme }) => ({
-  marginTop: 100,
-
-  [theme.breakpoints.down('md')]: {
-    marginTop: 50,
-  },
-
   '& .header': {
-    paddingTop: 150,
+    paddingTop: 100,
     paddingBottom: 50,
     fontSize: 35,
     fontWeigth: 500,
     textAlign: 'center',
+
+    [theme.breakpoints.down('sm')]: {
+      paddingTop: 50,
+      paddingBottom: 30,
+      fontSize: 28,
+    },
   },
 
   '& .imgWrap': {
@@ -55,25 +55,72 @@ const Wrap = styled('div')(({ theme }) => ({
   },
 }));
 
-const HeaderWrap = styled('div')({
+const MainWrap = styled('div')(({ theme }) => ({
+  position: 'relative',
+  width: '98.9vw',
+  marginLeft: 'calc(-50vw + 50.8%)',
+  paddingBottom: '30%',
+  overflow: 'hidden',
+  border: `1px solid ${grey[200]}`,
+
   '& img': {
     width: '100%',
-    maxHeight: 500,
+    height: '100%',
+    position: 'absolute',
+    top: 0,
+    left: 0,
     objectFit: 'cover',
-    borderRadius: 6,
   },
 
-  '& p': {
-    lineHeight: 1.8,
-    fontSize: 20,
-    fontWeight: 400,
-    color: `${grey[800]}`,
-
-    '& .MuiSvgIcon-root': {
-      fontSize: 16,
+  '& .contentWrap': {
+    position: 'absolute',
+    height: 180,
+    left: '15%',
+    background: 'black',
+    '& .title': {
+      marginTop: 60,
+      color: 'white',
+      fontSize: 53,
+      fontWeight: 600,
     },
   },
-});
+
+  [theme.breakpoints.down('lg')]: {
+    marginLeft: 'calc(-50vw + 51%)',
+    paddingBottom: '50%',
+    '& .contentWrap': {
+      left: '10%',
+      '& .title': {
+        fontSize: 45,
+      },
+    },
+  },
+
+  [theme.breakpoints.down('md')]: {
+    '& .contentWrap': {
+      height: 130,
+      left: 40,
+      '& .title': {
+        marginTop: 50,
+        fontSize: 35,
+      },
+    },
+  },
+
+  [theme.breakpoints.down('sm')]: {
+    paddingBottom: '80%',
+
+    '& .contentWrap': {
+      left: 15,
+      height: '100%',
+      '& .title': {
+        marginTop: 60,
+        fontSize: 24,
+        writingMode: 'vertical-rl',
+      },
+    },
+  },
+}));
 
 const ShopWrap = styled('div')(() => ({
   '& .imgWrap': {
@@ -92,37 +139,16 @@ const ServiceWrap = styled('div')(() => ({
 function Main() {
   return (
     <Wrap>
-      <div className="bgColor" />
-      <HeaderWrap>
-        <Grid container spacing={{ lg: 10, xs: 2 }}>
-          <Grid item lg={6} xs={12}>
-            <Fade direction="up">
-              <img src="/images/main.png" alt="main" />
-            </Fade>
-          </Grid>
-          <Grid item lg={6} xs={12}>
-            <Fade direction="up" delay={300}>
-              <p>
-                안녕하세요.
-                <br />
-                최고의 중고제품만 취급하는 군산 새만금 중고 마트입니다.
-                <br />
-                <br />
-                저희는 제품 판매뿐만이 아닌 매입도 함께 하고 있으며, 최저가 판매
-                및 최고가 매입을 원칙으로 운영중입니다.
-                <br />
-                고객님께서 제품 구매 시 배달, 설치 뿐 아니라 사용하셨던 제품까지
-                철거해드리고 있습니다.
-                <br />
-                <br />
-                언제나 최고의 품질과 서비스로 여러분을 찾아뵙겠습니다.
-                <br />
-                감사합니다.
-              </p>
-            </Fade>
-          </Grid>
-        </Grid>
-      </HeaderWrap>
+      <MainWrap>
+        <img src="/images/main.png" alt="main" />
+        <div className="contentWrap">
+          <p className="title">
+            군산
+            <br />
+            새만금중고
+          </p>
+        </div>
+      </MainWrap>
       <ShopWrap>
         <Fade direction="up">
           <p className="header">매장소개</p>

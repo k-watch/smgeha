@@ -18,19 +18,19 @@ function useProductsRecommend() {
     className: 'slides',
     responsive: [
       {
-        breakpoint: 1199,
+        breakpoint: 1200,
         settings: {
           slidesToShow: 3,
         },
       },
       {
-        breakpoint: 899,
+        breakpoint: 900,
         settings: {
           slidesToShow: 2,
         },
       },
       {
-        breakpoint: 799,
+        breakpoint: 600,
         settings: {
           slidesToShow: 1,
         },
