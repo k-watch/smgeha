@@ -24,7 +24,7 @@ function useProductList() {
   const navigate = useNavigate();
 
   const onClick = (id: number) => {
-    navigate(`product/${id}`);
+    navigate(`/product/${id}`);
   };
 
   // 제품 칩 데이터 가로 스크롤용
