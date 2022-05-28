@@ -12,6 +12,7 @@ const initialState: ProductState = {
     type: 0,
     image: [],
     url: '',
+    content: '',
   },
   loadImage: [],
 };

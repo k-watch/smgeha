@@ -1,9 +1,11 @@
-import { Grid } from '@mui/material';
+import { Chip, Grid, Skeleton } from '@mui/material';
 import { grey } from '@mui/material/colors';
 import { styled } from '@mui/system';
 import Button from 'components/common/Button';
 import Slider from 'react-slick';
 import useProductInfo from './useProductInfo';
+import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
+import { Desktop, Mobile } from 'lib/styles/common';
 
 const Wrap = styled('div')(({ theme }) => ({
   margin: '30px 0',
@@ -33,58 +35,83 @@ const Wrap = styled('div')(({ theme }) => ({
     },
   },
 
+  '& .rightWrap': {
+    marginLeft: 20,
+    padding: 20,
+    border: `1px solid ${grey[200]}`,
+    borderRadius: 4,
+
+    '& .title': { fontWeight: 500 },
+    '& .question': { marginTop: 20, marginBottom: 10, color: `${grey[600]}` },
+    '& .phone': {
+      display: 'flex',
+      alignItems: 'center',
+      marginBottom: 20,
+      fontWeight: 500,
+    },
+    '& .MuiButton-root': {
+      height: 50,
+      marginTop: 15,
+      fontSize: '1.125rem',
+    },
+
+    [theme.breakpoints.down('lg')]: {
+      margin: '10px 0',
+      '& .phone': {
+        marginBottom: 0,
+      },
+    },
+  },
+
   '& .contentWrap': {
-    position: 'relative',
-    height: '100%',
-    marginLeft: 70,
+    marginTop: 20,
 
     '& .manufacture': {
-      fontSize: '1.5625rem',
+      fontSize: '1rem',
       fontWeight: 500,
       color: `${grey[600]}`,
     },
     '& .name': {
-      margin: '20px 0',
-      fontSize: '3.4375rem',
+      margin: '10px 0',
+      fontSize: '2.1875rem',
       fontWeight: 600,
     },
-    '& .size': {
-      position: 'absolute',
-      bottom: '30%',
-      right: 0,
-      fontSize: '1.875rem',
-      fontWeight: 500,
-      color: `${grey[700]}`,
-    },
-    '& .type': {
-      position: 'absolute',
-      bottom: '20%',
-      right: 0,
-      fontSize: '1.875rem',
-      fontWeight: 500,
-      color: `${grey[700]}`,
-    },
-    '& .MuiButton-root': {
-      position: 'absolute',
-      bottom: 0,
-      marginTop: 20,
-      height: 60,
-      fontSize: '1.25rem',
-    },
+  },
 
-    [theme.breakpoints.down('lg')]: {
-      height: 400,
-      margin: '40px 0',
-    },
+  '& .content': {
+    margin: '30px 0',
+    lineHeight: 1.5,
   },
 }));
 
+const ChipStyle = styled(Chip)({
+  marginBottom: 6,
+
+  '&.MuiChip-root': {
+    height: 30,
+    marginRight: 10,
+    borderRadius: 19,
+
+    '& .MuiChip-label': {
+      padding: '8px 13px',
+      fontSize: '0.8125rem',
+      fontWeight: 600,
+      color: `${grey[700]}`,
+    },
+  },
+  '&.MuiChip-filled': {
+    border: `1px solid ${grey[400]}`,
+    backgroundColor: 'white',
+  },
+});
+
 function ProductInfo() {
   const { product, settings } = useProductInfo();
+
   return (
     <Wrap>
       <Grid container>
-        <Grid item lg={6} sm={12} xs={12}>
+        <Grid item lg={8} sm={12} xs={12}>
           <Slider {...settings}>
             {product &&
               product.image.map((image, index) => (
@@ -92,34 +119,45 @@ function ProductInfo() {
               ))}
           </Slider>
         </Grid>
-        <Grid item lg={6} sm={12} xs={12}>
+        <Grid item lg={4} sm={12} xs={12}>
+          {product && (
+            <div className="rightWrap">
+              <p className="title">군산 새만금중고</p>
+              <p className="question">문의전화</p>
+              <p className="phone">
+                <LocalPhoneIcon />
+                &nbsp;063-453-4137
+              </p>
+              {product.url && (
+                <a href={product.url} target="_blank" rel="noopener noreferrer">
+                  <Button variant="contained" fullWidth>
+                    블로그 가기
+                  </Button>
+                </a>
+              )}
+              <a
+                href="http://naver.me/xIh4bleL"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Button variant="outlined" fullWidth>
+                  오시는 길
+                </Button>
+              </a>
+            </div>
+          )}
+        </Grid>
+        <Grid item lg={8} sm={12} xs={12}>
           {product && (
             <div className="contentWrap">
               <p className="manufacture">{product.manufacture} </p>
               <p className="name">{product.name} </p>
-              <p className="size">크기 : {product.size} </p>
-              <p className="type">유형 : {product.type} </p>
-              {product.url ? (
-                <a
-                  href={`${product.url}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Button variant="contained" fullWidth>
-                    블로그
-                  </Button>
-                </a>
-              ) : (
-                <a
-                  href="http://naver.me/xIh4bleL"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Button variant="contained" fullWidth>
-                    오시는 길
-                  </Button>
-                </a>
-              )}
+              <ChipStyle label={`#${product.type}`} />
+              <ChipStyle label={`#${product.size}`} />
+              <div
+                className="content"
+                dangerouslySetInnerHTML={{ __html: product.content }}
+              />
             </div>
           )}
         </Grid>

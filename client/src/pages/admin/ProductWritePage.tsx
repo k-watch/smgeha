@@ -4,10 +4,10 @@ import WriteFormHeader from 'components/admin/common/ProductHeader';
 import WriteForm from 'components/admin/productWrite/WriteForm';
 import WriteImageForm from 'components/admin/productWrite/WriteImageForm';
 import WriteSummit from 'components/admin/productWrite/WriteSummit';
+import WriteEditor from 'components/admin/productWrite/WriteEditor';
 
 const Wrap = styled('div')(() => ({
   minWidth: 1257,
-  height: '72vh',
   overflow: 'hidden',
   margin: '0 auto',
   paddingTop: 50,
@@ -28,25 +28,36 @@ const Wrap = styled('div')(() => ({
     paddingLeft: 50,
     boxSizing: 'border-box',
   },
+  '& .editor': {
+    float: 'left',
+    width: '100%',
+    marginTop: 30,
+  },
   '& .button': {
     float: 'right',
+    margin: '30px 0',
   },
 }));
 
 function ProductWritePage() {
   return (
-    <Wrap>
-      <WriteFormHeader />
-      <div className="left">
-        <WriteForm />
-      </div>
-      <div className="right">
-        <WriteImageForm />
-      </div>
-      <div className="button">
-        <WriteSummit />
-      </div>
-    </Wrap>
+    <>
+      <Wrap>
+        <WriteFormHeader />
+        <div className="left">
+          <WriteForm />
+        </div>
+        <div className="right">
+          <WriteImageForm />
+        </div>
+        <div className="editor">
+          <WriteEditor />
+        </div>
+        <div className="button">
+          <WriteSummit />
+        </div>
+      </Wrap>
+    </>
   );
 }
 

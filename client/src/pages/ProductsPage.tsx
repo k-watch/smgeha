@@ -2,11 +2,11 @@ import ProductList from 'components/products/ProductList';
 import { styled } from '@mui/system';
 import ProductsRecommend from 'components/products/ProductsRecommend';
 
-const Wrap = styled('div')(({ theme }) => ({
+const Wrap = styled('div')({
   width: '100%',
   marginTop: 40,
   marginBottom: 25,
-}));
+});
 
 function ProductsPage() {
   return (

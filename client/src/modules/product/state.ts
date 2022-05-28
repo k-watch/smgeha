@@ -10,6 +10,7 @@ import { ImageListType } from 'react-images-uploading';
 //   type: 0,
 //   image: ImageListType,
 //   url: 'url.com'
+//   content: 내용
 // }
 export interface ProductData {
   [index: string]: any;
@@ -22,6 +23,7 @@ export interface ProductData {
   type: number;
   image: ImageListType;
   url?: string;
+  content: string;
 }
 
 export interface ProductState {

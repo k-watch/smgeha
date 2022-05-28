@@ -75,6 +75,7 @@ const Wrap = styled('div')(({ theme }) => ({
 
         '&:last-of-type': {
           marginLeft: 0,
+
           '& span': {
             paddingLeft: '12px',
           },
@@ -153,7 +154,7 @@ function Header() {
             </Button>
           </li>
           <li>
-            <a href="/">
+            <a href="/introduce">
               <img src="/logo.png" alt="logo" />
             </a>
           </li>
@@ -168,7 +169,7 @@ function Header() {
               </Button>
             </li>
             <li>
-              <a href="/">
+              <a href="/introduce">
                 <img src="/logo.png" alt="logo" />
               </a>
             </li>
@@ -185,7 +186,7 @@ function Header() {
 
         <Desktop>
           <li>
-            <a href="/">
+            <a href="/introduce">
               <img src="/logo.png" alt="logo" />
             </a>
           </li>

@@ -1,5 +1,6 @@
 import { EntityRepository, getConnection, Repository } from 'typeorm';
 import { Product } from '../entity/Product';
+import { ProductContent } from '../entity/ProductContent';
 import { ProductRecommend } from '../entity/ProductRecommend';
 import { ProductUnit } from '../entity/ProductUnit';
 
@@ -87,9 +88,11 @@ export class ProductRepository extends Repository<Product> {
           'p.image as image',
           'p.url as url',
           'if(isnull(pr.id), false, true) as recommend',
+          'pc.content as content',
         ])
         .leftJoin(ProductRecommend, 'pr', 'p.id = pr.product_id')
         .innerJoin(ProductUnit, 'pu', 'p.code = pu.product_id')
+        .innerJoin(ProductContent, 'pc', 'p.id = pc.product_id')
         .where('p.id = :id', { id })
         .getRawOne();
 
@@ -128,9 +131,11 @@ export class ProductRepository extends Repository<Product> {
           'p.image as image',
           'p.url as url',
           'pu.name as unit',
+          'pc.content as content',
         ])
         .leftJoin(ProductRecommend, 'pr', 'p.id = pr.product_id')
         .innerJoin(ProductUnit, 'pu', 'p.code = pu.product_id')
+        .leftJoin(ProductContent, 'pc', 'p.id = pc.product_id')
         .where('p.id = :id', { id })
         .getRawOne();
 

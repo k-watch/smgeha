@@ -1,6 +1,6 @@
 import { findOneProduct } from 'lib/api/product';
 import { ProductData, ProductInfoData } from 'modules/product/state';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useMutation } from 'react-query';
 import { useParams } from 'react-router-dom';
 import { ImageListType } from 'react-images-uploading';

@@ -35,6 +35,12 @@ const ButtonStyle = styled(MuiButton)({
       color: `${grey[400]}`,
     },
   },
+
+  '&.MuiButton-outlined': {
+    '&:hover': {
+      backgroundColor: 'white',
+    },
+  },
 });
 
 function Button(props: ButtonProps) {

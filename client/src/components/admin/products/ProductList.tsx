@@ -175,7 +175,7 @@ function ProductList() {
       <Wrap>
         <Grid container spacing={2}>
           {isLoading
-            ? Array.from(new Array(10)).map((item, index) => (
+            ? Array.from(new Array(12)).map((item, index) => (
                 <Grid key={index} item md={3} sm={4} xs={12}>
                   <Skeleton
                     animation="wave"

@@ -8,6 +8,8 @@ import { ProductRecommendRepository } from '../repository/productRecommendReposi
 import { ProductRepository } from '../repository/productRepository';
 import { ProductImgInfoRepository } from '../repository/productImgInfoRepository';
 import { ProductUnitRepository } from '../repository/productUnitRepository';
+import { ProductContent } from '../entity/ProductContent';
+import { ProductContentRepository } from '../repository/productContentRepository';
 
 export const findAllProduct = async (id: string) => {
   const products = await getCustomRepository(ProductRepository).findAllProduct(
@@ -64,7 +66,7 @@ export const findOneProductWrite = async (id: string) => {
 };
 
 export const write = async (
-  { recommend, code, name, manufacture, size, type, url },
+  { recommend, code, name, manufacture, size, type, url, content },
   files,
 ) => {
   const product = new Product();
@@ -95,6 +97,13 @@ export const write = async (
         .getRepository(ProductRecommend)
         .save(productRecommend);
     }
+
+    // ProductContent 저장
+    const productContent = new ProductContent();
+    productContent.productId = productInfo.id;
+    productContent.content = content;
+
+    await getConnection().getRepository(ProductContent).save(productContent);
 
     // ProductImgInfo 저장
     const images = files as Array<Express.Multer.File>;
@@ -167,6 +176,16 @@ export const update = async (id, data, files) => {
       await getCustomRepository(ProductRecommendRepository).save(recommend);
     }
 
+    // ProductContent 삭제
+    await getCustomRepository(ProductContentRepository).DeleteByProdcutId(id);
+
+    // ProductContent 저장
+    const productContent = new ProductContent();
+    productContent.productId = id;
+    productContent.content = data.content;
+
+    await getConnection().getRepository(ProductContent).save(productContent);
+
     // Product 갱신
     await getCustomRepository(ProductRepository).updateByOption(
       id,
@@ -202,6 +221,9 @@ export const remove = async (id) => {
 
     // ProductRecommend 삭제
     await getCustomRepository(ProductRecommendRepository).DeleteByProdcutId(id);
+
+    // ProductContent 삭제
+    await getCustomRepository(ProductContentRepository).DeleteByProdcutId(id);
 
     // ProductImgInfo 삭제
     await getCustomRepository(ProductImgInfoRepository).DeleteByProductId(id);

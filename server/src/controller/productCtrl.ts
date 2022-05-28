@@ -78,7 +78,8 @@ export const findOneProductWrite = async (req, res) => {
     type: number,
     image: file [png, jpg, jpeg],
     url: string,
-    recoomend: boolean (추천기능)
+    recoomend: boolean (추천기능),
+    content: 제품 내용
   }
 */
 export const write = async (req: Request, res: Response) => {
@@ -95,6 +96,7 @@ export const write = async (req: Request, res: Response) => {
     size: Joi.string().required(),
     type: Joi.number().required(),
     url: Joi.string(),
+    content: Joi.string(),
   });
 
   const validate = schema.validate(req.body);
@@ -127,7 +129,8 @@ export const write = async (req: Request, res: Response) => {
     type: number,
     image: file [png, jpg, jpeg],
     url: string,
-    recoomend: boolean (추천기능)
+    recoomend: boolean (추천기능),
+    content: 제품 내용
   }
 */
 export const update = async (req, res) => {
@@ -139,6 +142,7 @@ export const update = async (req, res) => {
     size: Joi.string(),
     type: Joi.number(),
     url: Joi.string(),
+    content: Joi.string(),
   });
 
   const validate = schema.validate(req.body);

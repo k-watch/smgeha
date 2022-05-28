@@ -44,8 +44,8 @@ function App() {
           <Header />
           <Wrap>
             <Routes>
-              <Route path="/" element={<Main />} />
-              <Route path="/products" element={<ProductsPage />} />
+              <Route path="/introduce" element={<Main />} />
+              <Route path="/" element={<ProductsPage />} />
               <Route path="/product/:id" element={<ProductPage />} />
               <Route path="/" element={<PublicRoutes />}>
                 <Route path="/login" element={<LoginPage />} />

@@ -58,6 +58,8 @@ function useWriteSummit() {
       formData.append('url', form.url);
     }
 
+    formData.append('content', form.content);
+
     setSuccessLodingOpen(true);
     if (id) {
       await updateMutation.mutateAsync(
