@@ -79,7 +79,7 @@ export class ProductRepository extends Repository<Product> {
         .where('p.name like :name', { name: `%${name}%` })
         .orderBy('p.updated', 'DESC')
         .getRawMany();
-      console.log(products, name);
+
       return products;
     } catch (e) {
       throw Error(e);
