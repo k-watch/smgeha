@@ -59,14 +59,27 @@ export class ProductRepository extends Repository<Product> {
     }
   };
 
-  findOneProductByName = async (name: string) => {
+  findProductsByName = async (name: string) => {
     try {
       const products = await getConnection()
         .getRepository(Product)
         .createQueryBuilder('p')
-        .where('name like :name', { name: `%${name}%` })
-        .getMany();
-
+        .select([
+          'p.id as id',
+          'p.code as code',
+          '(select name from product_category where id = p.type) as type',
+          'p.name as name',
+          '(select name from product_category where id = p.manufacture) as manufacture',
+          'concat(p.size, (select name from product_unit where product_id = p.code)) as size',
+          'p.image as image',
+          'p.url as url',
+          'if(isnull(pr.id), false, true) as recommend',
+        ])
+        .leftJoin(ProductRecommend, 'pr', 'p.id = pr.product_id')
+        .where('p.name like :name', { name: `%${name}%` })
+        .orderBy('p.updated', 'DESC')
+        .getRawMany();
+      console.log(products, name);
       return products;
     } catch (e) {
       throw Error(e);

@@ -1,7 +1,7 @@
 import { findAllProducts } from 'lib/api/products';
 import { categorySelector } from 'modules/category/category';
 import {
-  initProducts,
+  initAllProducts,
   productsSelector,
   setProducts,
 } from 'modules/products/products';
@@ -49,7 +49,7 @@ function useProductList() {
 
   useEffect(() => {
     if (productCode) {
-      store.dispatch(initProducts());
+      store.dispatch(initAllProducts());
       getProductList(productCode);
     }
   }, [productCode]);

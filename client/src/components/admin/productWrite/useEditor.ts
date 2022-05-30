@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react';
 import { store } from 'modules/store';
 import { productSelector, setWriteForm } from 'modules/product/product';
 import { useSelector } from 'react-redux';
+import { EditorState, convertToRaw, ContentState } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
 import htmlToDraft from 'html-to-draftjs';
-import { EditorState, convertToRaw, ContentState } from 'draft-js';
 
 function useEditor() {
   const { writeForm } = useSelector(productSelector);

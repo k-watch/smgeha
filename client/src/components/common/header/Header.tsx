@@ -36,13 +36,13 @@ const Wrap = styled('div')(({ theme }) => ({
 
     '& li': {
       marginLeft: '70px',
+      cursor: 'pointer',
 
       '&:first-of-type': {
         marginLeft: '0',
       },
 
       '& span': {
-        cursor: 'pointer',
         '&:hover': {
           color: `${lightBlue[400]}`,
         },
@@ -75,6 +75,7 @@ const Wrap = styled('div')(({ theme }) => ({
 
         '&:last-of-type': {
           marginLeft: 0,
+          marginRight: 10,
 
           '& span': {
             paddingLeft: '12px',
@@ -154,9 +155,11 @@ function Header() {
             </Button>
           </li>
           <li>
-            <a href="/introduce">
-              <img src="/logo.png" alt="logo" />
-            </a>
+            <img
+              src="/logo.png"
+              alt="logo"
+              onClick={() => navigate('/introduce')}
+            />
           </li>
           <DrawerStyles
             anchor="left"
@@ -169,9 +172,11 @@ function Header() {
               </Button>
             </li>
             <li>
-              <a href="/introduce">
-                <img src="/logo.png" alt="logo" />
-              </a>
+              <img
+                src="/logo.png"
+                alt="logo"
+                onClick={() => navigate('/introduce')}
+              />
             </li>
             {categories &&
               categories.map((category) => (
@@ -186,9 +191,11 @@ function Header() {
 
         <Desktop>
           <li>
-            <a href="/introduce">
-              <img src="/logo.png" alt="logo" />
-            </a>
+            <img
+              src="/logo.png"
+              alt="logo"
+              onClick={() => navigate('/introduce')}
+            />
           </li>
           {categories &&
             categories.map((category) => (

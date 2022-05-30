@@ -4,10 +4,12 @@ import { useMutation } from 'react-query';
 import { ProductsData } from 'modules/products/state';
 import { useCallback, useEffect, useState } from 'react';
 import { store } from 'modules/store';
-import { setSearchProducts } from 'modules/products/products';
-import { findOneProductByName } from 'lib/api/products';
+import { initProducts, setSearchProducts } from 'modules/products/products';
 import TextField from './TextField';
 import SearchIcon from '@mui/icons-material/Search';
+import { useNavigate } from 'react-router-dom';
+import { findProductsByName } from 'lib/api/products';
+import { setProductCode } from 'modules/category/category';
 
 const Wrap = styled('div')(({ theme }) => ({
   margin: '0 auto',
@@ -37,23 +39,28 @@ interface SearchProps {
 
 function Search({ searchFlag, setSearchFlag }: SearchProps) {
   const searchProductsMutation = useMutation<ProductsData[], Error, string>(
-    findOneProductByName,
+    findProductsByName,
   );
 
   const [name, setName] = useState('');
+  const navigate = useNavigate();
 
   const onSearch = useCallback(async () => {
     if (name === '') return;
 
     await searchProductsMutation.mutateAsync(name, {
       onSuccess: (data) => {
+        store.dispatch(initProducts());
+        store.dispatch(setProductCode(0));
         store.dispatch(setSearchProducts(data));
+        setSearchFlag(false);
+        navigate('/');
       },
       onError: (e) => {
         console.log(e);
       },
     });
-  }, [name, searchProductsMutation]);
+  }, [name, searchProductsMutation, setSearchFlag, navigate]);
 
   useEffect(() => {
     setName('');

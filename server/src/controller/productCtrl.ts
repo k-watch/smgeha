@@ -28,10 +28,10 @@ export const findAllProduct = async (req, res) => {
     name: string
   }
 */
-export const findOneProductByName = async (req, res) => {
+export const findProductsByName = async (req, res) => {
   const { name } = req.body;
 
-  const products = await productService.findOneProductByName(name);
+  const products = await productService.findProductsByName(name);
 
   res.send(products);
 };

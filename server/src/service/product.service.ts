@@ -27,10 +27,10 @@ export const findAllProduct = async (id: string) => {
   return { products, recommendProducts };
 };
 
-export const findOneProductByName = async (name: string) => {
+export const findProductsByName = async (name: string) => {
   const products = await getCustomRepository(
     ProductRepository,
-  ).findOneProductByName(name);
+  ).findProductsByName(name);
 
   return products;
 };
