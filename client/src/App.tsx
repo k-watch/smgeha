@@ -15,6 +15,7 @@ import ProductPage from 'pages/ProductPage';
 import ProtectedRoutes from 'modules/router/ProtectedRoutes';
 import PublicRoutes from 'modules/router/PublicRoutes';
 import Main from 'components/main/Main';
+import Chart from 'components/admin/chart/Chart';
 
 const theme = createTheme({
   palette: {
@@ -45,7 +46,8 @@ function App() {
           <Wrap>
             <Routes>
               <Route path="/introduce" element={<Main />} />
-              <Route path="/" element={<ProductsPage />} />
+              <Route path="/" element={<Chart />} />
+              <Route path="/1" element={<ProductsPage />} />
               <Route path="/product/:id" element={<ProductPage />} />
               <Route path="/" element={<PublicRoutes />}>
                 <Route path="/login" element={<LoginPage />} />

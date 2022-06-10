@@ -1,6 +1,7 @@
 require('dotenv').config();
 import express from 'express';
 import jwtMiddleware from './lib/jwtMiddleware';
+import visitorsCnt from './lib/visitorsCnt';
 import { createConnection } from 'typeorm';
 import router from './router';
 import cookieParser from 'cookie-parser';
@@ -11,6 +12,7 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 app.use(jwtMiddleware);
+app.use(visitorsCnt);
 
 app.use(
   express.urlencoded({
