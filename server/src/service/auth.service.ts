@@ -1,8 +1,7 @@
 import { User } from '../entity/User';
 import { UserRepository } from '../repository/userRepository';
 import bcrypt from 'bcrypt';
-import { getConnection, getCustomRepository } from 'typeorm';
-import auth from '../router/auth';
+import { getCustomRepository } from 'typeorm';
 
 export const register = async ({ userId, password, name }: User) => {
   const user = new User();
