@@ -5,12 +5,11 @@ import moment from 'moment';
 const visitorsCnt = async (req, res, next) => {
   const date = moment().format('DD');
 
-  if (date > req.cookies['visitDate']) {
+  if (date !== req.cookies['visitDate']) {
     // 방문 쿠키 없으면 세팅하고 방문자수 + 1
     res.cookie('visitDate', date, {
       maxAge: 1000 * 60 * 60 * 24 * 1.5,
       httpOnly: true,
-      overwrite: true,
     });
 
     const queryRunner = await getConnection().createQueryRunner();
