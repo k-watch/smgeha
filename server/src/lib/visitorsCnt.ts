@@ -1,16 +1,16 @@
 import { getConnection, getCustomRepository } from 'typeorm';
 import { VisitorsCount } from '../entity/VisitorsCount';
+import moment from 'moment';
 
 const visitorsCnt = async (req, res, next) => {
-  const now = new Date();
-  const date = `${now.getFullYear()}${now.getMonth() + 1}${now.getDate()}`;
+  const date = moment().format('DD');
 
-  if (date !== req.cookies['visitDate']) {
-    console.log(date, req.cookies['visitDate']);
+  if (date > req.cookies['visitDate']) {
     // 방문 쿠키 없으면 세팅하고 방문자수 + 1
     res.cookie('visitDate', date, {
-      maxAge: 1000 * 60 * 60 * 24 * 1,
+      maxAge: 1000 * 60 * 60 * 24 * 1.5,
       httpOnly: true,
+      overwrite: true,
     });
 
     const queryRunner = await getConnection().createQueryRunner();

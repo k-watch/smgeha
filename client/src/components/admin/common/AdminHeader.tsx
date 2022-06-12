@@ -1,9 +1,9 @@
 import { styled } from '@mui/system';
 import { Tab, Tabs } from '@mui/material';
 import { useState } from 'react';
-import VisitorsCount from '../chart/VisitorsCount';
 import ProductList from '../products/ProductList';
 import ProductHeader from './ProductHeader';
+import VisitorsCount from '../visitors/VisitorsCount';
 
 const Wrap = styled('div')({
   '& .MuiTabs-root': {

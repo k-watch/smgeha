@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useMutation } from 'react-query';
 import { findVisitorsCntWeek } from 'lib/api/common';
 import produce from 'immer';
+import moment from 'moment';
 
 const options = {
   responsive: true,
@@ -20,9 +21,6 @@ const options = {
       grid: {
         display: false,
       },
-    },
-    y: {
-      min: 0,
     },
   },
 };
@@ -51,25 +49,16 @@ function useVisitorsCount() {
 
   const dateMutation = useMutation<[], Error, any>(findVisitorsCntWeek);
 
-  function calDate(num: number) {
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = now.getMonth();
-    const day = now.getDate();
-    const dayOfWeek = now.getDay();
-
-    const result = new Date(year, month, day + (num - dayOfWeek));
-    const yyyy = result.getFullYear();
-    const mm = Number(result.getMonth()) + 1;
-    const dd = result.getDate();
-
-    return String(yyyy).substring(2, 4) + '.' + mm + '.' + dd;
+  function calDate(day: number) {
+    return moment().add(day, 'd').format('YY-MM-DD');
   }
 
   const getVistorsCnt = useCallback(
     async (day: number) => {
-      let prev = new Date(new Date().setDate(new Date().getDate() + day - 6));
-      let next = new Date(new Date().setDate(new Date().getDate() + day));
+      let prev = moment()
+        .add(day - 6, 'd')
+        .format();
+      let next = moment().add(day, 'd').format();
 
       await dateMutation.mutateAsync(
         { prev, next },
@@ -83,9 +72,9 @@ function useVisitorsCount() {
               for (let i = 0; i < 7; i++) {
                 tempLabel.push(
                   labels[
-                    new Date(
-                      new Date().setDate(new Date().getDate() + day - 6 + i),
-                    ).getDay()
+                    moment()
+                      .add(day - 6 + i, 'd')
+                      .day()
                   ],
                 );
                 sum += date[i];
