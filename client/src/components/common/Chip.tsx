@@ -10,7 +10,7 @@ const ChipStyle = styled(MuiChip)(({ theme }) => ({
     '& .MuiChip-label': {
       padding: '0 18px',
       fontSize: '0.9375rem',
-      fontWeight: 700,
+      fontWeight: 500,
     },
   },
   '&.MuiChip-filled': {

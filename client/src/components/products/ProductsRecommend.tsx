@@ -39,7 +39,7 @@ const Wrap = styled('div')(({ theme }) => ({
     padding: 20,
     color: `${grey[800]}`,
     fontSize: '2rem',
-    fontWeight: 700,
+    fontWeight: 600,
 
     [theme.breakpoints.down('sm')]: {
       fontSize: '1.5625rem',
@@ -113,7 +113,7 @@ const ListStyle = styled('div')(({ theme }) => ({
       right: 7,
       zIndex: 1,
       fontSize: '1.5625rem',
-      fontWeight: 700,
+      fontWeight: 600,
       color: 'white',
     },
 
@@ -166,7 +166,7 @@ const ListStyle = styled('div')(({ theme }) => ({
 
       '& .title': {
         fontSize: '1.5625rem',
-        fontWeight: 800,
+        fontWeight: 600,
       },
 
       '& .content': {
@@ -187,7 +187,7 @@ const ListStyle = styled('div')(({ theme }) => ({
 
         '& .title': {
           fontSize: '1.375rem',
-          fontWeight: 700,
+          fontWeight: 500,
         },
 
         '& .content': {

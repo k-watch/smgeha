@@ -7,7 +7,7 @@ export const findVisitorsCntWeek = async (prev, next) => {
       VisitorsCountRepository,
     ).findVisitorsCntWeek(prev, next);
 
-    // 일주일 분량 없으면 빈배열 보내줌
+    // 방문자 수 체크 이전 날짜라면
     if (result.length !== 7) {
       return [];
     }

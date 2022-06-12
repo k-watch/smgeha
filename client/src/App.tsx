@@ -9,15 +9,17 @@ import { createTheme, ThemeProvider } from '@mui/material';
 import { lightBlue } from '@mui/material/colors';
 import Footer from 'components/common/Footer';
 import Header from 'components/common/header/Header';
-import AdminProductsPage from 'pages/admin/AdminProductsPage';
+import AdminPage from 'pages/admin/AdminPage';
 import { styled } from '@mui/system';
 import ProductPage from 'pages/ProductPage';
 import ProtectedRoutes from 'modules/router/ProtectedRoutes';
 import PublicRoutes from 'modules/router/PublicRoutes';
 import Main from 'components/main/Main';
-import Chart from 'components/admin/chart/Chart';
 
 const theme = createTheme({
+  typography: {
+    fontFamily: ['Roboto', 'Noto Sans KR', 'sans-serif'].join(','),
+  },
   palette: {
     primary: {
       main: lightBlue[400],
@@ -46,14 +48,13 @@ function App() {
           <Wrap>
             <Routes>
               <Route path="/introduce" element={<Main />} />
-              <Route path="/" element={<Chart />} />
-              <Route path="/1" element={<ProductsPage />} />
+              <Route path="/" element={<ProductsPage />} />
               <Route path="/product/:id" element={<ProductPage />} />
               <Route path="/" element={<PublicRoutes />}>
                 <Route path="/login" element={<LoginPage />} />
               </Route>
               <Route path="/" element={<ProtectedRoutes />}>
-                <Route path="/admin" element={<AdminProductsPage />} />
+                <Route path="/admin" element={<AdminPage />} />
                 <Route path={'admin/write'} element={<ProductWritePage />} />
                 <Route
                   path={'admin/write/:id'}

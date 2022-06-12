@@ -6,10 +6,15 @@ import useWriteHeader from './useProductHeader';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import { grey } from '@mui/material/colors';
 
-const Wrap = styled('div')(() => ({
+const Wrap = styled('div')(({ theme }) => ({
   marginBottom: 30,
   '& ul': {
     display: 'flex',
+
+    [theme.breakpoints.down('md')]: {
+      overflow: 'scroll',
+      whiteSpace: 'nowrap',
+    },
 
     '& li': {
       marginRight: 15,

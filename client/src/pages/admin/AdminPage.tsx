@@ -1,16 +1,15 @@
 import { styled } from '@mui/system';
-import ProductHeader from 'components/admin/common/ProductHeader';
-import ProductList from 'components/admin/products/ProductList';
+import AdminHeader from 'components/admin/common/AdminHeader';
 
 const Wrap = styled('div')({
+  minHeight: '72vh',
   margin: '25px 0',
 });
 
 function AdminProductsPage() {
   return (
     <Wrap>
-      <ProductHeader />
-      <ProductList />
+      <AdminHeader />
     </Wrap>
   );
 }

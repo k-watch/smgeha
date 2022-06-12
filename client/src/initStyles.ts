@@ -133,7 +133,7 @@ const resetStyle = css`
     border-spacing: 0;
   }
   input::placeholder {
-    font-weight: 600;
+    font-weight: 500;
     font-size: 16px;
     color: ${grey[500]} !important;
   }
