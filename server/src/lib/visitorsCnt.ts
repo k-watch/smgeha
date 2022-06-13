@@ -1,21 +1,19 @@
 import { getConnection, getCustomRepository } from 'typeorm';
 import { VisitorsCount } from '../entity/VisitorsCount';
 import moment from 'moment';
+import * as express from 'express';
 
 const visitorsCnt = async (req, res, next) => {
   const date = moment().format('DD');
 
+  //방문 쿠키 없거나 다르면 세팅하고 방문자수 + 1
   if (date !== req.cookies['visitDate']) {
-    // 방문 쿠키 없으면 세팅하고 방문자수 + 1
     res.cookie('visitDate', date, {
       maxAge: 1000 * 60 * 60 * 24 * 1.5,
       httpOnly: true,
     });
 
-    const queryRunner = await getConnection().createQueryRunner();
     try {
-      await queryRunner.startTransaction();
-
       let visitorsCount = await getConnection()
         .getRepository(VisitorsCount)
         .createQueryBuilder('v')
@@ -40,10 +38,7 @@ const visitorsCnt = async (req, res, next) => {
           .execute();
       }
     } catch (e) {
-      await queryRunner.rollbackTransaction();
       return res.status(500).send({ status: e, msg: e.message });
-    } finally {
-      await queryRunner.release();
     }
   }
 

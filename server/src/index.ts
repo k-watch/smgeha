@@ -6,20 +6,27 @@ import { createConnection } from 'typeorm';
 import router from './router';
 import cookieParser from 'cookie-parser';
 import path from 'path';
+import cors from 'cors';
 
 const app = express();
 
+app.use(
+  cors({
+    origin: '*',
+    credential: 'true',
+  }),
+);
+app.enable('trust proxy');
 app.use(express.json());
 app.use(cookieParser());
 app.use(jwtMiddleware);
-app.use(visitorsCnt);
 
 app.use(
   express.urlencoded({
     extended: true,
   }),
 );
-
+app.use(visitorsCnt);
 app.use('/api', router);
 
 app.use(express.static(path.join(__dirname, process.env.STATIC_PATH)));
