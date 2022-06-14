@@ -1,4 +1,5 @@
 import * as commonService from '../service/common.service';
+import path from 'path';
 
 /*
   POST /api/common/findVisitorsCntWeek
@@ -16,4 +17,14 @@ export const findVisitorsCntWeek = async (req, res) => {
   }
 
   res.send(result);
+};
+
+/*
+  POST /api/common/findImage
+*/
+export const findImage = async (req, res) => {
+  const filePath = path.join(__dirname, process.env.IMAGE_PATH);
+  console.log(filePath + `/${req.body.image}`);
+
+  res.sendFile(filePath + `/${req.body.image}`);
 };
