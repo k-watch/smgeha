@@ -111,7 +111,7 @@ function Footer() {
         </Grid>
         <div className={'blog'}>
           <a href="https://blog.naver.com/apt4137">
-            <img src="/blog.png" alt="blog" />
+            <img src="/blog.png" width={35} height={35} alt="blog" />
             <span>NAVER blog</span>
           </a>
         </div>

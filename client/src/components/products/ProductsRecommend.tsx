@@ -213,7 +213,11 @@ function ProductsRecommend() {
                   {(index + 1).toString().padStart(2, '0')}
                 </p>
                 <div className="imgWrap">
-                  <img src={`images/${product.image}`} alt={product.name} />
+                  <img
+                    src={`images/${product.image}`}
+                    alt={product.name}
+                    loading="lazy"
+                  />
                 </div>
                 <div className="contentWrap">
                   <p className="manufacture">{product.manufacture}</p>

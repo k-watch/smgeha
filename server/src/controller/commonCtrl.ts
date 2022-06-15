@@ -24,7 +24,6 @@ export const findVisitorsCntWeek = async (req, res) => {
 */
 export const findImage = async (req, res) => {
   const filePath = path.join(__dirname, process.env.IMAGE_PATH);
-  console.log(filePath + `/${req.body.image}`);
 
   res.sendFile(filePath + `/${req.body.image}`);
 };

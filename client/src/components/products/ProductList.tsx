@@ -148,7 +148,11 @@ function ProductList() {
             products.map((product: ProductsData) => (
               <Grid key={product.id} item lg={3} md={4} sm={6} xs={6}>
                 <div className="imgWrap" onClick={() => onClick(product.id)}>
-                  <img src={`images/${product.image}`} alt={product.name} />
+                  <img
+                    src={`images/${product.image}`}
+                    alt={product.name}
+                    loading="lazy"
+                  />
                 </div>
                 <div className="contentWrap">
                   <p className="manufacture">{product.manufacture}</p>
