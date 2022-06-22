@@ -1,20 +1,15 @@
 import './App.css';
-import LoginPage from 'pages/LoginPage';
+import { Suspense, lazy } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import ProductsPage from 'pages/ProductsPage';
-import ProductWritePage from 'pages/admin/ProductWritePage';
 import initStyles from 'initStyles';
 import { Global } from '@emotion/react';
 import { createTheme, ThemeProvider } from '@mui/material';
 import { lightBlue } from '@mui/material/colors';
 import Footer from 'components/common/Footer';
 import Header from 'components/common/header/Header';
-import AdminPage from 'pages/admin/AdminPage';
 import { styled } from '@mui/system';
-import ProductPage from 'pages/ProductPage';
 import ProtectedRoutes from 'modules/router/ProtectedRoutes';
 import PublicRoutes from 'modules/router/PublicRoutes';
-import Main from 'components/main/Main';
 
 const theme = createTheme({
   typography: {
@@ -38,6 +33,13 @@ const Wrap = styled('div')(({ theme }) => ({
   },
 }));
 
+const Main = lazy(() => import('components/main/Main'));
+const ProductsPage = lazy(() => import('pages/ProductsPage'));
+const ProductPage = lazy(() => import('pages/ProductPage'));
+const LoginPage = lazy(() => import('pages/LoginPage'));
+const AdminPage = lazy(() => import('pages/admin/AdminPage'));
+const ProductWritePage = lazy(() => import('pages/admin/ProductWritePage'));
+
 function App() {
   return (
     <>
@@ -45,24 +47,26 @@ function App() {
       <ThemeProvider theme={theme}>
         <BrowserRouter>
           <Header />
-          <Wrap>
-            <Routes>
-              <Route path="/introduce" element={<Main />} />
-              <Route path="/" element={<ProductsPage />} />
-              <Route path="/product/:id" element={<ProductPage />} />
-              <Route path="/" element={<PublicRoutes />}>
-                <Route path="/login" element={<LoginPage />} />
-              </Route>
-              <Route path="/" element={<ProtectedRoutes />}>
-                <Route path="/admin" element={<AdminPage />} />
-                <Route path={'admin/write'} element={<ProductWritePage />} />
-                <Route
-                  path={'admin/write/:id'}
-                  element={<ProductWritePage />}
-                />
-              </Route>
-            </Routes>
-          </Wrap>
+          <Suspense fallback={<div />}>
+            <Wrap>
+              <Routes>
+                <Route path="/introduce" element={<Main />} />
+                <Route path="/" element={<ProductsPage />} />
+                <Route path="/product/:id" element={<ProductPage />} />
+                <Route path="/" element={<PublicRoutes />}>
+                  <Route path="/login" element={<LoginPage />} />
+                </Route>
+                <Route path="/" element={<ProtectedRoutes />}>
+                  <Route path="/admin" element={<AdminPage />} />
+                  <Route path={'admin/write'} element={<ProductWritePage />} />
+                  <Route
+                    path={'admin/write/:id'}
+                    element={<ProductWritePage />}
+                  />
+                </Route>
+              </Routes>
+            </Wrap>
+          </Suspense>
           <Footer />
         </BrowserRouter>
       </ThemeProvider>
